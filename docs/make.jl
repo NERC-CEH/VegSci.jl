@@ -19,6 +19,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/ZekeMarshall/EcoVeg.jl",
+    repo="github.com/ZekeMarshall/EcoVeg.jl.git",
     devbranch="main",
 )
