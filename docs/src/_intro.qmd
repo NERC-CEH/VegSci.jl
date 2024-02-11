@@ -3,10 +3,6 @@
 ```{julia}
 #| echo: false
 using Pkg; Pkg.activate("docs")
-
-# using Plots
-
-theme(:wong)
 using EcoVeg
 ```
 
@@ -53,7 +49,7 @@ To demonstrate...
 First we begin with generating two example plot by species `NamedArrays.NamedMatrix` object using the function `EcoVeg.generate_test_array` as test data.
 
 ```{julia example_data}
-x = generate_test_array(rown = 20, coln = 30, zerop = 0.4, rowprefix = "SiteA-", colprefix = "Species")
+x = generate_test_array(rown = 20, coln = 30, zerop = 0.6, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 ### Classification
