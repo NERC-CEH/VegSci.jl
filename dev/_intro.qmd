@@ -8,8 +8,13 @@ using EcoVeg
 
 `EcoVeg.jl` is a package containing functions for the analysis of vegetation plot sample data....
 
-## Example Pluto Notebook 
+in vegetation science using the Julia programming language [@bezanson2017]
 
+Solves two language problem [@roesch2023]
+
+Aims to collate functionality found in JUICE, vegan, MAVIS into a single location with a user-friendly API and transparent methodologies.
+
+## Example Pluto Notebook 
 
 ### Local Tour
 
@@ -28,18 +33,18 @@ All notebooks are contained in `docs/pluto`.
 
 ## Installation 
 
-You can install the latest stable release from the general registry:
+To install the latest stable release of `EcoVeg`:
 
 ```{.julia}
 using Pkg
 Pkg.add("EcoVeg")
 ```
 
-The development version can be installed as follows:
+To install the development version of `Ecoveg`:
 
 ```{.julia}
 using Pkg
-Pkg.add(url="https://github.com/ZekeMarshall/EcoVeg.jl")
+Pkg.add(url="https://github.com/ZekeMarshall/EcoVeg.jl", rev = "develop")
 ```
 
 ## Usage Example 

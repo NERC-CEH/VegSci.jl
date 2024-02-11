@@ -1,0 +1,7 @@
+```@meta
+CurrentModule = EcoVeg
+```
+
+Documentation for [EcoVeg.jl](https://github.com/ZekeMarhshall/EcoVeg.jl).
+
+{{< include _intro.qmd >}}
