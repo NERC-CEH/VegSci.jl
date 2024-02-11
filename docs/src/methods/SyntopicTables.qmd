@@ -22,6 +22,7 @@ using CSV
 using BenchmarkTools
 using SparseArrays
 using Statistics
+using Skipper
 ```
 
 ## Create example data
@@ -71,6 +72,9 @@ _nzfunc(f, A, dims) = mapslices(a->_nzfunc(f,a,:), A, dims=dims)
 nzfunc(f, A; dims=:) = _nzfunc(f, A, dims)
 
 @elapsed nzfunc(minimum, mat, dims=1)
+
+@btime map(x -> minimum(skip(iszero, x)), eachcol(mat))
+@btime mapslices(x -> minimum(skip(iszero, x)), mat, dims=1)
 
 ```
 

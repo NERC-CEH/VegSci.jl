@@ -12,9 +12,9 @@ setup_docs = quote
     using PrettyTables
     using Statistics
     using Suppressor
+    using Skipper
 
     # Setup:
-    theme(:wong)
     Random.seed!(2023)
     www_path = "$(pwd())/docs/src/www"
 end;
