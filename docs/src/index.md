@@ -4,7 +4,6 @@
 CurrentModule = EcoVeg
 ```
 
-<!-- ![](assets/wide_logo.png) -->
 
 Documentation for
 [EcoVeg.jl](https://github.com/ZekeMarhshall/EcoVeg.jl).
