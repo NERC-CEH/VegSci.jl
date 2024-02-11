@@ -1,0 +1,131 @@
+---
+title: "Data Wrangling"
+execute: 
+  enabled: true
+julia: julia-1.10
+bibliography: ../references.bib
+---
+
+## Outline
+
+This page outlines a variety of utility functions for helping wrangle data into the desired format...
+
+
+## Import Required Packages
+
+```{julia import_packages_julia}
+using NamedArrays
+using BenchmarkTools
+```
+
+## Generate test arrays {#sec-generate_test_arrays}
+
+```{julia generate_test_array_function}
+function generate_test_array(;rown::Int64, coln::Int64, 
+                             min::Float64 = 0.0, max::Float64 = 1.0, increment::Float64 = 0.1, 
+                             rowprefix::String = "Releve", colprefix::String = "Species")
+
+	rownames = vec([string("$rowprefix")].*string.([1:1:rown;]))
+    colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
+	x = NamedArrays.NamedArray(rand(min:increment:max, rown, coln), names = (rownames, colnames), dimnames = (rowprefix, colprefix))
+    return x
+
+end
+```
+
+```{julia generate_test_array_test}
+generate_test_array(rown = 10, coln = 10, min = 0.0, max = 1.0, increment = 0.1, rowprefix = "Releve", colprefix = "Species")
+```
+
+## Aligning site by species matrices {#sec-align_array_columns}
+
+Many analyses in vegetation science require site by species matrices. Frequently, such matrices contain different sets of species in the columns. Combining matrices, often `NamedArrays.NamedArray` objects in Julia, or ensuring these matrices have the same sets of species in the columns is a non-trivial task in Julia given the lack of a function to merge matrices in `NamedArrays`. Using R and in contrast, given two matrices (x and y) the R function `base::merge(x, y, by = "row.names", all = TRUE)` achieves this.
+
+Below is a helper function to align the columns in two `NamedArrays.NamedArray` objects.
+
+### Establish example data
+
+```{julia create_example_data_samples}
+#| code-fold: true
+begin
+    rows = 5
+    cols = 11
+	rownames = vec(["Releve"].*string.([1:1:rows;]))
+    colnames = vec(["Spp"].*string.([1:1:cols;]))
+	samp_mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))[:,Not(["Spp3", "Spp11"])]
+end
+```
+
+```{julia create_example_data_references}
+#| code-fold: true
+begin
+    rows = 5
+    cols = 11
+	rownames = vec(["Releve"].*string.([1:1:rows;]))
+    colnames = vec(["Spp"].*string.([1:1:cols;]))
+	ref_mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))[:,Not(["Spp4"])]
+end
+```
+
+Check whether the column names are aligned.
+
+```{julia check_columns}
+names(samp_mat)[2] == names(ref_mat)[2]
+```
+
+Note that the sample plots data is missing two species: "Spp3" and "Spp11" and the reference plots data is missing one species, "Spp4".
+
+### Define function
+
+```{julia align_array_columns_function}
+function align_array_columns(x::NamedArray, y::NamedArray, colorder::String = "x")
+
+    # Check which columns are missing from x and y
+    x_missing_cols = setdiff(Set(names(y)[2]), Set(names(x)[2]))
+    y_missing_cols = setdiff(Set(names(x)[2]), Set(names(y)[2]))
+
+    x_mat = copy(x)
+
+    # If there are missing columns in the x matrix
+    if length(x_missing_cols) != 0
+        x_mat_missing = NamedArray(zeros(size(x,1), length(x_missing_cols)), names = (vec(names(x)[1]), collect(x_missing_cols)))
+        x_mat_colnames = names(x)[2]
+        x_mat = [x x_mat_missing]
+        setnames!(x_mat, [x_mat_colnames; collect(x_missing_cols)], 2)
+    end
+
+    y_mat = copy(y)
+
+    # If there are missing columns in the x matrix
+    if length(y_missing_cols) != 0
+        y_mat_missing = NamedArray(zeros(size(y,1), length(y_missing_cols)), names = (vec(names(y)[1]), collect(y_missing_cols)))
+        y_mat_colnames = names(y)[2]
+        y_mat = [y y_mat_missing]
+        setnames!(y_mat, [y_mat_colnames; collect(y_missing_cols)], 2)
+    end
+
+    if colorder == "x"
+        y_mat = y_mat[:, names(x_mat)[2]]
+    elseif colorder == "y"
+        x_mat = x_mat[:, names(y_mat)[2]]
+    end
+
+    aligned_mats = (x = x_mat, y = y_mat)
+
+    return aligned_mats
+
+end
+```
+
+### Test function
+
+```{julia align_array_columns_test}
+results = align_array_columns(samp_mat, ref_mat)
+names(results.x)[2] == names(results.y)[2]
+```
+
+### Benchmark function
+
+```{julia benchmark_align_array_columns}
+@benchmark align_array_columns(samp_mat, ref_mat)
+```

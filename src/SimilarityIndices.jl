@@ -2,13 +2,14 @@ using NamedArrays
 using LinearAlgebra
 
 """
-    greet_your_package_name(name)
+binary_similarity(x::NamedArray, eq::AbstractString)
 
 Create a personalised greeting for EcoVeg using a `name`.
 
 ...
 # Arguments
 - `x::NamedArray`: A site by species 
+- `eq::AbstractString`: A representing an equation using the terms a, b, and c. The Jaccard similarity by default. "(a ./ (a .+ b .+ c)) + I".
 ...
 
 # Examples
@@ -46,6 +47,7 @@ function czekanowski_index(x::NamedArray, y::NamedArray)
     results = NamedArray(zeros(size(x, 1), size(y, 1)), names = (names(x)[1], names(y)[1]))
 
     # Loop through each pair of samples and references, calculate the Czekanowski index, and store the results in the matrix
+	# There will be a much better way to iterate through each pair of samples and references!
     for i in comp_vec
         x_i = x[[i[1]],:]
         y_i = y[[i[2]],:]

@@ -1,0 +1,263 @@
+---
+title: "Binary (Dis)similarity"
+execute: 
+  enabled: true
+julia: julia-1.10
+bibliography: ../references.bib
+---
+
+## Outline
+
+This page outlines how to calculate binary (dis)similarity coefficients using presence-absence matrices as outlined in @legendre2012.
+
+
+## Import Required Packages
+
+::: {.panel-tabset}
+
+## Julia
+
+```{julia import_packages_julia}
+using NamedArrays
+using LinearAlgebra
+using CSV
+using BenchmarkTools
+using DataFrames
+```
+
+
+## R
+
+```{r import_packages_r}
+library(vegan)
+library(microbenchmark)
+```
+
+:::
+
+## Create example data
+
+Create example data in the form of a site by species named matrix, making row (Releve2) and column (Spp7) contain all zero entries, for testing.
+
+```{julia create_example_data}
+#| code-fold: true
+begin
+	rows = 5
+	cols = 11
+	rownames = vec(["Releve"].*string.([1:1:rows;]))
+	colnames = vec(["Spp"].*string.([1:1:cols;]))
+	mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))
+	mat[:,"Spp7"] .= 0.0
+	mat["Releve2",:] .= 0.0
+	mat
+end
+```
+
+Prepare the data by removing all empty rows and columns.
+
+```{julia remove_zero_rowcols}
+begin
+	mat = mat[:, vec(mapslices(col -> any(col .!= 0), mat, dims = 1))]
+	mat = mat[vec(mapslices(col -> any(col .!= 0), mat, dims = 2)), :]
+end
+```
+
+Create a presence-absence matrix by replacing all non-zero values with an Integer value of 1.
+
+```{julia create_sample_data}
+samp = Int.(mat .!= 0)
+```
+
+## Calculate the transposed cross product
+
+Calculate the transposed cross product. This contains the number of species shared between each of the plots and the total number of species per plot along the diagonal.
+
+```{julia transposed_cross_product}
+d = samp * transpose(samp)
+```
+
+## Extract the diagonal
+
+Extract the diagonal of d (the transposed cross product of the sample matrix) and calculate its length.
+
+```{julia d_diagonal}
+begin
+	s = Array(diag(d))
+	n = length(s)
+end
+```
+
+## Calculate a
+
+Calculate a by removing the diagonal, leaving a matrix containing the shared presences only.
+
+```{julia calculate_a}
+a = d - LinearAlgebra.Diagonal(d)
+```
+
+## Calculate b
+```{julia calculate_b}
+b = reshape(repeat(s, n), :, n) - a
+```
+
+## Calculate c
+```{julia calculate_c}
+c = Array(transpose(reshape(repeat(s, n), :, n))) - a
+```
+
+## Calculate a binary (dis)similarity metric
+
+Use a, b, and c to calculate the Jaccard similarity [@jaccard1912] between each of the sample plots, as defined in @eq-jaccard_sim.
+
+$$
+j = \frac{a}{a + b + c} = \frac{X \cap Y}{X \cup Y}
+$$ {#eq-jaccard_sim}
+
+```{julia calculate_jaccard}
+j = a ./ (a .+ b .+ c)
+```
+
+Optionally, ensure that each plot is recorded as being identical with itself.
+
+```{julia jaccard_diag_set_one}
+j_i = j + I
+```
+
+Optionally, for visual clarity view the lower (or upper) triangular portion of the similarity matrix.
+
+```{julia jaccard_lower_triangular}
+LinearAlgebra.LowerTriangular(j_i)
+```
+
+## Create a binary (dis)similarity metric function
+
+Collate the above code into a function, which accepts a Matrix or NamedMatrix, x, and returns a Matrix or NamedMatrix containing the site x site Jaccard similarity values.
+
+```{julia jaccard_function}
+function jaccard_similarity(x::Union{Matrix, NamedMatrix})
+	samp = Int.(x .!= 0)
+	d = samp * transpose(samp)
+	s = Array(diag(d))
+	n = length(s)
+	a = d - Diagonal(d)
+	b = reshape(repeat(s, n), :, n) - a
+	c = Array(transpose(reshape(repeat(s, n), :, n))) - a
+	j = (a ./ (a .+ b .+ c)) + I
+	return j
+end	
+```
+
+Execute function.
+
+```{julia jaccard_function_execute}
+jaccard_similarity(mat)
+```
+
+## Create a customisable (dis)similarity function
+
+There are a number of binary (dis)similarity metrics which utlise presence-absence data, with the R package `{vegan}` supporting the 24 indices of beta diversity descibed in @koleff2003 in the function `vegan::betadiver()` and 16 (dis)similarity metrics in the function `vegan::vegdist()`. The ability to use a custom dissimilarity metric with the function `vegan::designdist()` is also provided [@oksanen2022].
+
+The metaprogramming capabilities of Julia facilitate the implementation of a user-supplied (dis)similarity metric with ease. Only three additional steps are required. First, compose a string representing an equation. Second, create an expression by parsing this string. Last, evaluate this expression.
+
+
+```{julia parse_string_jaccard}
+begin
+	equation = "(a ./ (a .+ b .+ c)) + I"
+	expression = Meta.parse(equation)
+	eval(expression)
+end
+```
+
+Next create a new function with an additional parameter, eq.
+
+```{julia custom_dissimilarity_function}
+function similarity(;x::Union{Matrix, NamedMatrix}, eq::String)
+	samp = Int.(x .!= 0)
+	d = samp * transpose(samp)
+	s = Array(diag(d))
+	n = length(s)
+	a = d - Diagonal(d)
+	b = reshape(repeat(s, n), :, n) - a
+	c = Array(transpose(reshape(repeat(s, n), :, n))) - a
+	sim = eval(Meta.parse(eq))
+	return sim
+end	
+```
+
+Test this function with a different (dis)similarity metric, for example the Whittaker's beta diversity metric ($\beta_{w}$) as formulated in [@koleff2003] and defined in @eq-whittaker_beta where $S$ is equal to the total number of species recorded in both plots and $\bar{\alpha}$ is equal to the average number of species recorded in the sample plots.
+
+$$
+\beta_{w} = \frac{a + b + c}{(2a + b + c)/2} -1 = \frac{S}{\bar{\alpha}} -1
+$$ {#eq-whittaker_beta}
+
+```{julia execute_custom_dissimilarity_function}
+similarity(x = mat, eq = "((a .+ b .+ c) ./ ((2 * a .+ b .+ c) ./ 2)) .- 1")
+```
+
+## R vs Julia Dune Data
+
+Let's see how the R function `vegan::designdist()` compares to the Julia function `similarity()` created above.
+
+First load the `dune` dataset bundled in `{vegan}`.
+
+::: {.panel-tabset}
+
+## Julia
+
+```{julia load_dune_julia}
+begin
+	dune_df = CSV.read("../data/dune.csv", DataFrame, header = 1)
+	dune_na = NamedArray(Array(dune_df))
+	NamedArrays.setnames!(dune_na, names(dune_df), 2)
+	dune_na
+end
+```
+
+
+## R
+
+```{r load_dune_r}
+dune <- as.matrix(read.csv(file = "../data/dune.csv"))
+```
+
+:::
+
+Next, let's benchmark both implementations using the dune data
+
+```{julia benchmark_julia}
+@benchmark similarity(x = dune_na, eq = "(a ./ (a .+ b .+ c))")
+```
+
+```{r benchmark_r}
+microbenchmark::microbenchmark(vegan::designdist(x = dune, "(a)/(a+b+c)", abcd = TRUE), units = "us")
+```
+
+
+## Macro
+
+```{julia macro}
+macro binarysimilarity(x::NamedArray, eq::AbstractString)
+
+	samp = Int.(x .!= 0)
+	d = samp * transpose(samp)
+	s = Array(diag(d))
+	n = length(s)
+	a = d - Diagonal(d)
+	b = reshape(repeat(s, n), :, n) - a
+	c = Array(transpose(reshape(repeat(s, n), :, n))) - a
+
+	expr = Meta.parse(eq)
+
+	quote
+		$expr
+	end
+
+end
+```
+
+```{julia eval_macro}
+@binarysimilarity(mat, "(a ./ (a .+ b .+ c))")
+```
+
+
+## References

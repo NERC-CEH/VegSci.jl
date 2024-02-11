@@ -1,0 +1,9 @@
+---
+title: "Clustering"
+execute: 
+  enabled: true
+julia: julia-1.10
+bibliography: ../references.bib
+---
+
+## Outline

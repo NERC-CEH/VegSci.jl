@@ -1,0 +1,14 @@
+---
+title: "Species Fidelity"
+execute: 
+  enabled: true
+julia: julia-1.10
+bibliography: ../references.bib
+---
+
+## Outline
+
+This page outlines a variety of utility functions for helping wrangle data into the desired format...
+
+The functionality outlined here draws heavily on the functionality found in the program JUICE @tichy2002.
+Fidelity measures follow @chytry2002.
