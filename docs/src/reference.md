@@ -1,24 +1,25 @@
-```@meta
+
+
+``` @meta
 CurrentModule = EcoVeg
 ```
 
 # Reference
 
-
 ## Content
 
-```@contents
+``` @contents
 Pages = ["_reference.md"]
 ```
 
 ## Index
 
-```@index
+``` @index
 ```
 
 ## Public Interface
 
-```@autodocs
+``` @autodocs
 Modules = [
     EcoVeg,
 ]
@@ -27,7 +28,7 @@ Private = false
 
 ## Internal functions
 
-```@autodocs
+``` @autodocs
 Modules = [
     EcoVeg,
 ]
