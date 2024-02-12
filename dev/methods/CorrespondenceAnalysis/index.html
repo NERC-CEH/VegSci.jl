@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Correspondence Analysis · EcoVeg.jl</title><meta name="title" content="Correspondence Analysis · EcoVeg.jl"/><meta property="og:title" content="Correspondence Analysis · EcoVeg.jl"/><meta property="twitter:title" content="Correspondence Analysis · EcoVeg.jl"/><meta name="description" content="Documentation for EcoVeg.jl."/><meta property="og:description" content="Documentation for EcoVeg.jl."/><meta property="twitter:description" content="Documentation for EcoVeg.jl."/><meta property="og:url" content="https://ZekeMarshall.github.io/EcoVeg.jl/methods/CorrespondenceAnalysis/"/><meta property="twitter:url" content="https://ZekeMarshall.github.io/EcoVeg.jl/methods/CorrespondenceAnalysis/"/><link rel="canonical" href="https://ZekeMarshall.github.io/EcoVeg.jl/methods/CorrespondenceAnalysis/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">EcoVeg.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Methods</span><ul><li class="is-active"><a class="tocitem" href>Correspondence Analysis</a><ul class="internal"><li><a class="tocitem" href="#Outline"><span>Outline</span></a></li><li><a class="tocitem" href="#Import-Required-Packages"><span>Import Required Packages</span></a></li><li><a class="tocitem" href="#Julia"><span>Julia</span></a></li><li><a class="tocitem" href="#R"><span>R</span></a></li><li><a class="tocitem" href="#Create-example-data"><span>Create example data</span></a></li><li><a class="tocitem" href="#A.1-Create-the-correspondence-matrix"><span>A.1 Create the correspondence matrix</span></a></li><li><a class="tocitem" href="#A.2-Calculate-column-and-row-masses"><span>A.2 Calculate column and row masses</span></a></li><li><a class="tocitem" href="#A.3-Diagonal-matrices-of-row-and-column-masses"><span>A.3 Diagonal matrices of row and column masses</span></a></li><li><a class="tocitem" href="#A.4-Calculate-the-matrix-of-standardized-residuals"><span>A.4 Calculate the matrix of standardized residuals</span></a></li><li><a class="tocitem" href="#A.5-Calculate-the-Singular-Value-Decomposition-(SVD)-of-S"><span>A.5 Calculate the Singular Value Decomposition (SVD) of S</span></a></li><li><a class="tocitem" href="#A.6-Standard-coordinates-*Φ*-of-rows"><span>A.6 Standard coordinates <em>Φ</em> of rows</span></a></li><li><a class="tocitem" href="#A.7-Standard-coordinates-*Γ*-of-columns"><span>A.7 Standard coordinates <em>Γ</em> of columns</span></a></li><li><a class="tocitem" href="#A.8-Principal-coordinates-F-of-rows"><span>A.8 Principal coordinates F of rows</span></a></li><li><a class="tocitem" href="#A.9-Principal-coordinates-G-of-columns"><span>A.9 Principal coordinates G of columns</span></a></li><li><a class="tocitem" href="#A.10-Principal-inertias-*λ*sub*k*/sub"><span>A.10 Principal inertias <em>λ</em>&lt;sub&gt;<em>k</em>&lt;/sub&gt;</span></a></li><li><a class="tocitem" href="#Create-Correspondence-Analysis-Function"><span>Create Correspondence Analysis Function</span></a></li><li><a class="tocitem" href="#R-vs-Julia-Dune-Data"><span>R vs Julia Dune Data</span></a></li><li><a class="tocitem" href="#Julia-2"><span>Julia</span></a></li><li><a class="tocitem" href="#R-2"><span>R</span></a></li><li><a class="tocitem" href="#References"><span>References</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../../reference/">Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Methods</a></li><li class="is-active"><a href>Correspondence Analysis</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Correspondence Analysis</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/ZekeMarshall/EcoVeg.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/ZekeMarshall/EcoVeg.jl/blob/main/docs/src/methods/CorrespondenceAnalysis.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Correspondence-Analysis"><a class="docs-heading-anchor" href="#Correspondence-Analysis">Correspondence Analysis</a><a id="Correspondence-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Correspondence-Analysis" title="Permalink"></a></h1><h2 id="Outline"><a class="docs-heading-anchor" href="#Outline">Outline</a><a id="Outline-1"></a><a class="docs-heading-anchor-permalink" href="#Outline" title="Permalink"></a></h2><p>This page details how to perform correspondence analysis in Julia following the computational algorithm outlined in appendix A of Greenacre (2017) and implemented in the R package <code>ca</code> (Nenadic and Greenacre 2007).</p><p>The Julia package MultivariateStats.jl does not currently contain an implementation of correspondence analysis.</p><h2 id="Import-Required-Packages"><a class="docs-heading-anchor" href="#Import-Required-Packages">Import Required Packages</a><a id="Import-Required-Packages-1"></a><a class="docs-heading-anchor-permalink" href="#Import-Required-Packages" title="Permalink"></a></h2><h2 id="Julia"><a class="docs-heading-anchor" href="#Julia">Julia</a><a id="Julia-1"></a><a class="docs-heading-anchor-permalink" href="#Julia" title="Permalink"></a></h2><pre><code class="language-julia hljs">using Pkg; Pkg.activate(&quot;docs&quot;)
+using EcoVeg
+using NamedArrays
+using LinearAlgebra
+using CSV
+using BenchmarkTools
+using DataFrames
+# using Plots</code></pre><h2 id="R"><a class="docs-heading-anchor" href="#R">R</a><a id="R-1"></a><a class="docs-heading-anchor-permalink" href="#R" title="Permalink"></a></h2><pre><code class="language-r hljs">library(ca)
+library(microbenchmark)
+library(ggplot2)
+library(dplyr)</code></pre><pre><code class="nohighlight hljs">Attaching package: &#39;dplyr&#39;
+
+The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag
+
+The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre><pre><code class="language-r hljs">library(JuliaCall)</code></pre><h2 id="Create-example-data"><a class="docs-heading-anchor" href="#Create-example-data">Create example data</a><a id="Create-example-data-1"></a><a class="docs-heading-anchor-permalink" href="#Create-example-data" title="Permalink"></a></h2><p>Create example data in the form of a site by species named matrix, N.</p><p>&lt;details class=&quot;code-fold&quot;&gt; &lt;summary&gt;Code&lt;/summary&gt;</p><pre><code class="language-julia hljs">N = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = &quot;SiteA-&quot;, colprefix = &quot;Species&quot;)</code></pre><p>&lt;/details&gt;</p><pre><code class="nohighlight hljs">20×30 Named Matrix{Float64}
+Releve ╲ Species │   Species1    Species2  …   Species29   Species30
+─────────────────┼──────────────────────────────────────────────────
+SiteA-1          │        0.0         0.0  …    0.170432    0.158011
+SiteA-2          │        0.0   0.0870126      0.0725648         0.0
+SiteA-3          │        0.0         0.0            0.0         0.0
+SiteA-4          │   0.131351         0.0            0.0   0.0843551
+SiteA-5          │        0.0    0.295832            0.0         0.0
+SiteA-6          │        0.0         0.0            0.0         0.0
+SiteA-7          │ 0.00278463         0.0            0.0    0.145937
+SiteA-8          │   0.109003         0.0            0.0         0.0
+⋮                           ⋮           ⋮  ⋱           ⋮           ⋮
+SiteA-13         │        0.0         0.0            0.0   0.0647773
+SiteA-14         │        0.0   0.0165251            0.0         0.0
+SiteA-15         │  0.0247495         0.0            0.0         0.0
+SiteA-16         │        0.0    0.164256     0.00753465         0.0
+SiteA-17         │        0.0   0.0928379      0.0579124   0.0955104
+SiteA-18         │  0.0702064         0.0            0.0         0.0
+SiteA-19         │   0.152927   0.0883153            0.0         0.0
+SiteA-20         │  0.0351665         0.0  …         0.0         0.0</code></pre><p>&lt;!– ## Perform <span>$\chi^{2}$</span> test</p><p>Perform a chi-squared (<span>$\chi^{2}$</span>) test to check whether there is asignificant dependence between the rows and columns. –&gt;</p><h2 id="A.1-Create-the-correspondence-matrix"><a class="docs-heading-anchor" href="#A.1-Create-the-correspondence-matrix">A.1 Create the correspondence matrix</a><a id="A.1-Create-the-correspondence-matrix-1"></a><a class="docs-heading-anchor-permalink" href="#A.1-Create-the-correspondence-matrix" title="Permalink"></a></h2><p>Calculate the correspondence matrix <em>P</em> following &lt;a href=&quot;#eq-p&quot; class=&quot;quarto-xref&quot;&gt;Equation 1&lt;/a&gt;.</p><p>&lt;span id=&quot;eq-p&quot;&gt; $ P = \frac{1}{n}N  \qquad(1)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">begin
+  n = sum(N)
+  P = N / n
+end</code></pre><pre><code class="nohighlight hljs">20×30 Named Matrix{Float64}
+Releve ╲ Species │    Species1     Species2  …    Species29    Species30
+─────────────────┼──────────────────────────────────────────────────────
+SiteA-1          │         0.0          0.0  …   0.00852162   0.00790053
+SiteA-2          │         0.0   0.00435063      0.00362824          0.0
+SiteA-3          │         0.0          0.0             0.0          0.0
+SiteA-4          │  0.00656756          0.0             0.0   0.00421775
+SiteA-5          │         0.0    0.0147916             0.0          0.0
+SiteA-6          │         0.0          0.0             0.0          0.0
+SiteA-7          │ 0.000139232          0.0             0.0   0.00729684
+SiteA-8          │  0.00545016          0.0             0.0          0.0
+⋮                            ⋮            ⋮  ⋱            ⋮            ⋮
+SiteA-13         │         0.0          0.0             0.0   0.00323887
+SiteA-14         │         0.0  0.000826253             0.0          0.0
+SiteA-15         │  0.00123748          0.0             0.0          0.0
+SiteA-16         │         0.0   0.00821279     0.000376733          0.0
+SiteA-17         │         0.0    0.0046419      0.00289562   0.00477552
+SiteA-18         │  0.00351032          0.0             0.0          0.0
+SiteA-19         │  0.00764635   0.00441577             0.0          0.0
+SiteA-20         │  0.00175833          0.0  …          0.0          0.0</code></pre><h2 id="A.2-Calculate-column-and-row-masses"><a class="docs-heading-anchor" href="#A.2-Calculate-column-and-row-masses">A.2 Calculate column and row masses</a><a id="A.2-Calculate-column-and-row-masses-1"></a><a class="docs-heading-anchor-permalink" href="#A.2-Calculate-column-and-row-masses" title="Permalink"></a></h2><p>Calculate the row and and column masses using &lt;a href=&quot;#eq-row<em>masses&quot; class=&quot;quarto-xref&quot;&gt;Equation 2&lt;/a&gt; and &lt;a href=&quot;#eq-column</em>masses&quot; class=&quot;quarto-xref&quot;&gt;Equation 3&lt;/a&gt; respectively.</p><p>&lt;span id=&quot;eq-row<em>masses&quot;&gt; $ r = P1 \space \space r\</em>{i} = \sum^{J}_{j = 1} P_{ij}  \qquad(2)$ &lt;/span&gt;</p><p>&lt;span id=&quot;eq-column<em>masses&quot;&gt; $ c = P^{t}1 \space \space c\</em>{j} = \sum^{I}_{i = 1} P_{ij}  \qquad(3)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">r = vec(sum(P, dims = 2))</code></pre><pre><code class="nohighlight hljs">20-element Vector{Float64}:
+ 0.05
+ 0.05
+ 0.05000000000000001
+ 0.05
+ 0.049999999999999996
+ 0.05
+ 0.05000000000000001
+ 0.049999999999999996
+ 0.05
+ 0.05000000000000002
+ 0.049999999999999996
+ 0.05
+ 0.049999999999999996
+ 0.049999999999999996
+ 0.04999999999999999
+ 0.049999999999999996
+ 0.049999999999999996
+ 0.05
+ 0.04999999999999999
+ 0.049999999999999996</code></pre><pre><code class="language-julia hljs">c = vec(sum(P, dims = 1))</code></pre><pre><code class="nohighlight hljs">30-element Vector{Float64}:
+ 0.029797285454353825
+ 0.04254821738424704
+ 0.022168578795640586
+ 0.03667780057407388
+ 0.03559269646595144
+ 0.013147319471395386
+ 0.03143078895024295
+ 0.026883538366246268
+ 0.02503468016746781
+ 0.045659374956502644
+ ⋮
+ 0.015518681305573994
+ 0.050225117248218466
+ 0.035453680445382094
+ 0.026486700867364404
+ 0.04638580027640751
+ 0.04378936059704854
+ 0.0402633052739362
+ 0.0191261733084541
+ 0.027429514127492536</code></pre><h2 id="A.3-Diagonal-matrices-of-row-and-column-masses"><a class="docs-heading-anchor" href="#A.3-Diagonal-matrices-of-row-and-column-masses">A.3 Diagonal matrices of row and column masses</a><a id="A.3-Diagonal-matrices-of-row-and-column-masses-1"></a><a class="docs-heading-anchor-permalink" href="#A.3-Diagonal-matrices-of-row-and-column-masses" title="Permalink"></a></h2><pre><code class="language-julia hljs">Dr = Diagonal(r)</code></pre><pre><code class="nohighlight hljs">20×20 Diagonal{Float64, Vector{Float64}}:
+ 0.05   ⋅     ⋅     ⋅     ⋅     ⋅    …   ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅    0.05   ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅    0.05   ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅    0.05   ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅    0.05   ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅    0.05  …   ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅    …   ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅       0.05   ⋅     ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅    …   ⋅    0.05   ⋅     ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅    0.05   ⋅     ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅    0.05   ⋅     ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅    0.05   ⋅ 
+  ⋅     ⋅     ⋅     ⋅     ⋅     ⋅        ⋅     ⋅     ⋅     ⋅     ⋅    0.05</code></pre><pre><code class="language-julia hljs">Dc = Diagonal(c)</code></pre><pre><code class="nohighlight hljs">30×30 Diagonal{Float64, Vector{Float64}}:
+ 0.0297973   ⋅          ⋅         …   ⋅          ⋅          ⋅ 
+  ⋅         0.0425482   ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅         0.0221686      ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅         …   ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+ ⋮                                ⋱                        
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅         …   ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅          ⋅ 
+  ⋅          ⋅          ⋅            0.0402633   ⋅          ⋅ 
+  ⋅          ⋅          ⋅             ⋅         0.0191262   ⋅ 
+  ⋅          ⋅          ⋅             ⋅          ⋅         0.0274295</code></pre><h2 id="A.4-Calculate-the-matrix-of-standardized-residuals"><a class="docs-heading-anchor" href="#A.4-Calculate-the-matrix-of-standardized-residuals">A.4 Calculate the matrix of standardized residuals</a><a id="A.4-Calculate-the-matrix-of-standardized-residuals-1"></a><a class="docs-heading-anchor-permalink" href="#A.4-Calculate-the-matrix-of-standardized-residuals" title="Permalink"></a></h2><p>&lt;span id=&quot;eq-standardized<em>residuals&quot;&gt; $ SR = D\</em>{r}^{-\frac{1}{2}}(P - rc^{T})D_{c}^{-\frac{1}{2}}  \qquad(4)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">SR = Dr^(-1/2) * (P - r * transpose(c)) * Dc^(-1/2)</code></pre><pre><code class="nohighlight hljs">20×30 Named Matrix{Float64}
+Releve ╲ Species │    Species1     Species2  …    Species29    Species30
+─────────────────┼──────────────────────────────────────────────────────
+SiteA-1          │  -0.0385988   -0.0461239  …      0.24464     0.176302
+SiteA-2          │  -0.0385988    0.0482011       0.0864026   -0.0370334
+SiteA-3          │  -0.0385988   -0.0461239      -0.0309242   -0.0370334
+SiteA-4          │    0.131551   -0.0461239      -0.0309242    0.0768569
+SiteA-5          │  -0.0385988     0.274569      -0.0309242   -0.0370334
+SiteA-6          │  -0.0385988   -0.0461239      -0.0309242   -0.0370334
+SiteA-7          │  -0.0349916   -0.0461239      -0.0309242     0.160001
+SiteA-8          │    0.102602   -0.0461239      -0.0309242   -0.0370334
+⋮                            ⋮            ⋮  ⋱            ⋮            ⋮
+SiteA-13         │  -0.0385988   -0.0461239      -0.0309242    0.0504245
+SiteA-14         │  -0.0385988   -0.0282101      -0.0309242   -0.0370334
+SiteA-15         │ -0.00653879   -0.0461239      -0.0309242   -0.0370334
+SiteA-16         │  -0.0385988     0.131936      -0.0187418   -0.0370334
+SiteA-17         │  -0.0385988    0.0545159       0.0627117    0.0919181
+SiteA-18         │   0.0523451   -0.0461239      -0.0309242   -0.0370334
+SiteA-19         │      0.1595    0.0496133      -0.0309242   -0.0370334
+SiteA-20         │   0.0069552   -0.0461239  …   -0.0309242   -0.0370334</code></pre><h2 id="A.5-Calculate-the-Singular-Value-Decomposition-(SVD)-of-S"><a class="docs-heading-anchor" href="#A.5-Calculate-the-Singular-Value-Decomposition-(SVD)-of-S">A.5 Calculate the Singular Value Decomposition (SVD) of S</a><a id="A.5-Calculate-the-Singular-Value-Decomposition-(SVD)-of-S-1"></a><a class="docs-heading-anchor-permalink" href="#A.5-Calculate-the-Singular-Value-Decomposition-(SVD)-of-S" title="Permalink"></a></h2><pre><code class="language-julia hljs">begin
+  svd = LinearAlgebra.svd(SR)
+  U = svd.U
+  S = svd.S
+  V = svd.V
+  Vt = svd.Vt
+end</code></pre><pre><code class="nohighlight hljs">20×30 Matrix{Float64}:
+  0.0277472   0.263536    0.183036    0.284186    …   0.07413     -0.00044748
+ -0.124673    0.132335   -0.0313571   0.079454        0.133775     0.130072
+  0.0492648   0.360312   -0.0436118   0.151669       -0.0524779   -0.137841
+  0.0599456   0.101318   -0.24344    -0.0485777      -0.178755    -0.348148
+ -0.0644521   0.0249991  -0.186244   -0.164796       -0.210954    -0.019968
+  0.126481   -0.106551    0.129724    0.112612    …   0.0511834    0.150883
+  0.163159   -0.0512313  -0.0907901   0.0994037      -0.413552    -0.174815
+ -0.246268   -0.0135586   0.0581568  -0.00182286      0.0113439   -0.136203
+  0.0433817  -0.34875     0.204373   -0.010393        0.143411     0.0404354
+  0.0686343  -0.105994    0.182573   -0.413977       -0.00786521  -0.105437
+  0.432171   -0.149333   -0.181619    0.0809251   …   0.0748871   -0.026061
+ -0.353368    0.249685   -0.0616244  -0.0453439       0.219725     0.0720968
+ -0.0429023   0.190243    0.30537    -0.108484        0.159298    -0.259405
+  0.213778    0.202971   -0.449343   -0.293665        0.0312296    0.467769
+  0.234056    0.0461315   0.147221    0.281817        0.0811585    0.0418743
+ -0.0497457   0.0412138  -0.0808324  -0.205025    …  -0.14202      0.173201
+  0.167446    0.256396    0.151087   -0.234452       -0.286027    -0.122344
+ -0.0892483  -0.10088    -0.388253    0.221433        0.127351     0.0106292
+  0.19401     0.176481    0.0552762  -0.244265        0.107382    -0.0533481
+ -0.0990352  -0.126195   -0.0711957  -0.311605        0.142285    -0.134679</code></pre><h2 id="A.6-Standard-coordinates-*Φ*-of-rows"><a class="docs-heading-anchor" href="#A.6-Standard-coordinates-*Φ*-of-rows">A.6 Standard coordinates <em>Φ</em> of rows</a><a id="A.6-Standard-coordinates-*Φ*-of-rows-1"></a><a class="docs-heading-anchor-permalink" href="#A.6-Standard-coordinates-*Φ*-of-rows" title="Permalink"></a></h2><p>&lt;span id=&quot;eq-standard<em>coordinates</em>rows&quot;&gt; $ \Phi = D_{r}^{-\frac{1}{2}} U  \qquad(5)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">Φ = Dr^(-1/2) * U</code></pre><pre><code class="nohighlight hljs">20×20 Matrix{Float64}:
+  0.542131    0.841649   -0.707821  -1.38023    …   0.219159   -0.619357  1.0
+  1.03052    -0.159256    0.347044  -0.571611      -1.29544     0.372989  1.0
+  0.477683   -0.652137   -1.23403   -0.608532      -0.300774   -0.82542   1.0
+  0.569041   -0.463937   -0.92046   -1.2413        -1.5854      2.08046   1.0
+  2.04167     0.448324    2.04881    0.589515      -0.795633    0.571818  1.0
+  1.14386    -0.554638   -0.282652  -1.27691    …   0.846201   -0.416927  1.0
+  0.328224   -0.139496   -1.28021   -0.84642       -0.454645   -1.66797   1.0
+ -0.77596    -0.571572    0.124988   0.997407      -0.775544   -1.37952   1.0
+ -1.20384    -3.0903      0.806721  -0.194074       0.0255838   0.232227  1.0
+ -0.131173    0.844404    0.74448    0.492471      -1.03398     0.114153  1.0
+ -0.139023    0.411493   -1.5002     1.96263    …  -1.09167     0.893059  1.0
+ -0.396141    0.703335   -1.55756    1.14588        0.396413    0.183787  1.0
+ -2.49513     2.01586     1.19386   -1.56641       -0.946202   -0.462779  1.0
+ -1.17239    -1.30337     0.984823  -0.0023841      0.0830796   0.430646  1.0
+ -0.738665   -0.0871971  -1.10044    0.246693       1.2481      0.140134  1.0
+  0.0637213   0.336415    0.544282   0.667391   …   0.637572   -1.67736   1.0
+ -0.219168    0.738382    0.178073  -1.04666        2.42829     1.87591   1.0
+  0.859668   -0.1891      0.65495    0.777036       1.2833     -0.350366  1.0
+  0.914553    0.421802    0.910888   0.514256       0.737739   -0.578849  1.0
+ -0.699585    0.449335    0.044459   1.34126        0.373856    1.08337   1.0</code></pre><pre><code class="language-julia hljs"># NamedArrays.setnames!(NamedArray(Φ), names = vec(names(N)[1]))
+# NamedArray(Φ, names(N)[1])</code></pre><h2 id="A.7-Standard-coordinates-*Γ*-of-columns"><a class="docs-heading-anchor" href="#A.7-Standard-coordinates-*Γ*-of-columns">A.7 Standard coordinates <em>Γ</em> of columns</a><a id="A.7-Standard-coordinates-*Γ*-of-columns-1"></a><a class="docs-heading-anchor-permalink" href="#A.7-Standard-coordinates-*Γ*-of-columns" title="Permalink"></a></h2><p>&lt;span id=&quot;eq-standard<em>coordinates</em>columns&quot;&gt; $ \Gamma = D_{c}^{-\frac{1}{2}} V  \qquad(6)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">Γ = Dc^(-1/2) * V</code></pre><pre><code class="nohighlight hljs">30×20 Matrix{Float64}:
+  0.160743    -0.722244    0.285397   …  -0.517025    1.12392   -0.573722
+  1.27761      0.641555    1.74678       -0.489063    0.855574  -0.611789
+  1.22932     -0.210604   -0.292911      -2.60763     0.371252  -0.478173
+  1.48389      0.414872    0.791945       1.15622    -1.27544   -1.62706
+  0.465907    -0.121331   -0.484532       1.215       1.79504    0.30412
+ -0.407832     1.17587    -1.39454    …   0.129133    1.54475   -1.43673
+ -2.15349      1.22124     0.374751       0.167163   -0.362303   0.910496
+  1.62133      0.0356063   1.58289        0.0083305  -0.44619    0.636651
+  0.322265     0.298816    0.275601      -1.47833     0.324154   0.977762
+  0.623052    -0.178683   -0.282869       1.22766    -1.37135    1.46796
+  ⋮                                   ⋱                         
+  0.368465    -0.14963    -1.08514        3.0549      1.83656    0.58943
+ -0.51469      0.217093   -1.50407        0.421448   -0.199464  -0.143708
+ -0.875218     1.23369    -0.0776353     -1.04178    -1.80226    0.995381
+ -1.1275      -2.96656     0.721649       0.342896    0.932523   1.76801
+ -0.733064     1.25813     0.982183   …   1.35324    -0.604114   0.223364
+  0.694621    -0.392623   -0.802119      -0.926349   -1.42959   -0.947848
+ -0.245193     0.347176   -1.77955       -1.27817     1.11786   -0.76953
+  0.536019     0.9673     -0.379457       0.920846    0.776459   1.02884
+ -0.00270187   0.785371   -0.832278       0.0641791  -0.322114  -0.813187</code></pre><h2 id="A.8-Principal-coordinates-F-of-rows"><a class="docs-heading-anchor" href="#A.8-Principal-coordinates-F-of-rows">A.8 Principal coordinates F of rows</a><a id="A.8-Principal-coordinates-F-of-rows-1"></a><a class="docs-heading-anchor-permalink" href="#A.8-Principal-coordinates-F-of-rows" title="Permalink"></a></h2><p>&lt;span id=&quot;eq-principal<em>coordinates</em>rows&quot;&gt; $ F = D_{r}^{-\frac{1}{2}} U D_{\alpha} = \Phi D_{\alpha}  \qquad(7)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">F = Φ * Diagonal(S)</code></pre><pre><code class="nohighlight hljs">20×20 Matrix{Float64}:
+  0.364635    0.536427   -0.437139   -0.77529     …  -0.0581634  7.62993e-17
+  0.693123   -0.101502    0.214329   -0.321079        0.0350272  7.62993e-17
+  0.321287   -0.415641   -0.762115   -0.341818       -0.0775147  7.62993e-17
+  0.382733   -0.295692   -0.568462   -0.697251        0.195374   7.62993e-17
+  1.37322     0.285741    1.26531     0.331136        0.053699   7.62993e-17
+  0.769353   -0.3535     -0.174561   -0.717252    …  -0.0391533  7.62993e-17
+  0.220761   -0.0889081  -0.79064    -0.475442       -0.156638   7.62993e-17
+ -0.521906   -0.364293    0.0771904   0.560252       -0.12955    7.62993e-17
+ -0.809693   -1.96961     0.498218   -0.109013        0.0218083  7.62993e-17
+ -0.0882265   0.538183    0.459779    0.276626        0.01072    7.62993e-17
+ -0.0935063   0.262266   -0.926497    1.10243     …   0.0838666  7.62993e-17
+ -0.266442    0.448272   -0.961927    0.643649        0.0172593  7.62993e-17
+ -1.67821     1.28481     0.737307   -0.879868       -0.0434593  7.62993e-17
+ -0.788543   -0.830704    0.608211   -0.00133917      0.0404417  7.62993e-17
+ -0.496822   -0.0555753  -0.679616    0.13857         0.0131599  7.62993e-17
+  0.0428586   0.214415    0.33614     0.374879    …  -0.15752    7.62993e-17
+ -0.147411    0.47061     0.109975   -0.587918        0.176165   7.62993e-17
+  0.578208   -0.120523    0.404487    0.436468       -0.0329027  7.62993e-17
+  0.615123    0.268837    0.56255     0.288862       -0.0543593  7.62993e-17
+ -0.470537    0.286385    0.0274571   0.753398        0.101739   7.62993e-17</code></pre><h2 id="A.9-Principal-coordinates-G-of-columns"><a class="docs-heading-anchor" href="#A.9-Principal-coordinates-G-of-columns">A.9 Principal coordinates G of columns</a><a id="A.9-Principal-coordinates-G-of-columns-1"></a><a class="docs-heading-anchor-permalink" href="#A.9-Principal-coordinates-G-of-columns" title="Permalink"></a></h2><p>&lt;span id=&quot;eq-principal<em>coordinates</em>rows&quot;&gt; $ G = D_{c}^{-\frac{1}{2}} V D_{\alpha} = \Gamma D_{\alpha}  \qquad(8)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">G = Γ * Diagonal(S)</code></pre><pre><code class="nohighlight hljs">30×20 Matrix{Float64}:
+  0.108114    -0.460324    0.176256    0.195066  …   0.105547   -4.37746e-17
+  0.859314     0.408897    1.07878     0.275903      0.0803464  -4.6679e-17
+  0.826837    -0.134229   -0.180897   -0.918404      0.0348641  -3.64842e-17
+  0.998056     0.26442     0.489093   -0.142478     -0.119776   -1.24143e-16
+  0.313367    -0.0773305  -0.299239   -0.327366      0.168571    2.32041e-17
+ -0.274305     0.749447   -0.861245    0.813528  …   0.145067   -1.09622e-16
+ -1.44843      0.77836     0.23144    -0.377392     -0.0340237   6.94702e-17
+  1.0905       0.0226938   0.977566    0.322952     -0.0419014   4.8576e-17
+  0.216753     0.190451    0.170207    0.197298      0.0304411   7.46025e-17
+  0.419061    -0.113884   -0.174695   -0.153319     -0.128782    1.12004e-16
+  ⋮                                              ⋱              
+  0.247827    -0.0953674  -0.670164   -0.583507      0.17247     4.49731e-17
+ -0.346178     0.138365   -0.928893    0.943697     -0.0187315  -1.09648e-17
+ -0.588666     0.786297   -0.0479463  -0.143759     -0.169249    7.59468e-17
+ -0.758353    -1.89074     0.445679   -0.269286      0.0875726   1.34898e-16
+ -0.493054     0.801875    0.60658     0.182385  …  -0.056732    1.70425e-17
+  0.467198    -0.250239   -0.495376   -0.270616     -0.134252   -7.23201e-17
+ -0.164915     0.221274   -1.09902     0.777537      0.104977   -5.87146e-17
+  0.360523     0.616511   -0.234347   -0.72603       0.0729168   7.84994e-17
+ -0.00181726   0.500558   -0.514002   -1.18077      -0.0302496  -6.20456e-17</code></pre><h2 id="A.10-Principal-inertias-*λ*sub*k*/sub"><a class="docs-heading-anchor" href="#A.10-Principal-inertias-*λ*sub*k*/sub">A.10 Principal inertias <em>λ</em>&lt;sub&gt;<em>k</em>&lt;/sub&gt;</a><a id="A.10-Principal-inertias-*λ*sub*k*/sub-1"></a><a class="docs-heading-anchor-permalink" href="#A.10-Principal-inertias-*λ*sub*k*/sub" title="Permalink"></a></h2><p>&lt;span id=&quot;eq-principal<em>inertias&quot;&gt; $ \lambda\</em>{k} = \alpha_{k}^{2}, k = 1,2,...,\space where \space k = min\I-1,J-1\
+ \qquad(9)$ &lt;/span&gt;</p><pre><code class="language-julia hljs">F * Dr * transpose(F)</code></pre><pre><code class="nohighlight hljs">20×20 Matrix{Float64}:
+  0.185804     0.0172968    -0.0441563   …  -0.00915386   -0.0369694
+  0.0172968    0.13057      -0.00226797      0.00610265   -0.0212148
+ -0.0441563   -0.00226797    0.209484       -0.0164003    -0.0222328
+  0.0198157   -0.0167266     0.0288903      -0.00482476   -0.0406749
+ -0.0184064    0.0209121    -0.0313273       0.0597688    -0.0250034
+  0.0250116    0.031794      0.00710539  …  -0.00287972   -0.0233792
+  0.0166774    0.000573079   0.0202196      -0.0275567    -0.00793825
+ -0.0127093   -0.0296196    -0.0408504      -0.0159874     0.0568817
+ -0.0453142   -0.00132332   -0.0111181      -0.023888     -0.0139068
+  0.00296881   0.00725656   -0.0226813       0.0336077     0.015313
+  0.00623326  -0.0437973     0.0020329   …  -0.0130872     0.00252162
+ -0.0041632   -0.00645339    0.00342205     -0.0246943     0.0150378
+ -0.00942158  -0.05         -0.05           -0.0268769     0.0138181
+ -0.0471243   -0.0287668    -0.00706715     -0.0371324    -0.0298188
+ -0.0195146   -0.039298     -0.0112581      -0.033084     -0.00833025
+ -0.0271492   -0.00430903   -0.0220503   …  -0.000593994   0.00622623
+  0.0314837    0.0106455     0.0191718      -0.00942428   -0.0123814
+ -0.0312089    0.018626     -0.00891622      0.00883097   -0.0303511
+ -0.00915386   0.00610265   -0.0164003       0.134015      0.00325934
+ -0.0369694   -0.0212148    -0.0222328       0.00325934    0.159143</code></pre><pre><code class="language-julia hljs">G * Dr * transpose(G)</code></pre><pre><code class="nohighlight hljs">30×30 Matrix{Float64}:
+  0.130693     -0.0233681   -0.0177667   …  -0.05        -0.0148655
+ -0.0233681     0.15719     -0.0130419       0.00484713  -0.031006
+ -0.0177667    -0.0130419    0.215532        0.104433     0.0212732
+  0.017716      0.0598352    0.049445        0.0354312    0.001405
+  0.0368593    -0.0385474    0.0497935       0.0425507    0.0421976
+ -0.05         -0.0143735   -0.0403772   …   0.0554215   -0.0335066
+ -0.0130109    -0.0436006   -0.0453818      -0.0374281    0.00991364
+ -0.000429491   0.0958988    0.0118984      -0.05        -0.0482198
+  0.0314036     0.0220936   -0.044188       -0.00633348  -0.0332198
+ -0.0020434    -0.00216661   0.0540027       0.0114867    0.00496454
+  ⋮                                      ⋱               
+ -0.0486332    -0.00743175  -0.0080931       0.0193996   -0.000987393
+ -0.00576169   -0.035604    -0.0432601      -0.035824    -0.05
+ -0.0247264    -0.0140882   -0.00912491      0.0795669    0.0337331
+ -0.000477128  -0.0427819   -0.0329925      -0.0491217   -0.04899
+ -0.00185211    0.0356473   -0.05        …  -0.00910993  -0.0113144
+  0.00826969   -0.01742      0.00901839     -0.0203782   -0.00285874
+ -0.0352838    -0.05        -0.0487494      -0.033483    -0.00465508
+ -0.05          0.00484713   0.104433        0.227753     0.104689
+ -0.0148655    -0.031006     0.0212732       0.104689     0.171627</code></pre><h2 id="Create-Correspondence-Analysis-Function"><a class="docs-heading-anchor" href="#Create-Correspondence-Analysis-Function">Create Correspondence Analysis Function</a><a id="Create-Correspondence-Analysis-Function-1"></a><a class="docs-heading-anchor-permalink" href="#Create-Correspondence-Analysis-Function" title="Permalink"></a></h2><pre><code class="language-julia hljs">function correspondence_analysis(N::NamedMatrix)
+  
+  # A.1 Create the correspondence matrix
+  P = N / sum(N)
+
+  # A.2 Calculate column and row masses
+  r = vec(sum(P, dims = 2))
+  c = vec(sum(P, dims = 1))
+
+  # A.3 Diagonal matrices of row and column masses
+  Dr = Diagonal(r)
+  Dc = Diagonal(c)
+
+  # A.4 Calculate the matrix of standardized residuals
+  SR = Dr^(-1/2) * (P - r * transpose(c)) * Dc^(-1/2)
+
+  # A.5 Calculate the Singular Value Decomposition (SVD) of S
+  svd = LinearAlgebra.svd(SR)
+  U = svd.U
+  V = svd.V
+  S = svd.S
+  D = Diagonal(S)
+
+  # A.6 Standard coordinates Φ of rows
+  Φ_rownames = names(N)[1]
+  Φ_colnames = vec([&quot;Dim&quot;].*string.([1:1:size(N,1);]))
+  Φ = NamedArray(Dr^(-1/2) * U, names = (Φ_rownames, Φ_colnames), dimnames = (&quot;Plot&quot;, &quot;Dimension&quot;))
+  
+  # A.7 Standard coordinates Γ of columns
+  Γ_rownames = names(N)[2]
+  Γ_colnames = vec([&quot;Dim&quot;].*string.([1:1:size(N,1);]))
+  Γ = NamedArray(Dc^(-1/2) * V, names = (Γ_rownames, Γ_colnames), dimnames = (&quot;Species&quot;, &quot;Dimension&quot;))
+  
+  # A.8 Principal coordinates F of rows
+  # F = Φ * D
+  F = Dr^(-1/2) * U * D
+  
+  # A.9 Principal coordinates G of columns
+  # G = Γ * D
+  G = Dc^(-1/2) * V * D
+
+  # [1:end, 1:end .∉ [[20]]]
+
+  results = (sv = D, # Singular values
+             rownames = names(N)[1], # Row names
+             rowmass = r, # Row masses
+            #  rowdist = , # Row chi-square distances to centroid
+            #  rowinertia = , # Row inertias
+             rowcoord = Φ, # Row standard coordinates
+            #  rowsup = , # Indicies of row supplementary points
+             colnames = names(N)[2], # Column names
+             colmass = c, # Column masses
+            #  coldist = , # Column chi-square distances to centroid
+            #  colinertia = , # Column inertias
+             colcoord = Γ, # Column standard coordinates
+            #  colsup = , # Indices of column supplementary points
+            N = N # The frequency table
+            )
+
+  return results
+
+end</code></pre><pre><code class="nohighlight hljs">correspondence_analysis (generic function with 1 method)</code></pre><h3 id="Test-Function"><a class="docs-heading-anchor" href="#Test-Function">Test Function</a><a id="Test-Function-1"></a><a class="docs-heading-anchor-permalink" href="#Test-Function" title="Permalink"></a></h3><pre><code class="language-julia hljs">ca_results = correspondence_analysis(N)</code></pre><pre><code class="nohighlight hljs">(sv = [0.6725942692278521 0.0 … 0.0 0.0; 0.0 0.6373526331747739 … 0.0 0.0; … ; 0.0 0.0 … 0.09390935412880762 0.0; 0.0 0.0 … 0.0 7.629925883268047e-17], rownames = [&quot;SiteA-1&quot;, &quot;SiteA-2&quot;, &quot;SiteA-3&quot;, &quot;SiteA-4&quot;, &quot;SiteA-5&quot;, &quot;SiteA-6&quot;, &quot;SiteA-7&quot;, &quot;SiteA-8&quot;, &quot;SiteA-9&quot;, &quot;SiteA-10&quot;, &quot;SiteA-11&quot;, &quot;SiteA-12&quot;, &quot;SiteA-13&quot;, &quot;SiteA-14&quot;, &quot;SiteA-15&quot;, &quot;SiteA-16&quot;, &quot;SiteA-17&quot;, &quot;SiteA-18&quot;, &quot;SiteA-19&quot;, &quot;SiteA-20&quot;], rowmass = [0.05, 0.05, 0.05000000000000001, 0.05, 0.049999999999999996, 0.05, 0.05000000000000001, 0.049999999999999996, 0.05, 0.05000000000000002, 0.049999999999999996, 0.05, 0.049999999999999996, 0.049999999999999996, 0.04999999999999999, 0.049999999999999996, 0.049999999999999996, 0.05, 0.04999999999999999, 0.049999999999999996], rowcoord = [0.5421314805290488 0.8416488279753974 … -0.6193569008593827 0.9999999999999994; 1.0305221892233063 -0.15925583078659358 … 0.3729892801517001 1.0000000000000004; … ; 0.914552612810756 0.4218024913287271 … -0.5788488016502343 1.0000000000000004; -0.6995851884957469 0.44933527195795236 … 1.0833713051657947 0.9999999999999996], colnames = [&quot;Species1&quot;, &quot;Species2&quot;, &quot;Species3&quot;, &quot;Species4&quot;, &quot;Species5&quot;, &quot;Species6&quot;, &quot;Species7&quot;, &quot;Species8&quot;, &quot;Species9&quot;, &quot;Species10&quot;  …  &quot;Species21&quot;, &quot;Species22&quot;, &quot;Species23&quot;, &quot;Species24&quot;, &quot;Species25&quot;, &quot;Species26&quot;, &quot;Species27&quot;, &quot;Species28&quot;, &quot;Species29&quot;, &quot;Species30&quot;], colmass = [0.029797285454353825, 0.04254821738424704, 0.022168578795640586, 0.03667780057407388, 0.03559269646595144, 0.013147319471395386, 0.03143078895024295, 0.026883538366246268, 0.02503468016746781, 0.045659374956502644  …  0.034696148400630476, 0.015518681305573994, 0.050225117248218466, 0.035453680445382094, 0.026486700867364404, 0.04638580027640751, 0.04378936059704854, 0.0402633052739362, 0.0191261733084541, 0.027429514127492536], colcoord = [0.16074252219581042 -0.7222439561309885 … 1.1239223324173633 -0.573721846516808; 1.2776116669880744 0.6415551010340832 … 0.8555742739239312 -0.611789016408664; … ; 0.5360187780009981 0.9672998622466116 … 0.7764589947116682 1.0288357667901207; -0.002701868119655921 0.7853709416909604 … -0.3221144382016358 -0.8131871410115292], N = [0.0 0.0 … 0.1704324316308754 0.15801063157599765; 0.0 0.08701262538580858 … 0.07256484830489757 0.0; … ; 0.15292704456766795 0.08831531700803892 … 0.0 0.0; 0.03516652551133091 0.0 … 0.0 0.0])</code></pre><h3 id="Plot-Test-Results"><a class="docs-heading-anchor" href="#Plot-Test-Results">Plot Test Results</a><a id="Plot-Test-Results-1"></a><a class="docs-heading-anchor-permalink" href="#Plot-Test-Results" title="Permalink"></a></h3><pre><code class="language-julia hljs">begin
+  plots_x = ca_results.rowcoord[:,&quot;Dim1&quot;]
+  plots_y = ca_results.rowcoord[:,&quot;Dim2&quot;]
+
+  species_x = ca_results.colcoord[:,&quot;Dim1&quot;]
+  species_y = ca_results.colcoord[:,&quot;Dim2&quot;]
+
+  # scatter(species_x, species_y, series_annotations = text.(ca_results.colnames, 8, :right, :bottom), framestyle=:origin, label = &quot;Species&quot;)
+  # scatter!(plots_x, plots_y, series_annotations = text.(ca_results.rownames, 8, :right, :bottom), label = &quot;Plots&quot;)
+end</code></pre><pre><code class="nohighlight hljs">30-element Named Vector{Float64}
+Species   │ 
+──────────┼──────────
+Species1  │ -0.722244
+Species2  │  0.641555
+Species3  │ -0.210604
+Species4  │  0.414872
+Species5  │ -0.121331
+Species6  │   1.17587
+Species7  │   1.22124
+Species8  │ 0.0356063
+⋮                   ⋮
+Species23 │  0.217093
+Species24 │   1.23369
+Species25 │  -2.96656
+Species26 │   1.25813
+Species27 │ -0.392623
+Species28 │  0.347176
+Species29 │    0.9673
+Species30 │  0.785371</code></pre><h2 id="R-vs-Julia-Dune-Data"><a class="docs-heading-anchor" href="#R-vs-Julia-Dune-Data">R vs Julia Dune Data</a><a id="R-vs-Julia-Dune-Data-1"></a><a class="docs-heading-anchor-permalink" href="#R-vs-Julia-Dune-Data" title="Permalink"></a></h2><p>Let’s see how the R function <code>ca::ca()</code> compares to the Julia function <code>correspondence_analysis()</code> defined above.</p><p>First load the <code>dune</code> dataset bundled in <code>{vegan}</code>.</p><h2 id="Julia-2"><a class="docs-heading-anchor" href="#Julia-2">Julia</a><a class="docs-heading-anchor-permalink" href="#Julia-2" title="Permalink"></a></h2><pre><code class="language-julia hljs">begin
+    dune_df = CSV.read(&quot;../data/dune.csv&quot;, DataFrame, header = 1)
+    dune_na = NamedArray(Array(dune_df))
+    NamedArrays.setnames!(dune_na, names(dune_df), 2)
+end</code></pre><pre><code class="nohighlight hljs">(OrderedCollections.OrderedDict{Any, Int64}(&quot;1&quot; =&gt; 1, &quot;2&quot; =&gt; 2, &quot;3&quot; =&gt; 3, &quot;4&quot; =&gt; 4, &quot;5&quot; =&gt; 5, &quot;6&quot; =&gt; 6, &quot;7&quot; =&gt; 7, &quot;8&quot; =&gt; 8, &quot;9&quot; =&gt; 9, &quot;10&quot; =&gt; 10…), OrderedCollections.OrderedDict{Any, Int64}(&quot;Achimill&quot; =&gt; 1, &quot;Agrostol&quot; =&gt; 2, &quot;Airaprae&quot; =&gt; 3, &quot;Alopgeni&quot; =&gt; 4, &quot;Anthodor&quot; =&gt; 5, &quot;Bellpere&quot; =&gt; 6, &quot;Bromhord&quot; =&gt; 7, &quot;Chenalbu&quot; =&gt; 8, &quot;Cirsarve&quot; =&gt; 9, &quot;Comapalu&quot; =&gt; 10…))</code></pre><h2 id="R-2"><a class="docs-heading-anchor" href="#R-2">R</a><a class="docs-heading-anchor-permalink" href="#R-2" title="Permalink"></a></h2><pre><code class="language-r hljs">dune &lt;- as.matrix(read.csv(file = &quot;../data/dune.csv&quot;))</code></pre><h3 id="Run-CA-in-Julia-on-Dune-data"><a class="docs-heading-anchor" href="#Run-CA-in-Julia-on-Dune-data">Run CA in Julia on Dune data</a><a id="Run-CA-in-Julia-on-Dune-data-1"></a><a class="docs-heading-anchor-permalink" href="#Run-CA-in-Julia-on-Dune-data" title="Permalink"></a></h3><pre><code class="language-julia hljs">dune_ca_julia = correspondence_analysis(dune_na)</code></pre><pre><code class="nohighlight hljs">(sv = [0.7321237072731497 0.0 … 0.0 0.0; 0.0 0.6325690627910964 … 0.0 0.0; … ; 0.0 0.0 … 0.05896537573383853 0.0; 0.0 0.0 … 0.0 7.091790502929597e-17], rownames = [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;, &quot;13&quot;, &quot;14&quot;, &quot;15&quot;, &quot;16&quot;, &quot;17&quot;, &quot;18&quot;, &quot;19&quot;, &quot;20&quot;], rowmass = [0.02627737226277372, 0.06131386861313868, 0.05839416058394161, 0.0656934306569343, 0.06277372262773723, 0.07007299270072993, 0.05839416058394161, 0.05839416058394161, 0.06131386861313869, 0.06277372262773723, 0.04671532846715329, 0.051094890510948905, 0.04817518248175183, 0.03503649635036496, 0.03357664233576642, 0.04817518248175183, 0.0218978102189781, 0.03941605839416058, 0.04525547445255475, 0.04525547445255475], rowcoord = [0.8116737226994164 1.0826713631197626 … 2.417299499470586 0.9999999999999976; 0.6326772260449806 0.6958357017624843 … -0.049159624022002205 0.9999999999999993; … ; 0.6902687683328907 -3.2642026272615623 … 0.014843350243563693 1.0; -1.9443804612344018 -1.0688808878703615 … -1.087127732821526 1.0000000000000004], colnames = [&quot;Achimill&quot;, &quot;Agrostol&quot;, &quot;Airaprae&quot;, &quot;Alopgeni&quot;, &quot;Anthodor&quot;, &quot;Bellpere&quot;, &quot;Bromhord&quot;, &quot;Chenalbu&quot;, &quot;Cirsarve&quot;, &quot;Comapalu&quot;  …  &quot;Ranuflam&quot;, &quot;Rumeacet&quot;, &quot;Sagiproc&quot;, &quot;Salirepe&quot;, &quot;Scorautu&quot;, &quot;Trifprat&quot;, &quot;Trifrepe&quot;, &quot;Vicilath&quot;, &quot;Bracruta&quot;, &quot;Callcusp&quot;], colmass = [0.02335766423357664, 0.07007299270072993, 0.0072992700729927005, 0.05255474452554745, 0.030656934306569343, 0.01897810218978102, 0.021897810218978103, 0.00145985401459854, 0.00291970802919708, 0.00583941605839416  …  0.020437956204379562, 0.026277372262773723, 0.029197080291970802, 0.016058394160583942, 0.07883211678832117, 0.01313868613138686, 0.06861313868613139, 0.00583941605839416, 0.07153284671532847, 0.014598540145985401], colcoord = [1.2410388912758308 -0.13374974813501736 … 1.0922556626083908 0.5378610945054166; -1.275443784762892 0.3264688587581394 … -1.3054088243241777 0.6482522649395861; … ; -0.2488978439865396 -0.4185696756019523 … -0.01770675187655213 -0.49012289845882706; -2.6661966956330643 -0.8970175654454415 … -0.22298366681774884 -0.2585309105382417], N = [1 0 … 0 0; 3 0 … 0 0; … ; 0 0 … 3 0; 0 5 … 4 3])</code></pre><h3 id="Run-CA-in-R-using-Dune-data"><a class="docs-heading-anchor" href="#Run-CA-in-R-using-Dune-data">Run CA in R using Dune data</a><a id="Run-CA-in-R-using-Dune-data-1"></a><a class="docs-heading-anchor-permalink" href="#Run-CA-in-R-using-Dune-data" title="Permalink"></a></h3><pre><code class="language-r hljs">dune_ca_r &lt;- ca::ca(dune)</code></pre><pre><code class="language-r hljs">dune_ca_coords_r &lt;- ca::cacoord(dune_ca_r)
+dune_ca_r_rowcoord &lt;- dune_ca_coords_r$rows
+dune_ca_r_colcoord &lt;- dune_ca_coords_r$columns</code></pre><h3 id="Check-equality-of-R-and-Julia-CA-results"><a class="docs-heading-anchor" href="#Check-equality-of-R-and-Julia-CA-results">Check equality of R and Julia CA results</a><a id="Check-equality-of-R-and-Julia-CA-results-1"></a><a class="docs-heading-anchor-permalink" href="#Check-equality-of-R-and-Julia-CA-results" title="Permalink"></a></h3><p>Check whether the standard row (plot) and column (species) coordinates produced by the Julia function <code>correspondence_analaysis()</code> the R function <code>ca::ca()</code> are identical.</p><p>First retrieve the Julia results in R.</p><pre><code class="language-r hljs">dune_ca_julia &lt;- JuliaCall::julia_eval(&quot;dune_ca_julia&quot;)
+dune_ca_julia_rowcoord &lt;- dune_ca_julia$rowcoord
+dune_ca_julia_colcoord &lt;- dune_ca_julia$colcoord</code></pre><p>Then check for equivalence. Note that there are two differences in R and Julia data structure:</p><ol><li>Row and column names are stripped from the Julia results when  calling <code>JuliaCall::julia_eval(&quot;dune_ca_julia&quot;)</code>, so the R results  are also unnamed.</li><li>The Julia results contain an additional dimension, populated with  1.0 values.</li></ol><p>These differences are corrected below whilst checking for equivalence.</p><p>The R function <code>all.equal</code> is used rather than <code>identical</code> as the Julia implementation returns results with higher precision.</p><pre><code class="language-r hljs">plots_allequal &lt;- all.equal(dune_ca_julia_rowcoord[,-20], unname(dune_ca_r_rowcoord))
+species_allequal &lt;- all.equal(dune_ca_julia_colcoord[,-20], unname(dune_ca_r_colcoord))
+isTRUE(all(plots_allequal, species_allequal))</code></pre><pre><code class="nohighlight hljs">[1] TRUE</code></pre><p>Let’s view the first two dimensions of the Julia and R results side-by-side.</p><h3 id="Visualise-standard-coordinates"><a class="docs-heading-anchor" href="#Visualise-standard-coordinates">Visualise standard coordinates</a><a id="Visualise-standard-coordinates-1"></a><a class="docs-heading-anchor-permalink" href="#Visualise-standard-coordinates" title="Permalink"></a></h3><p><img src="../CorrespondenceAnalysis.markdown_strict_files/figure-markdown_strict/plot_dune_julia_vs_r-1.png" alt/></p><h2 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h2><p>Greenacre, Michael. 2017. <em>Correspondence Analysis in Practice, Third Edition</em>. CRC Press.</p><p>Nenadic, Oleg, and Michael Greenacre. 2007. “Correspondence Analysis in R, with Two- and &lt;span class=&quot;nocase&quot;&gt;Three-dimensional Graphics&lt;/span&gt;: The Ca Package.” <em>Journal of Statistical Software</em> 20 (February): 1–13. <a href="https://doi.org/10.18637/jss.v020.i03">https://doi.org/10.18637/jss.v020.i03</a>.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../../reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.2.1 on <span class="colophon-date" title="Monday 12 February 2024 11:30">Monday 12 February 2024</span>. Using Julia version 1.10.0.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

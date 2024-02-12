@@ -21,6 +21,29 @@ using SparseArrays
 
 ## Generate test arrays {#sec-generate_test_arrays}
 
+```{julia generate_test_array_parameters}
+rown = 10
+coln = 30
+meancoloccs = 10
+rowprefix = "Releve"
+colprefix = "Species"
+rowdim = "Releve"
+coldim = "Species"
+```
+
+```{julia generate_test_array_process}
+zerop = meancoloccs / coln
+rownames = vec([string("$rowprefix")].*string.([1:1:rown;]))
+colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
+# x = NamedArrays.NamedArray(rand(min:increment:max, rown, coln), names = (rownames, colnames), dimnames = (rowdim, coldim))
+x = NamedArrays.NamedArray(Array(sprand(Float64, rown, coln, zerop)), names = (rownames, colnames), dimnames = (rowdim, coldim))
+# x = NamedArrays.NamedArray(Array(sprand(rown, coln, zerop, randn)), names = (rownames, colnames), dimnames = (rowdim, coldim))
+y = x ./ sum(x, dims = 2)
+
+sum(x, dims = 2)
+mean(count(i->i>0, x, dims = 2))
+```
+
 ```{julia generate_test_array_function}
 function generate_test_array(;rown::Int64, coln::Int64, 
                              #min::Float64 = 0.0, max::Float64 = 1.0, increment::Float64 = 0.1, 
