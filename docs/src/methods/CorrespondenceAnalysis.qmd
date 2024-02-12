@@ -58,18 +58,12 @@ N = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "Sit
 ```
 
 
-<!-- ## Perform $\chi^{2}$ test
-
-Perform a chi-squared ($\chi^{2}$) test to check whether there is asignificant dependence between the rows and columns. -->
-
 ## A.1 Create the correspondence matrix
 
-```markdown
 Calculate the correspondence matrix $P$ following @eq-p.
 
-$$
+```math
 P = \frac{1}{n}N
-$$ {#eq-p}
 ```
 
 ```{julia proportion_matrix}
@@ -81,19 +75,16 @@ end
 
 ## A.2 Calculate column and row masses
 
-```markdown
 Calculate the row and and column masses using @eq-row_masses and @eq-column_masses respectively.
 
-$$
+```math
 r = P1 \space \space
 r_{i} = \sum^{J}_{j = 1} P_{ij}
-$$ {#eq-row_masses}
 ```
-```markdown
-$$
+
+```math
 c = P^{t}1 \space \space
 c_{j} = \sum^{I}_{i = 1} P_{ij}
-$$ {#eq-column_masses}
 ```
 
 ```{julia row_masses}
@@ -116,10 +107,8 @@ Dc = Diagonal(c)
 
 ## A.4 Calculate the matrix of standardized residuals
 
-```markdown
-$$
+```math
 SR = D_{r}^{-\frac{1}{2}}(P - rc^{T})D_{c}^{-\frac{1}{2}}
-$$ {#eq-standardized_residuals}
 ```
 
 ```{julia standardized_residuals}
@@ -140,10 +129,8 @@ end
 
 ## A.6 Standard coordinates $\Phi$ of rows
 
-```markdown
-$$
+```math
 \Phi = D_{r}^{-\frac{1}{2}} U
-$$ {#eq-standard_coordinates_rows}
 ```
 
 ```{julia standard_coordinates_rows}
@@ -157,10 +144,8 @@ $$ {#eq-standard_coordinates_rows}
 
 ## A.7 Standard coordinates $\Gamma$ of columns
 
-```markdown
-$$
+```math
 \Gamma = D_{c}^{-\frac{1}{2}} V
-$$ {#eq-standard_coordinates_columns}
 ```
 
 ```{julia standard_coordinates_columns}
@@ -169,10 +154,8 @@ $$ {#eq-standard_coordinates_columns}
 
 ## A.8 Principal coordinates F of rows
 
-```markdown
-$$
+```math
 F = D_{r}^{-\frac{1}{2}} U D_{\alpha} = \Phi D_{\alpha}
-$$ {#eq-principal_coordinates_rows}
 ```
 
 ```{julia principal_coordinates_rows}
@@ -181,10 +164,8 @@ F = Φ * Diagonal(S)
 
 ## A.9 Principal coordinates G of columns
 
-```markdown
-$$
+```math
 G = D_{c}^{-\frac{1}{2}} V D_{\alpha} = \Gamma D_{\alpha}
-$$ {#eq-principal_coordinates_rows}
 ```
 
 ```{julia principal_coordinates_columns}
@@ -193,10 +174,8 @@ G = Γ * Diagonal(S)
 
 ## A.10 Principal inertias $\lambda_{k}$
 
-```markdown
-$$
+```math
 \lambda_{k} = \alpha_{k}^{2}, k = 1,2,...,\space where \space k = min\{I-1,J-1\}
-$$ {#eq-principal_inertias}
 ```
 
 ```{julia principal_inertias_columns}
