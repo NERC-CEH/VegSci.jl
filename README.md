@@ -1,7 +1,7 @@
 
 
-\[![version](https://img.shields.io/badge/version-0.1-blue)\]
-[![CI](https://github.com/JuliaCI/PkgTemplates.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/ZekeMarshall/EcoVeg.jl/actions/workflows/CI.yml?query=branch%3Amain)
+![version](https://img.shields.io/badge/version-0.1-blue)
+[![CI](https://github.com/JuliaCI/PkgTemplates.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/ZekeMarshall/EcoVeg.jl/actions/workflows/ci.yml?query=branch%3Amain)
 [![Codecov](https://codecov.io/gh/ZekeMarshall/EcoVeg.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/ZekeMarshall/EcoVeg.jl)
 [![Aqua
 QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/ZekeMarshall/EcoVeg.jl)
@@ -13,13 +13,15 @@ Tools for vegetation science.
 
 ## Background
 
-in vegetation science using the Julia programming language (Bezanson et
-al. 2017)
+`EcoVeg.jl` contains tools for vegetation science using the Julia
+programming language (Bezanson et al. 2017).
 
 Solves two language problem (Roesch et al. 2023)
 
 Aims to collate functionality found in JUICE, vegan, MAVIS into a single
-location with a user-friendly API and transparent methodologies.
+location with a user-friendly API and transparent methodologies. With
+the aim of assisting in the creation of reproducible analysis (Sperandii
+et al. 2024).
 
 Nomenclature follows Theurillat et al. (2021).
 
@@ -133,6 +135,12 @@ Roesch, Elisabeth, Joe G. Greener, Adam L. MacLean, Huda Nassar,
 Christopher Rackauckas, Timothy E. Holy, and Michael P. H. Stumpf. 2023.
 “Julia for Biologists.” *Nature Methods* 20 (5): 655–64.
 <https://doi.org/10.1038/s41592-023-01832-z>.
+
+Sperandii, Marta Gaia, Manuele Bazzichetto, Glenda Mendieta-Leiva,
+Sebastian Schmidtlein, Michael Bott, Renato A. Ferreira de Lima, Valério
+D. Pillar, Jodi N. Price, Viktoria Wagner, and Milan Chytrý. 2024.
+“Towards More Reproducibility in Vegetation Research.” *Journal of
+Vegetation Science* 35 (1): e13224. <https://doi.org/10.1111/jvs.13224>.
 
 Theurillat, Jean-Paul, Wolfgang Willner, Federico Fernández-González,
 Helga Bültmann, Andraž Čarni, Daniela Gigante, Ladislav Mucina, and
