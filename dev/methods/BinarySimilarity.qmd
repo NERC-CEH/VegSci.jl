@@ -3,7 +3,7 @@ title: "Binary (Dis)similarity"
 execute: 
   enabled: true
 julia: julia-1.10
-bibliography: ../references.bib
+bibliography: ../../../references.bib
 ---
 
 ## Outline
@@ -18,6 +18,7 @@ This page outlines how to calculate binary (dis)similarity coefficients using pr
 ## Julia
 
 ```{julia import_packages_julia}
+using EcoVeg
 using NamedArrays
 using LinearAlgebra
 using CSV
@@ -42,13 +43,9 @@ Create example data in the form of a site by species named matrix, making row (R
 ```{julia create_example_data}
 #| code-fold: true
 begin
-	rows = 5
-	cols = 11
-	rownames = vec(["Releve"].*string.([1:1:rows;]))
-	colnames = vec(["Spp"].*string.([1:1:cols;]))
-	mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))
-	mat[:,"Spp7"] .= 0.0
-	mat["Releve2",:] .= 0.0
+    mat = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+	mat[:,"Species7"] .= 0.0
+	mat["SiteA-2",:] .= 0.0
 	mat
 end
 ```
@@ -57,8 +54,8 @@ Prepare the data by removing all empty rows and columns.
 
 ```{julia remove_zero_rowcols}
 begin
-	mat = mat[:, vec(mapslices(col -> any(col .!= 0), mat, dims = 1))]
-	mat = mat[vec(mapslices(col -> any(col .!= 0), mat, dims = 2)), :]
+	mat = mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
+    mat = mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
 end
 ```
 
@@ -109,9 +106,9 @@ c = Array(transpose(reshape(repeat(s, n), :, n))) - a
 
 Use a, b, and c to calculate the Jaccard similarity [@jaccard1912] between each of the sample plots, as defined in @eq-jaccard_sim.
 
-$$
+```math
 j = \frac{a}{a + b + c} = \frac{X \cap Y}{X \cup Y}
-$$ {#eq-jaccard_sim}
+```
 
 ```{julia calculate_jaccard}
 j = a ./ (a .+ b .+ c)
@@ -153,11 +150,28 @@ Execute function.
 jaccard_similarity(mat)
 ```
 
+## Store equations in object
+
+```{julia dissim_measures_const}
+similarity_indices = 
+	Dict(
+		"jaccard" => "(a ./ (a .+ b .+ c)) + I"
+	)
+```
+
+
+```{julia foo}
+id2 = Base.ImmutableDict("key2"=>2)
+id2.key2
+```
+
 ## Create a customisable (dis)similarity function
 
 There are a number of binary (dis)similarity metrics which utlise presence-absence data, with the R package `{vegan}` supporting the 24 indices of beta diversity descibed in @koleff2003 in the function `vegan::betadiver()` and 16 (dis)similarity metrics in the function `vegan::vegdist()`. The ability to use a custom dissimilarity metric with the function `vegan::designdist()` is also provided [@oksanen2022].
 
-The metaprogramming capabilities of Julia facilitate the implementation of a user-supplied (dis)similarity metric with ease. Only three additional steps are required. First, compose a string representing an equation. Second, create an expression by parsing this string. Last, evaluate this expression.
+The metaprogramming capabilities of Julia facilitate the implementation of a user-supplied (dis)similarity metric with ease. 
+Only three additional steps are required. 
+First, compose a string representing an equation. Second, create an expression by parsing this string. Last, evaluate this expression.
 
 
 ```{julia parse_string_jaccard}
@@ -171,7 +185,7 @@ end
 Next create a new function with an additional parameter, eq.
 
 ```{julia custom_dissimilarity_function}
-function similarity(;x::Union{Matrix, NamedMatrix}, eq::String)
+function binary_dissimilarity(x::Union{Matrix, NamedMatrix}, eq::String)
 	samp = Int.(x .!= 0)
 	d = samp * transpose(samp)
 	s = Array(diag(d))
@@ -180,18 +194,23 @@ function similarity(;x::Union{Matrix, NamedMatrix}, eq::String)
 	b = reshape(repeat(s, n), :, n) - a
 	c = Array(transpose(reshape(repeat(s, n), :, n))) - a
 	sim = eval(Meta.parse(eq))
+
+	f(a,b,c) = eval(Meta.parse(eq))
+	sim = f(a,b,c)
 	return sim
 end	
 ```
 
 Test this function with a different (dis)similarity metric, for example the Whittaker's beta diversity metric ($\beta_{w}$) as formulated in [@koleff2003] and defined in @eq-whittaker_beta where $S$ is equal to the total number of species recorded in both plots and $\bar{\alpha}$ is equal to the average number of species recorded in the sample plots.
 
-$$
+```math
 \beta_{w} = \frac{a + b + c}{(2a + b + c)/2} -1 = \frac{S}{\bar{\alpha}} -1
-$$ {#eq-whittaker_beta}
+```
 
 ```{julia execute_custom_dissimilarity_function}
-similarity(x = mat, eq = "((a .+ b .+ c) ./ ((2 * a .+ b .+ c) ./ 2)) .- 1")
+binary_dissimilarity(mat, "((a .+ b .+ c) ./ ((2 * a .+ b .+ c) ./ 2)) .- 1")
+
+@eval(@formula($(Meta.parse(text))))
 ```
 
 ## R vs Julia Dune Data
@@ -236,22 +255,8 @@ microbenchmark::microbenchmark(vegan::designdist(x = dune, "(a)/(a+b+c)", abcd =
 ## Macro
 
 ```{julia macro}
-macro binarysimilarity(x::NamedArray, eq::AbstractString)
-
-	samp = Int.(x .!= 0)
-	d = samp * transpose(samp)
-	s = Array(diag(d))
-	n = length(s)
-	a = d - Diagonal(d)
-	b = reshape(repeat(s, n), :, n) - a
-	c = Array(transpose(reshape(repeat(s, n), :, n))) - a
-
-	expr = Meta.parse(eq)
-
-	quote
-		$expr
-	end
-
+macro eval_str(x)
+          :(eval(Meta.parse($x)))
 end
 ```
 

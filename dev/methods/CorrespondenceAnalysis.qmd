@@ -215,20 +215,22 @@ function correspondence_analysis(N::NamedMatrix)
   # A.6 Standard coordinates Φ of rows
   Φ_rownames = names(N)[1]
   Φ_colnames = vec(["Dim"].*string.([1:1:size(N,1);]))
-  Φ = NamedArray(Dr^(-1/2) * U, names = (Φ_rownames, Φ_colnames), dimnames = ("Plot", "Dimension"))
+  Φ = NamedArray(Dr^(-1/2) * U, names = (Φ_rownames, Φ_colnames), dimnames = ("Plot", "Dimension"))[1:end,1:end .!= end]
   
   # A.7 Standard coordinates Γ of columns
   Γ_rownames = names(N)[2]
   Γ_colnames = vec(["Dim"].*string.([1:1:size(N,1);]))
-  Γ = NamedArray(Dc^(-1/2) * V, names = (Γ_rownames, Γ_colnames), dimnames = ("Species", "Dimension"))
+  Γ = NamedArray(Dc^(-1/2) * V, names = (Γ_rownames, Γ_colnames), dimnames = ("Species", "Dimension"))[1:end,1:end .!= end]
   
   # A.8 Principal coordinates F of rows
   # F = Φ * D
   F = Dr^(-1/2) * U * D
+  F = F[1:end,1:end .!= end]
   
   # A.9 Principal coordinates G of columns
   # G = Γ * D
   G = Dc^(-1/2) * V * D
+  G = G[1:end,1:end .!= end]
 
   # [1:end, 1:end .∉ [[20]]]
 
@@ -331,19 +333,13 @@ dune_ca_julia_rowcoord <- dune_ca_julia$rowcoord
 dune_ca_julia_colcoord <- dune_ca_julia$colcoord
 ```
 
-Then check for equivalence.
-Note that there are two differences in R and Julia data structure:
-
-1.  Row and column names are stripped from the Julia results when calling `JuliaCall::julia_eval("dune_ca_julia")`, so the R results are also unnamed.
-2.  The Julia results contain an additional dimension, populated with 1.0 values.
-
-These differences are corrected below whilst checking for equivalence.
+Then check for equivalence. Note that the row and column names are stripped from the Julia results when calling `JuliaCall::julia_eval("dune_ca_julia")`, so the R results are also unnamed.
 
 The R function `all.equal` is used rather than `identical` as the Julia implementation returns results with higher precision.
 
 ```{r all.equal}
-plots_allequal <- all.equal(dune_ca_julia_rowcoord[,-20], unname(dune_ca_r_rowcoord))
-species_allequal <- all.equal(dune_ca_julia_colcoord[,-20], unname(dune_ca_r_colcoord))
+plots_allequal <- all.equal(dune_ca_julia_rowcoord, unname(dune_ca_r_rowcoord))
+species_allequal <- all.equal(dune_ca_julia_colcoord, unname(dune_ca_r_colcoord))
 isTRUE(all(plots_allequal, species_allequal))
 ```
 
