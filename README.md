@@ -6,6 +6,7 @@
 [![Aqua
 QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/ZekeMarshall/EcoVeg.jl)
 [![License](https://img.shields.io/github/license/ZekeMarshall/EcoVeg.jl)](LICENSE)
+[![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999.png)]()
 
 # EcoVeg
 
@@ -50,7 +51,7 @@ First we begin with generating two example plot by species
 `EcoVeg.generate_test_array` as test data.
 
 ``` julia
-x = generate_test_array(rown = 20, coln = 30, zerop = 0.6, rowprefix = "SiteA-", colprefix = "Species")
+x = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 ### Classification
@@ -83,7 +84,7 @@ Let’s generate a second example matrix, consisting of sample 5 releves,
 against which we want to calculate the similarity.
 
 ``` julia
-y = generate_test_array(rown = 5, coln = 30, zerop = 0.6, rowprefix = "SiteB-", colprefix = "Species")
+y = generate_test_array(rown = 5, coln = 30, meancoloccs = 10, rowprefix = "SiteB-", colprefix = "Species")
 ```
 
 Three methods will be demonstrated.

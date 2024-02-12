@@ -37,8 +37,8 @@ begin
 	rownames = vec(["Releve"].*string.([1:1:rows;]))
     colnames = vec(["Spp"].*string.([1:1:cols;]))
 	mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))
-	# mat[:,"Spp7"] .= 0.0
-	# mat["Releve2",:] .= 0.0
+	mat[:,"Spp7"] .= 0.0
+	mat["Releve2",:] .= 0.0
 	mat
 end
 ```
@@ -76,6 +76,19 @@ nzfunc(f, A; dims=:) = _nzfunc(f, A, dims)
 @btime map(x -> minimum(skip(iszero, x)), eachcol(mat))
 @btime mapslices(x -> minimum(skip(iszero, x)), mat, dims=1)
 
+```
+
+## Remove columns with all zeros
+
+```{julia remove_zeros}
+@btime mat[:, vec(mapslices(col -> any(col .!= 0), mat, dims = 1))]
+@btime mat[vec(mapslices(col -> any(col .!= 0), mat, dims = 2)), :]
+
+@btime mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
+@btime mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
+
+mat = mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
+mat = mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
 ```
 
 ## Composing a syntopic table

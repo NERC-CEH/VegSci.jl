@@ -24,6 +24,9 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Methods" => [
+            "Correspondence Analysis" => "methods/CorrespondenceAnalysis.md"
+        ],
         "Reference" => "reference.md"
     ],
 )

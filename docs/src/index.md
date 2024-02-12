@@ -4,41 +4,26 @@
 CurrentModule = EcoVeg
 ```
 
-
 Documentation for
 [EcoVeg.jl](https://github.com/ZekeMarhshall/EcoVeg.jl).
 
 # EcoVeg
 
-      Activating new project at `~/Github/EcoVeg.jl/docs/src/docs`
+Tools for vegetation science.
 
-`EcoVeg.jl` is a package containing functions for the analysis of
-vegetation plot sample data….
+## Background
 
-in vegetation science using the Julia programming language
-\[@bezanson2017\]
+`EcoVeg.jl` contains tools for vegetation science using the Julia
+programming language \[@bezanson2017\].
 
 Solves two language problem \[@roesch2023\]
 
 Aims to collate functionality found in JUICE, vegan, MAVIS into a single
-location with a user-friendly API and transparent methodologies.
+location with a user-friendly API and transparent methodologies. With
+the aim of assisting in the creation of reproducible analysis
+\[@sperandii2024\].
 
-## Example Pluto Notebook
-
-### Local Tour
-
-To run the tour locally, just clone this repo and start `Pluto.jl` as
-follows:
-
-``` julia
-] add Pluto
-using Pluto
-Pluto.run()
-```
-
-All notebooks are contained in `docs/pluto`.
-
-## Background
+Nomenclature follows @theurillat2021.
 
 ## Installation
 
@@ -65,32 +50,32 @@ First we begin with generating two example plot by species
 `EcoVeg.generate_test_array` as test data.
 
 ``` julia
-x = generate_test_array(rown = 20, coln = 30, zerop = 0.6, rowprefix = "SiteA-", colprefix = "Species")
+x = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
     20×30 Named Matrix{Float64}
-    Releve ╲ Species │    Species1     Species2  …    Species29    Species30
-    ─────────────────┼──────────────────────────────────────────────────────
-    SiteA-1          │    0.574341     0.835083  …          0.0     0.647713
-    SiteA-2          │    0.308076     0.952746        0.491991          0.0
-    SiteA-3          │   0.0170512          0.0             0.0     0.995746
-    SiteA-4          │         0.0     0.182911         0.98594     0.902697
-    SiteA-5          │  0.00449277     0.978113        0.950479      0.19102
-    SiteA-6          │         0.0          0.0        0.103873     0.780704
-    SiteA-7          │         0.0     0.807792        0.245446          0.0
-    SiteA-8          │   0.0865799     0.785077             0.0          0.0
-    SiteA-9          │    0.592954     0.443407             0.0          0.0
-    SiteA-10         │    0.940073     0.766005       0.0214637     0.677974
-    SiteA-11         │    0.625696          0.0        0.376025     0.655731
-    SiteA-12         │    0.279377     0.369117        0.768802     0.851647
-    SiteA-13         │    0.352045     0.218777             0.0          0.0
-    SiteA-14         │         0.0     0.497137        0.476686     0.594838
-    SiteA-15         │         0.0          0.0             0.0     0.114054
-    SiteA-16         │    0.774778     0.538604        0.910406          0.0
-    SiteA-17         │         0.0     0.811507             0.0     0.701075
-    SiteA-18         │    0.639591          0.0             0.0          0.0
-    SiteA-19         │     0.55452     0.860287             0.0          0.0
-    SiteA-20         │     0.14533     0.595273  …     0.523479     0.907187
+    Releve ╲ Species │   Species1    Species2  …   Species29   Species30
+    ─────────────────┼──────────────────────────────────────────────────
+    SiteA-1          │        0.0         0.0  …         0.0         0.0
+    SiteA-2          │        0.0         0.0            0.0   0.0742907
+    SiteA-3          │  0.0704807   0.0369201            0.0         0.0
+    SiteA-4          │        0.0         0.0            0.0         0.0
+    SiteA-5          │        0.0         0.0       0.065016    0.114198
+    SiteA-6          │        0.0         0.0     0.00555444         0.0
+    SiteA-7          │        0.0   0.0550128            0.0   0.0563497
+    SiteA-8          │        0.0         0.0            0.0   0.0475957
+    SiteA-9          │        0.0   0.0139922            0.0         0.0
+    SiteA-10         │   0.048195    0.058435      0.0296611         0.0
+    SiteA-11         │        0.0         0.0            0.0         0.0
+    SiteA-12         │        0.0         0.0            0.0   0.0508891
+    SiteA-13         │        0.0   0.0798633            0.0    0.131321
+    SiteA-14         │        0.0         0.0            0.0    0.183577
+    SiteA-15         │        0.0         0.0       0.140305   0.0119757
+    SiteA-16         │  0.0752609    0.067526      0.0843943         0.0
+    SiteA-17         │  0.0864513         0.0            0.0         0.0
+    SiteA-18         │ 0.00308486         0.0            0.0    0.147017
+    SiteA-19         │        0.0    0.133836            0.0         0.0
+    SiteA-20         │        0.0         0.0  …         0.0         0.0
 
 ### Classification
 
@@ -132,36 +117,36 @@ print_summary_syntopic_table(syn_2)
     ╭───────────┬───────────────────┬─────────────────╮
     │   Species │ RelativeFrequency │       Abundance │
     ├───────────┼───────────────────┼─────────────────┤
-    │ Species19 │          0.523543 │ 0.8 (0.2 - 0.9) │
-    │  Species2 │          0.486789 │ 0.6 (0.2 - 1.0) │
-    │  Species4 │          0.462055 │ 0.9 (0.4 - 1.0) │
-    │ Species15 │           0.44981 │ 0.7 (0.0 - 1.0) │
-    │ Species27 │          0.434385 │ 0.6 (0.2 - 1.0) │
-    │ Species30 │          0.417057 │ 0.7 (0.2 - 1.0) │
-    │  Species6 │          0.405933 │ 0.5 (0.0 - 0.8) │
-    │ Species24 │          0.392898 │ 0.5 (0.1 - 0.9) │
-    │ Species10 │          0.381608 │ 0.4 (0.1 - 0.9) │
-    │ Species21 │          0.378836 │ 0.7 (0.2 - 1.0) │
-    │ Species14 │          0.369817 │ 0.5 (0.1 - 1.0) │
-    │ Species28 │          0.353245 │ 0.5 (0.2 - 1.0) │
-    │ Species22 │          0.336727 │ 0.5 (0.2 - 1.0) │
-    │ Species20 │          0.322975 │ 0.7 (0.2 - 0.9) │
-    │  Species5 │          0.314488 │ 0.7 (0.2 - 1.0) │
-    │ Species18 │          0.307546 │ 0.5 (0.0 - 0.9) │
-    │  Species8 │          0.303783 │ 0.4 (0.0 - 0.8) │
-    │ Species29 │          0.296492 │ 0.5 (0.1 - 1.0) │
-    │  Species3 │          0.293004 │ 0.8 (0.5 - 0.8) │
-    │ Species25 │          0.284239 │ 0.6 (0.1 - 1.0) │
-    │ Species26 │          0.281381 │ 0.5 (0.1 - 0.7) │
-    │  Species7 │           0.26627 │ 0.3 (0.0 - 0.8) │
-    │ Species16 │          0.261026 │ 0.5 (0.1 - 0.8) │
-    │ Species12 │           0.25653 │ 0.4 (0.1 - 1.0) │
-    │ Species23 │          0.224693 │ 0.7 (0.1 - 0.8) │
-    │ Species17 │          0.221477 │ 0.4 (0.1 - 0.9) │
-    │  Species1 │          0.197323 │ 0.1 (0.0 - 0.8) │
-    │  Species9 │          0.178729 │ 0.2 (0.1 - 0.8) │
-    │ Species11 │          0.136716 │ 0.7 (0.4 - 1.0) │
-    │ Species13 │          0.126797 │ 0.2 (0.0 - 0.7) │
+    │  Species8 │          0.116874 │ 0.1 (0.1 - 0.3) │
+    │ Species15 │         0.0623607 │ 0.1 (0.0 - 0.2) │
+    │ Species19 │         0.0584902 │ 0.1 (0.1 - 0.2) │
+    │ Species11 │         0.0523788 │ 0.1 (0.1 - 0.2) │
+    │ Species28 │         0.0513153 │ 0.2 (0.0 - 0.2) │
+    │ Species26 │         0.0478617 │ 0.1 (0.1 - 0.2) │
+    │ Species30 │         0.0476692 │ 0.1 (0.0 - 0.2) │
+    │ Species14 │         0.0445658 │ 0.1 (0.0 - 0.2) │
+    │ Species18 │         0.0403507 │ 0.1 (0.1 - 0.3) │
+    │ Species21 │         0.0364615 │ 0.1 (0.1 - 0.2) │
+    │ Species12 │         0.0343615 │ 0.1 (0.0 - 0.2) │
+    │ Species17 │         0.0325703 │ 0.1 (0.0 - 0.1) │
+    │ Species16 │         0.0315202 │ 0.1 (0.0 - 0.1) │
+    │ Species23 │         0.0300857 │ 0.1 (0.0 - 0.1) │
+    │  Species4 │         0.0298907 │ 0.1 (0.1 - 0.2) │
+    │ Species13 │         0.0284227 │ 0.1 (0.0 - 0.1) │
+    │  Species5 │         0.0275004 │ 0.1 (0.0 - 0.1) │
+    │ Species22 │         0.0267309 │ 0.1 (0.0 - 0.1) │
+    │  Species1 │         0.0232193 │ 0.1 (0.1 - 0.1) │
+    │ Species27 │         0.0223382 │ 0.1 (0.1 - 0.1) │
+    │  Species2 │         0.0198302 │ 0.1 (0.0 - 0.1) │
+    │  Species7 │         0.0198162 │ 0.1 (0.1 - 0.1) │
+    │  Species6 │          0.017789 │ 0.1 (0.1 - 0.1) │
+    │ Species20 │         0.0175654 │ 0.1 (0.1 - 0.1) │
+    │ Species25 │         0.0160109 │ 0.1 (0.0 - 0.1) │
+    │  Species9 │         0.0156659 │ 0.1 (0.0 - 0.1) │
+    │ Species29 │         0.0154965 │ 0.1 (0.0 - 0.1) │
+    │ Species10 │         0.0115231 │ 0.1 (0.0 - 0.1) │
+    │  Species3 │         0.0113954 │ 0.1 (0.0 - 0.1) │
+    │ Species24 │        0.00993922 │ 0.0 (0.0 - 0.1) │
     ╰───────────┴───────────────────┴─────────────────╯
 
 ### Identification of High-Fidelity Species
@@ -174,17 +159,17 @@ Let’s generate a second example matrix, consisting of sample 5 releves,
 against which we want to calculate the similarity.
 
 ``` julia
-y = generate_test_array(rown = 5, coln = 30, zerop = 0.6, rowprefix = "SiteB-", colprefix = "Species")
+y = generate_test_array(rown = 5, coln = 30, meancoloccs = 10, rowprefix = "SiteB-", colprefix = "Species")
 ```
 
     5×30 Named Matrix{Float64}
-    Releve ╲ Species │  Species1   Species2  …  Species29  Species30
-    ─────────────────┼──────────────────────────────────────────────
-    SiteB-1          │  0.270629   0.888484  …  0.0570284  0.0940625
-    SiteB-2          │       0.0   0.127423      0.303841        0.0
-    SiteB-3          │       0.0   0.944684     0.0229587   0.756141
-    SiteB-4          │   0.32658        0.0      0.439616   0.486081
-    SiteB-5          │  0.978606        0.0  …   0.399057   0.139963
+    Releve ╲ Species │    Species1     Species2  …    Species29    Species30
+    ─────────────────┼──────────────────────────────────────────────────────
+    SiteB-1          │         0.0     0.267636  …          0.0          0.0
+    SiteB-2          │    0.149368    0.0515994             0.0     0.135862
+    SiteB-3          │         0.0    0.0404588             0.0     0.108958
+    SiteB-4          │         0.0          0.0        0.012553    0.0916869
+    SiteB-5          │         0.0          0.0  …          0.0          0.0
 
 Three methods will be demonstrated.
 
@@ -203,9 +188,9 @@ syn_2_mat = extract_syntopic_matrix(syn_2)
 ```
 
     1×30 Named Matrix{Float64}
-    A ╲ B │ Species19   Species2   Species4  …   Species9  Species11  Species13
-    ──────┼────────────────────────────────────────────────────────────────────
-    Syn2  │  0.523543   0.486789   0.462055  …   0.178729   0.136716   0.126797
+    A ╲ B │   Species8   Species15  …    Species3   Species24
+    ──────┼──────────────────────────────────────────────────
+    Syn2  │   0.116874   0.0623607  …   0.0113954  0.00993922
 
 Now we have three matrices, containg the relative frequencies of each
 species present in the sample releves which constitute the

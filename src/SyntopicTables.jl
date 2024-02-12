@@ -14,6 +14,8 @@ end
 
 function compose_syntopic_table_object(name::String, mat::NamedArray)
 
+    mat = mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
+    mat = mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
     releve_n = size(mat, 1)
     releve_ids = names(mat)[1]
     species_names = names(mat)[2]

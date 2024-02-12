@@ -7,12 +7,12 @@ using Aqua
 
 @testset "EcoVeg.jl" begin
 
-    x = generate_test_array(rown = 10, coln = 10, zerop = 0.6, rowprefix = "SiteA-", colprefix = "Species")
-    y = generate_test_array(rown = 5, coln = 10, zerop = 0.6, rowprefix = "SiteB-", colprefix = "Species")
+    x = generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
+    y = generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
 
     @testset "Utilities.jl" begin
         @testset "generate_test_array" begin
-            gta_results = EcoVeg.generate_test_array(rown = 10, coln = 10, zerop = 0.6, rowprefix = "Releve", colprefix = "Species")
+            gta_results = EcoVeg.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
             @test typeof(gta_results) <: NamedMatrix
             @test size(gta_results) == (10, 10)
             @test names(gta_results)[1] == vec([string("Releve")].*string.([1:1:10;]))

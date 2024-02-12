@@ -3,7 +3,7 @@ title: "Correspondence Analysis"
 execute: 
   enabled: true
 julia: julia-1.10
-bibliography: ../references.bib
+bibliography: ../../../references.bib
 ---
 
 ## Outline
@@ -19,6 +19,8 @@ The Julia package MultivariateStats.jl does not currently contain an implementat
 ## Julia
 
 ```{julia import_packages}
+using Pkg; Pkg.activate("docs")
+using EcoVeg
 using NamedArrays
 using LinearAlgebra
 using CSV
@@ -41,32 +43,13 @@ library(JuliaCall)
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix, making row (Releve2) and column (Spp7) contain all zero entries, for testing.
+Create example data in the form of a site by species named matrix, N.
 
 ```{julia create_example_data}
 #| code-fold: true
-begin
-  rows = 5
-  cols = 11
-  rownames = vec(["Releve"].*string.([1:1:rows;]))
-  colnames = vec(["Spp"].*string.([1:1:cols;]))
-  mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))
-  mat[:,"Spp7"] .= 0.0
-  mat["Releve2",:] .= 0.0
-  mat
-end
+N = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
-Prepare the data by removing all empty rows and columns, yielding $N$, the sample data matrix.
-
-```{julia remove_zero_rowcols}
-#| code-fold: true
-begin
-  mat = mat[:, vec(mapslices(col -> any(col .!= 0), mat, dims = 1))]
-  mat = mat[vec(mapslices(col -> any(col .!= 0), mat, dims = 2)), :]
-  N = mat
-end
-```
 
 <!-- ## Perform $\chi^{2}$ test
 

@@ -10,8 +10,7 @@ Create a `rown` by `coln` NamedArray object containing random values.
 # Arguments
 - `rown::Int64`: The number of rows in the array.
 - `coln::Int64`: The number of columns in the array.
-- `zerop::Float64`: The probability of a zero entry in the matrix (i.e. a species absence), a value between 0 and 1. 0.6 by default.
-- `increment::Float64`: The increment used in generating random values. 0.1 by default.
+- `meancoloccs::Int64`: The mean number of non-zero elements in the array.
 - `rowprefix::String`: The prefix to the row number. "Releve" by default.
 - `colprefix::String`: The prefix to the column number. "Species" by default.
 - `rowdim::String`: The row dimension name. "Releve" by default.
@@ -20,18 +19,17 @@ Create a `rown` by `coln` NamedArray object containing random values.
 
 # Examples
 ```julia
-julia>generate_test_array(rown = 10, coln = 10, min = 0.0, max = 1.0, increment = 0.1, rowprefix = "Releve", colprefix = "Species")
+julia>generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
 ```
 """
-function generate_test_array(;rown::Int64, coln::Int64, 
-                             #min::Float64 = 0.0, max::Float64 = 1.0, increment::Float64 = 0.1, 
-                             zerop::Float64 = 0.6,
+function generate_test_array(;rown::Int64, coln::Int64,
+                             meancoloccs::Int64,
                              rowprefix::String = "Releve", colprefix::String = "Species",
                              rowdim::String = "Releve", coldim::String = "Species")
 
+    zerop = meancoloccs / coln
     rownames = vec([string("$rowprefix")].*string.([1:1:rown;]))
     colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
-    # x = NamedArrays.NamedArray(rand(min:increment:max, rown, coln), names = (rownames, colnames), dimnames = (rowdim, coldim))
     x = NamedArrays.NamedArray(Array(sprand(Float64, rown, coln, zerop)), names = (rownames, colnames), dimnames = (rowdim, coldim))
     y = x ./ sum(x, dims = 2)
     return y
@@ -42,6 +40,11 @@ end
 Draws heavily from the function outlines here: https://discourse.julialang.org/t/nanmean-options/4994/17
 """
 function nzfunc(f::Function, x::NamedArray; dims::Int64 = 1)
+
+    # _nzfunc(fn, A, ::Colon) = fn(skip(iszero, A))
+    # _nzfunc(fn, A) = map(a->_nzfunc(fn,a,:), eachcol(A))
+    # y = nzfunc(f, x, dims = dims)
+    # setnames!(y, names(x)[2], 2)
 
     _nzfunc(fn, A, ::Colon) = fn(filter(!iszero, A))
     _nzfunc(fn, A, dims) = mapslices(a->_nzfunc(fn,a,:), A, dims=dims)
