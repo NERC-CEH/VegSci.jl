@@ -4,6 +4,7 @@ using NamedArrays
 
 @testset "Utilities.jl" begin
     x = generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
+    y = generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
     @testset "generate_test_array" begin
         gta_results = EcoVeg.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
         @test typeof(gta_results) <: NamedMatrix
