@@ -1,7 +1,14 @@
 ---
 title: "Correspondence Analysis"
+format: 
+  commonmark:
+    variant: -raw_html+tex_math_dollars
+    wrap: none
 execute: 
-  enabled: true
+  freeze: auto
+  eval: true
+  echo: true
+  output: true
 julia: julia-1.10
 bibliography: ../../../references.bib
 ---
@@ -57,11 +64,13 @@ Perform a chi-squared ($\chi^{2}$) test to check whether there is asignificant d
 
 ## A.1 Create the correspondence matrix
 
+```markdown
 Calculate the correspondence matrix $P$ following @eq-p.
 
 $$
 P = \frac{1}{n}N
 $$ {#eq-p}
+```
 
 ```{julia proportion_matrix}
 begin
@@ -72,17 +81,20 @@ end
 
 ## A.2 Calculate column and row masses
 
+```markdown
 Calculate the row and and column masses using @eq-row_masses and @eq-column_masses respectively.
 
 $$
 r = P1 \space \space
 r_{i} = \sum^{J}_{j = 1} P_{ij}
 $$ {#eq-row_masses}
-
+```
+```markdown
 $$
 c = P^{t}1 \space \space
 c_{j} = \sum^{I}_{i = 1} P_{ij}
 $$ {#eq-column_masses}
+```
 
 ```{julia row_masses}
 r = vec(sum(P, dims = 2))
@@ -104,9 +116,11 @@ Dc = Diagonal(c)
 
 ## A.4 Calculate the matrix of standardized residuals
 
+```markdown
 $$
 SR = D_{r}^{-\frac{1}{2}}(P - rc^{T})D_{c}^{-\frac{1}{2}}
 $$ {#eq-standardized_residuals}
+```
 
 ```{julia standardized_residuals}
 SR = Dr^(-1/2) * (P - r * transpose(c)) * Dc^(-1/2)
@@ -126,9 +140,11 @@ end
 
 ## A.6 Standard coordinates $\Phi$ of rows
 
+```markdown
 $$
 \Phi = D_{r}^{-\frac{1}{2}} U
 $$ {#eq-standard_coordinates_rows}
+```
 
 ```{julia standard_coordinates_rows}
 Φ = Dr^(-1/2) * U
@@ -141,9 +157,11 @@ $$ {#eq-standard_coordinates_rows}
 
 ## A.7 Standard coordinates $\Gamma$ of columns
 
+```markdown
 $$
 \Gamma = D_{c}^{-\frac{1}{2}} V
 $$ {#eq-standard_coordinates_columns}
+```
 
 ```{julia standard_coordinates_columns}
 Γ = Dc^(-1/2) * V
@@ -151,9 +169,11 @@ $$ {#eq-standard_coordinates_columns}
 
 ## A.8 Principal coordinates F of rows
 
+```markdown
 $$
 F = D_{r}^{-\frac{1}{2}} U D_{\alpha} = \Phi D_{\alpha}
 $$ {#eq-principal_coordinates_rows}
+```
 
 ```{julia principal_coordinates_rows}
 F = Φ * Diagonal(S)
@@ -161,9 +181,11 @@ F = Φ * Diagonal(S)
 
 ## A.9 Principal coordinates G of columns
 
+```markdown
 $$
 G = D_{c}^{-\frac{1}{2}} V D_{\alpha} = \Gamma D_{\alpha}
 $$ {#eq-principal_coordinates_rows}
+```
 
 ```{julia principal_coordinates_columns}
 G = Γ * Diagonal(S)
@@ -171,9 +193,11 @@ G = Γ * Diagonal(S)
 
 ## A.10 Principal inertias $\lambda_{k}$
 
+```markdown
 $$
 \lambda_{k} = \alpha_{k}^{2}, k = 1,2,...,\space where \space k = min\{I-1,J-1\}
 $$ {#eq-principal_inertias}
+```
 
 ```{julia principal_inertias_columns}
 F * Dr * transpose(F)
@@ -386,6 +410,16 @@ ggplot2::ggplot() +
   ggplot2::facet_wrap(vars(Language)) +
   ggplot2::theme_minimal() +
   NULL
+```
+
+### Benchmark Functions
+
+```{julia benchmark_julia}
+@benchmark correspondence_analysis(dune_na)
+```
+
+```{r benchmark_r}
+microbenchmark::microbenchmark(ca::ca(dune))
 ```
 
 
