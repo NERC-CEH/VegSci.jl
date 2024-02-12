@@ -7,9 +7,6 @@ using NamedArrays
     x = generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
     y = generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
 
-    # @testset "binary_dissimilarity" begin
-    #     bindis_results = EcoVeg.binary_dissimilarity(x, "((a .+ b .+ c) ./ ((2 * a .+ b .+ c) ./ 2)) .- 1")
-    # end
     @testset "czekanowski_index" begin
         czeksim_results = EcoVeg.czekanowski_index(x, y)
         @test typeof(czeksim_results) <: NamedMatrix
