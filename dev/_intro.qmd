@@ -10,11 +10,11 @@ Tools for vegetation science.
 
 ## Background
 
-in vegetation science using the Julia programming language [@bezanson2017]
+`EcoVeg.jl` contains tools for vegetation science using the Julia programming language [@bezanson2017].
 
 Solves two language problem [@roesch2023]
 
-Aims to collate functionality found in JUICE, vegan, MAVIS into a single location with a user-friendly API and transparent methodologies.
+Aims to collate functionality found in JUICE, vegan, MAVIS into a single location with a user-friendly API and transparent methodologies. With the aim of assisting in the creation of reproducible analysis [@sperandii2024].
 
 Nomenclature follows @theurillat2021.
 
