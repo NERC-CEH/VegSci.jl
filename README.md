@@ -1,7 +1,7 @@
 
 
-[![GitHub
-Actions](https://github.com/ZekeMarshall/EcoVeg.jl/workflows/Run%20tests/badge.svg)](https://github.com/ZekeMarshall/EcoVeg.jl/actions?query=workflow%3ARun+tests)
+\[![version](https://img.shields.io/badge/version-0.1-blue)\]
+[![CI](https://github.com/JuliaCI/PkgTemplates.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/ZekeMarshall/EcoVeg.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Codecov](https://codecov.io/gh/ZekeMarshall/EcoVeg.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/ZekeMarshall/EcoVeg.jl)
 [![Aqua
 QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/ZekeMarshall/EcoVeg.jl)
@@ -9,8 +9,9 @@ QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](ht
 
 # EcoVeg
 
-`EcoVeg.jl` is a package containing functions for the analysis of
-vegetation plot sample data….
+Tools for vegetation science.
+
+## Background
 
 in vegetation science using the Julia programming language (Bezanson et
 al. 2017)
@@ -20,22 +21,7 @@ Solves two language problem (Roesch et al. 2023)
 Aims to collate functionality found in JUICE, vegan, MAVIS into a single
 location with a user-friendly API and transparent methodologies.
 
-## Example Pluto Notebook
-
-### Local Tour
-
-To run the tour locally, just clone this repo and start `Pluto.jl` as
-follows:
-
-``` julia
-] add Pluto
-using Pluto
-Pluto.run()
-```
-
-All notebooks are contained in `docs/pluto`.
-
-## Background
+Nomenclature follows Theurillat et al. (2021).
 
 ## Installation
 
@@ -147,3 +133,9 @@ Roesch, Elisabeth, Joe G. Greener, Adam L. MacLean, Huda Nassar,
 Christopher Rackauckas, Timothy E. Holy, and Michael P. H. Stumpf. 2023.
 “Julia for Biologists.” *Nature Methods* 20 (5): 655–64.
 <https://doi.org/10.1038/s41592-023-01832-z>.
+
+Theurillat, Jean-Paul, Wolfgang Willner, Federico Fernández-González,
+Helga Bültmann, Andraž Čarni, Daniela Gigante, Ladislav Mucina, and
+Heinrich Weber. 2021. “International Code of Phytosociological
+Nomenclature. 4th Edition.” *Applied Vegetation Science* 24 (1): e12491.
+<https://doi.org/10.1111/avsc.12491>.

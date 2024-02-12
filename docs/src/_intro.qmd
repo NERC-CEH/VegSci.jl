@@ -1,12 +1,14 @@
 # EcoVeg
 
 ```{julia}
-#| echo: false
+#| include: false
 using Pkg; Pkg.activate("docs")
 using EcoVeg
 ```
 
-`EcoVeg.jl` is a package containing functions for the analysis of vegetation plot sample data....
+Tools for vegetation science.
+
+## Background
 
 in vegetation science using the Julia programming language [@bezanson2017]
 
@@ -14,21 +16,7 @@ Solves two language problem [@roesch2023]
 
 Aims to collate functionality found in JUICE, vegan, MAVIS into a single location with a user-friendly API and transparent methodologies.
 
-## Example Pluto Notebook 
-
-### Local Tour
-
-To run the tour locally, just clone this repo and start `Pluto.jl` as follows:
-
-```{.julia}
-] add Pluto
-using Pluto
-Pluto.run()
-```
-
-All notebooks are contained in `docs/pluto`.
-
-## Background
+Nomenclature follows @theurillat2021.
 
 
 ## Installation 
