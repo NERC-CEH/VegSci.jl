@@ -4,7 +4,7 @@
 Actions](https://github.com/ZekeMarshall/EcoVeg.jl/workflows/Run%20tests/badge.svg)](https://github.com/ZekeMarshall/EcoVeg.jl/actions?query=workflow%3ARun+tests)
 [![Codecov](https://codecov.io/gh/ZekeMarshall/EcoVeg.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/ZekeMarshall/EcoVeg.jl)
 [![Aqua
-QA](https://raw.githubusercontent.com/ZekeMarshall/EcoVeg.jl/main/badge.svg)](https://github.com/ZekeMarshall/EcoVeg.jl)
+QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/ZekeMarshall/EcoVeg.jl)
 [![License](https://img.shields.io/github/license/ZekeMarshall/EcoVeg.jl)](LICENSE)
 
 # EcoVeg

@@ -10,7 +10,7 @@ ex_meta = quote
     # Model:
 end
 
-DocMeta.setdocmeta!(ConformalPrediction, :DocTestSetup, ex_meta; recursive=true)
+DocMeta.setdocmeta!(EcoVeg, :DocTestSetup, ex_meta; recursive=true)
 
 makedocs(;
     modules=[EcoVeg],
