@@ -3,7 +3,7 @@ using NamedArrays
 using Suppressor
 using DataFrames
 using Test
-
+using Aqua
 
 @testset "EcoVeg.jl" begin
 
@@ -19,6 +19,7 @@ using Test
             @test names(gta_results)[2] == vec([string("Species")].*string.([1:1:10;])) 
             @test all(x->x>=0.0, gta_results)
             @test all(x->x<=1.0, gta_results)
+            @test all(sum(x, dims = 2) .≈ 1.0)
         end
         @testset "nzfunc" begin
             nzfunc_results = EcoVeg.nzfunc(minimum, x, dims = 1) 
@@ -63,3 +64,10 @@ using Test
         end
     end
 end
+
+# @testset "Aqua.jl" begin
+#     Aqua.test_all(
+#       EcoVeg;
+#       piracies=false,
+#     )
+#   end

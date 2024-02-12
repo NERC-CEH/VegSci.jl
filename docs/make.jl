@@ -1,7 +1,16 @@
 using EcoVeg
 using Documenter
 
-DocMeta.setdocmeta!(EcoVeg, :DocTestSetup, :(using EcoVeg); recursive=true)
+ex_meta = quote
+    # Import module(s):
+    using EcoVeg
+
+    # Data:
+
+    # Model:
+end
+
+DocMeta.setdocmeta!(ConformalPrediction, :DocTestSetup, ex_meta; recursive=true)
 
 makedocs(;
     modules=[EcoVeg],

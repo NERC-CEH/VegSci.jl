@@ -5,6 +5,7 @@ setup_docs = quote
     Pkg.activate("docs")
 
     # Dependencies:
+    using EcoVeg
     using DataFrames
     using Documenter
     using LinearAlgebra

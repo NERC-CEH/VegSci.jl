@@ -33,7 +33,8 @@ function generate_test_array(;rown::Int64, coln::Int64,
     colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
     # x = NamedArrays.NamedArray(rand(min:increment:max, rown, coln), names = (rownames, colnames), dimnames = (rowdim, coldim))
     x = NamedArrays.NamedArray(Array(sprand(Float64, rown, coln, zerop)), names = (rownames, colnames), dimnames = (rowdim, coldim))
-    return x
+    y = x ./ sum(x, dims = 2)
+    return y
 
 end
 
