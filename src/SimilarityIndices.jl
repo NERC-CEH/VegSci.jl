@@ -2,6 +2,20 @@ using NamedArrays
 using LinearAlgebra
 
 """
+"""
+function jaccard_similarity(x::Union{Matrix, NamedMatrix})
+    samp = Int.(x .!= 0)
+	d = samp * transpose(samp)
+	s = Array(diag(d))
+	n = length(s)
+	a = d - Diagonal(d)
+	b = reshape(repeat(s, n), :, n) - a
+	c = Array(transpose(reshape(repeat(s, n), :, n))) - a
+	j = (a ./ (a .+ b .+ c)) + I
+	return j    
+end
+
+"""
 binary_similarity(x::NamedArray, eq::AbstractString)
 
 Create a personalised greeting for EcoVeg using a `name`.
@@ -18,8 +32,7 @@ x = generatetestarray(rown = 10, coln = 10)
 julia>binarysimilarity(x, "(a ./ (a .+ b .+ c)) + I")
 ```
 """
-function binary_similarity(x::NamedArray, eq::AbstractString = "(a ./ (a .+ b .+ c)) + I")
-
+function binary_dissimilarity(x::Union{Matrix, NamedMatrix}, eq::String)
 	samp = Int.(x .!= 0)
 	d = samp * transpose(samp)
 	s = Array(diag(d))
@@ -27,16 +40,13 @@ function binary_similarity(x::NamedArray, eq::AbstractString = "(a ./ (a .+ b .+
 	a = d - Diagonal(d)
 	b = reshape(repeat(s, n), :, n) - a
 	c = Array(transpose(reshape(repeat(s, n), :, n))) - a
+	sim = eval(Meta.parse(eq))
 
-	# sim = eval(Meta.parse(eq))
-
-    expr = Meta.parse(eq)
-
-    sim = eval(:((a,b,c)->$expr))
-
+	f(a,b,c) = eval(Meta.parse(eq))
+	sim = f(a,b,c)
 	return sim
-
 end
+
 
 function czekanowski_index(x::NamedArray, y::NamedArray)
 

@@ -14,16 +14,16 @@ Tools for vegetation science.
 ## Background
 
 `EcoVeg.jl` contains tools for vegetation science using the Julia
-programming language \[@bezanson2017\].
+programming language (Bezanson et al. 2017).
 
-Solves two language problem \[@roesch2023\]
+Solves two language problem (Roesch et al. 2023)
 
 Aims to collate functionality found in JUICE, vegan, MAVIS into a single
 location with a user-friendly API and transparent methodologies. With
-the aim of assisting in the creation of reproducible analysis
-\[@sperandii2024\].
+the aim of assisting in the creation of reproducible analysis (Sperandii
+et al. 2024).
 
-Nomenclature follows @theurillat2021.
+Nomenclature follows Theurillat et al. (2021).
 
 ## Installation
 
@@ -54,28 +54,28 @@ x = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "Sit
 ```
 
     20×30 Named Matrix{Float64}
-    Releve ╲ Species │   Species1    Species2  …   Species29   Species30
-    ─────────────────┼──────────────────────────────────────────────────
-    SiteA-1          │        0.0         0.0  …         0.0         0.0
-    SiteA-2          │        0.0         0.0            0.0   0.0742907
-    SiteA-3          │  0.0704807   0.0369201            0.0         0.0
-    SiteA-4          │        0.0         0.0            0.0         0.0
-    SiteA-5          │        0.0         0.0       0.065016    0.114198
-    SiteA-6          │        0.0         0.0     0.00555444         0.0
-    SiteA-7          │        0.0   0.0550128            0.0   0.0563497
-    SiteA-8          │        0.0         0.0            0.0   0.0475957
-    SiteA-9          │        0.0   0.0139922            0.0         0.0
-    SiteA-10         │   0.048195    0.058435      0.0296611         0.0
-    SiteA-11         │        0.0         0.0            0.0         0.0
-    SiteA-12         │        0.0         0.0            0.0   0.0508891
-    SiteA-13         │        0.0   0.0798633            0.0    0.131321
-    SiteA-14         │        0.0         0.0            0.0    0.183577
-    SiteA-15         │        0.0         0.0       0.140305   0.0119757
-    SiteA-16         │  0.0752609    0.067526      0.0843943         0.0
-    SiteA-17         │  0.0864513         0.0            0.0         0.0
-    SiteA-18         │ 0.00308486         0.0            0.0    0.147017
-    SiteA-19         │        0.0    0.133836            0.0         0.0
-    SiteA-20         │        0.0         0.0  …         0.0         0.0
+    Releve ╲ Species │    Species1     Species2  …    Species29    Species30
+    ─────────────────┼──────────────────────────────────────────────────────
+    SiteA-1          │         0.0          0.0  …          0.0          0.0
+    SiteA-2          │         0.0          0.0       0.0782331          0.0
+    SiteA-3          │         0.0    0.0575326        0.155053     0.152938
+    SiteA-4          │         0.0     0.144142        0.128875          0.0
+    SiteA-5          │         0.0          0.0             0.0          0.0
+    SiteA-6          │    0.085319          0.0             0.0          0.0
+    SiteA-7          │         0.0          0.0             0.0          0.0
+    SiteA-8          │   0.0449193          0.0             0.0          0.0
+    SiteA-9          │         0.0          0.0        0.216531          0.0
+    SiteA-10         │         0.0          0.0             0.0      0.18558
+    SiteA-11         │   0.0771162          0.0        0.242951          0.0
+    SiteA-12         │         0.0          0.0             0.0          0.0
+    SiteA-13         │         0.0          0.0             0.0     0.329161
+    SiteA-14         │         0.0     0.177045             0.0      0.14028
+    SiteA-15         │    0.120292          0.0             0.0      0.28692
+    SiteA-16         │   0.0241883     0.111589       0.0757173          0.0
+    SiteA-17         │    0.138463          0.0             0.0     0.155279
+    SiteA-18         │         0.0          0.0             0.0     0.204505
+    SiteA-19         │    0.114521    0.0774826             0.0          0.0
+    SiteA-20         │    0.108287          0.0  …    0.0175558    0.0594922
 
 ### Classification
 
@@ -117,36 +117,36 @@ print_summary_syntopic_table(syn_2)
     ╭───────────┬───────────────────┬─────────────────╮
     │   Species │ RelativeFrequency │       Abundance │
     ├───────────┼───────────────────┼─────────────────┤
-    │  Species8 │          0.116874 │ 0.1 (0.1 - 0.3) │
-    │ Species15 │         0.0623607 │ 0.1 (0.0 - 0.2) │
-    │ Species19 │         0.0584902 │ 0.1 (0.1 - 0.2) │
-    │ Species11 │         0.0523788 │ 0.1 (0.1 - 0.2) │
-    │ Species28 │         0.0513153 │ 0.2 (0.0 - 0.2) │
-    │ Species26 │         0.0478617 │ 0.1 (0.1 - 0.2) │
-    │ Species30 │         0.0476692 │ 0.1 (0.0 - 0.2) │
-    │ Species14 │         0.0445658 │ 0.1 (0.0 - 0.2) │
-    │ Species18 │         0.0403507 │ 0.1 (0.1 - 0.3) │
-    │ Species21 │         0.0364615 │ 0.1 (0.1 - 0.2) │
-    │ Species12 │         0.0343615 │ 0.1 (0.0 - 0.2) │
-    │ Species17 │         0.0325703 │ 0.1 (0.0 - 0.1) │
-    │ Species16 │         0.0315202 │ 0.1 (0.0 - 0.1) │
-    │ Species23 │         0.0300857 │ 0.1 (0.0 - 0.1) │
-    │  Species4 │         0.0298907 │ 0.1 (0.1 - 0.2) │
-    │ Species13 │         0.0284227 │ 0.1 (0.0 - 0.1) │
-    │  Species5 │         0.0275004 │ 0.1 (0.0 - 0.1) │
-    │ Species22 │         0.0267309 │ 0.1 (0.0 - 0.1) │
-    │  Species1 │         0.0232193 │ 0.1 (0.1 - 0.1) │
-    │ Species27 │         0.0223382 │ 0.1 (0.1 - 0.1) │
-    │  Species2 │         0.0198302 │ 0.1 (0.0 - 0.1) │
-    │  Species7 │         0.0198162 │ 0.1 (0.1 - 0.1) │
-    │  Species6 │          0.017789 │ 0.1 (0.1 - 0.1) │
-    │ Species20 │         0.0175654 │ 0.1 (0.1 - 0.1) │
-    │ Species25 │         0.0160109 │ 0.1 (0.0 - 0.1) │
-    │  Species9 │         0.0156659 │ 0.1 (0.0 - 0.1) │
-    │ Species29 │         0.0154965 │ 0.1 (0.0 - 0.1) │
-    │ Species10 │         0.0115231 │ 0.1 (0.0 - 0.1) │
-    │  Species3 │         0.0113954 │ 0.1 (0.0 - 0.1) │
-    │ Species24 │        0.00993922 │ 0.0 (0.0 - 0.1) │
+    │ Species14 │         0.0974639 │ 0.1 (0.1 - 0.3) │
+    │ Species30 │          0.083715 │ 0.2 (0.1 - 0.3) │
+    │ Species20 │         0.0689173 │ 0.1 (0.0 - 0.2) │
+    │  Species8 │         0.0600403 │ 0.1 (0.0 - 0.3) │
+    │ Species19 │         0.0497797 │ 0.1 (0.1 - 0.2) │
+    │ Species27 │         0.0493997 │ 0.2 (0.1 - 0.2) │
+    │ Species29 │         0.0464857 │ 0.1 (0.0 - 0.2) │
+    │ Species23 │         0.0424856 │ 0.1 (0.1 - 0.2) │
+    │  Species1 │         0.0401177 │ 0.1 (0.0 - 0.1) │
+    │ Species16 │         0.0376498 │ 0.1 (0.0 - 0.2) │
+    │ Species22 │         0.0363398 │ 0.1 (0.0 - 0.2) │
+    │ Species12 │         0.0353443 │ 0.2 (0.2 - 0.2) │
+    │  Species2 │         0.0346166 │ 0.1 (0.1 - 0.2) │
+    │ Species28 │         0.0339354 │ 0.1 (0.0 - 0.2) │
+    │ Species17 │         0.0302904 │ 0.1 (0.0 - 0.1) │
+    │  Species4 │          0.027939 │ 0.1 (0.0 - 0.2) │
+    │ Species21 │         0.0260201 │ 0.1 (0.1 - 0.1) │
+    │ Species13 │         0.0255388 │ 0.0 (0.0 - 0.1) │
+    │  Species3 │         0.0246532 │ 0.0 (0.0 - 0.1) │
+    │ Species15 │         0.0245426 │ 0.1 (0.0 - 0.1) │
+    │ Species26 │         0.0197612 │ 0.0 (0.0 - 0.1) │
+    │ Species11 │         0.0182556 │ 0.1 (0.1 - 0.1) │
+    │ Species24 │         0.0169718 │ 0.1 (0.1 - 0.1) │
+    │ Species10 │         0.0155926 │ 0.1 (0.0 - 0.1) │
+    │  Species7 │         0.0151053 │ 0.1 (0.1 - 0.1) │
+    │  Species5 │         0.0123686 │ 0.1 (0.0 - 0.1) │
+    │ Species18 │         0.0112344 │ 0.1 (0.1 - 0.1) │
+    │  Species9 │        0.00908157 │ 0.1 (0.1 - 0.1) │
+    │  Species6 │        0.00406966 │ 0.0 (0.0 - 0.0) │
+    │ Species25 │        0.00228414 │ 0.0 (0.0 - 0.0) │
     ╰───────────┴───────────────────┴─────────────────╯
 
 ### Identification of High-Fidelity Species
@@ -163,13 +163,13 @@ y = generate_test_array(rown = 5, coln = 30, meancoloccs = 10, rowprefix = "Site
 ```
 
     5×30 Named Matrix{Float64}
-    Releve ╲ Species │    Species1     Species2  …    Species29    Species30
-    ─────────────────┼──────────────────────────────────────────────────────
-    SiteB-1          │         0.0     0.267636  …          0.0          0.0
-    SiteB-2          │    0.149368    0.0515994             0.0     0.135862
-    SiteB-3          │         0.0    0.0404588             0.0     0.108958
-    SiteB-4          │         0.0          0.0        0.012553    0.0916869
-    SiteB-5          │         0.0          0.0  …          0.0          0.0
+    Releve ╲ Species │   Species1    Species2  …   Species29   Species30
+    ─────────────────┼──────────────────────────────────────────────────
+    SiteB-1          │        0.0         0.0  …         0.0         0.0
+    SiteB-2          │        0.0   0.0307212       0.232576         0.0
+    SiteB-3          │        0.0         0.0       0.046245   0.0969491
+    SiteB-4          │   0.081061         0.0      0.0764102         0.0
+    SiteB-5          │   0.101557         0.0  …         0.0         0.0
 
 Three methods will be demonstrated.
 
@@ -188,9 +188,9 @@ syn_2_mat = extract_syntopic_matrix(syn_2)
 ```
 
     1×30 Named Matrix{Float64}
-    A ╲ B │   Species8   Species15  …    Species3   Species24
+    A ╲ B │  Species14   Species30  …    Species6   Species25
     ──────┼──────────────────────────────────────────────────
-    Syn2  │   0.116874   0.0623607  …   0.0113954  0.00993922
+    Syn2  │  0.0974639    0.083715  …  0.00406966  0.00228414
 
 Now we have three matrices, containg the relative frequencies of each
 species present in the sample releves which constitute the
@@ -216,3 +216,24 @@ all columns are present in each of the matrices before joining.
 ## Acknowledgements
 
 ## References
+
+Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017.
+“Julia: A Fresh Approach to Numerical Computing.” *SIAM Review* 59 (1):
+65–98. <https://doi.org/10.1137/141000671>.
+
+Roesch, Elisabeth, Joe G. Greener, Adam L. MacLean, Huda Nassar,
+Christopher Rackauckas, Timothy E. Holy, and Michael P. H. Stumpf. 2023.
+“Julia for Biologists.” *Nature Methods* 20 (5): 655–64.
+<https://doi.org/10.1038/s41592-023-01832-z>.
+
+Sperandii, Marta Gaia, Manuele Bazzichetto, Glenda Mendieta-Leiva,
+Sebastian Schmidtlein, Michael Bott, Renato A. Ferreira de Lima, Valério
+D. Pillar, Jodi N. Price, Viktoria Wagner, and Milan Chytrý. 2024.
+“Towards More Reproducibility in Vegetation Research.” *Journal of
+Vegetation Science* 35 (1): e13224. <https://doi.org/10.1111/jvs.13224>.
+
+Theurillat, Jean-Paul, Wolfgang Willner, Federico Fernández-González,
+Helga Bültmann, Andraž Čarni, Daniela Gigante, Ladislav Mucina, and
+Heinrich Weber. 2021. “International Code of Phytosociological
+Nomenclature. 4th Edition.” *Applied Vegetation Science* 24 (1): e12491.
+<https://doi.org/10.1111/avsc.12491>.

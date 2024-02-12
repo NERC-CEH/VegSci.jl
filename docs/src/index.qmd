@@ -1,3 +1,17 @@
+---
+format: 
+  commonmark:
+    variant: -raw_html+tex_math_dollars
+    wrap: none
+execute: 
+  freeze: auto
+  eval: true
+  echo: true
+  output: true
+julia: julia-1.10
+bibliography: ../../references.bib
+---
+
 ```@meta
 CurrentModule = EcoVeg
 ```
