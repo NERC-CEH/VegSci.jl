@@ -15,30 +15,27 @@ The functionality outlined here draws heavily on the functionality found in the 
 ## Import Required Packages
 
 ```{julia import_packages_julia}
+using EcoVeg
 using NamedArrays
 using PrettyTables
 using DataFrames
 using CSV
 using BenchmarkTools
-using SparseArrays
+# using SparseArrays
 using Statistics
-using Skipper
+# using Skipper
 ```
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix, making row (Releve2) and column (Spp7) contain all zero entries, for testing.
+Create example data in the form of a site by species named matrix, making row (SiteA-2) and column (Species7) contain all zero entries, for testing.
 
 ```{julia create_example_data}
 #| code-fold: true
 begin
-    rows = 5
-    cols = 11
-	rownames = vec(["Releve"].*string.([1:1:rows;]))
-    colnames = vec(["Spp"].*string.([1:1:cols;]))
-	mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))
-	mat[:,"Spp7"] .= 0.0
-	mat["Releve2",:] .= 0.0
+    mat = EcoVeg.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+	mat[:,"Species7"] .= 0.0
+	mat["SiteA-2",:] .= 0.0
 	mat
 end
 ```
@@ -54,39 +51,39 @@ end
 # min_abundance = minimum(skipmissing(replace(mat, 0 => missing)), dims = 1) # Doesn't accept dims when using skipmissing
 
 # Work!
-@elapsed mapslices(x -> minimum(skipmissing(x)), replace(mat, 0 => missing), dims = 1)
-@elapsed minimum(mat, dims = 1)
-@elapsed mapslices(x -> minimum(filter(!iszero, x)), mat, dims = 1)
-@elapsed mapslices(x -> minimum(filter(!isnan, x)), replace(mat, 0 => NaN), dims = 1)
+# @elapsed mapslices(x -> minimum(skipmissing(x)), replace(mat, 0 => missing), dims = 1)
+# @elapsed minimum(mat, dims = 1)
+# @elapsed mapslices(x -> minimum(filter(!iszero, x)), mat, dims = 1)
+# @elapsed mapslices(x -> minimum(filter(!isnan, x)), replace(mat, 0 => NaN), dims = 1)
 
-_nanfunc(f, A, ::Colon) = f(filter(!isnan, A))
-_nanfunc(f, A, dims) = mapslices(a->_nanfunc(f,a,:), A, dims=dims)
-nanfunc(f, A; dims=:) = _nanfunc(f, A, dims)
+# _nanfunc(f, A, ::Colon) = f(filter(!isnan, A))
+# _nanfunc(f, A, dims) = mapslices(a->_nanfunc(f,a,:), A, dims=dims)
+# nanfunc(f, A; dims=:) = _nanfunc(f, A, dims)
 
-nzmin(x) = minimum(filter(!iszero, x))
-mapslices(nzmin, mat, dims = 1)
-@elapsed mapslices(nzmin, mat, dims = 1)
+# nzmin(x) = minimum(filter(!iszero, x))
+# mapslices(nzmin, mat, dims = 1)
+# @elapsed mapslices(nzmin, mat, dims = 1)
 
-_nzfunc(f, A, ::Colon) = f(filter(!iszero, A))
-_nzfunc(f, A, dims) = mapslices(a->_nzfunc(f,a,:), A, dims=dims)
-nzfunc(f, A; dims=:) = _nzfunc(f, A, dims)
+# _nzfunc(f, A, ::Colon) = f(filter(!iszero, A))
+# _nzfunc(f, A, dims) = mapslices(a->_nzfunc(f,a,:), A, dims=dims)
+# nzfunc(f, A; dims=:) = _nzfunc(f, A, dims)
 
-@elapsed nzfunc(minimum, mat, dims=1)
+# @elapsed nzfunc(minimum, mat, dims=1)
 
-@btime map(x -> minimum(skip(iszero, x)), eachcol(mat))
-@btime mapslices(x -> minimum(skip(iszero, x)), mat, dims=1)
+# @btime map(x -> minimum(skip(iszero, x)), eachcol(mat))
+# @btime mapslices(x -> minimum(skip(iszero, x)), mat, dims=1)
+
+# @btime mat[:, vec(mapslices(col -> any(col .!= 0), mat, dims = 1))]
+# @btime mat[vec(mapslices(col -> any(col .!= 0), mat, dims = 2)), :]
+
+# @btime mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
+# @btime mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
 
 ```
 
 ## Remove columns with all zeros
 
 ```{julia remove_zeros}
-@btime mat[:, vec(mapslices(col -> any(col .!= 0), mat, dims = 1))]
-@btime mat[vec(mapslices(col -> any(col .!= 0), mat, dims = 2)), :]
-
-@btime mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
-@btime mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
-
 mat = mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
 mat = mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
 ```
@@ -150,18 +147,36 @@ It would also be useful to be able to convert between ....
 ```{julia syntopic_table_object}
 struct SyntopicTable
     name::String
-    table::DataFrame
-    releve_ids::Vector{String}
     releve_n::Int64
+    releve_ids::Vector{String}
     species_n::Int64
+    species_names::Vector{String}
     abundance_units::String
+    relative_frequency::Vector{Float64}
+    absolute_frequency::Vector{Float64}
+    minimum_abundance::Vector{Float64}
+    mean_abundance::Vector{Float64}
+    median_abundance::Vector{Float64}
+    maximum_abundance::Vector{Float64}
 end
 ```
 
 ## Populate a syntopic table object with example data
 
 ```{julia populate_object}
-example_object = SyntopicTable("Test", table, releve_ids, releve_n, species_n, "cover_proportion")
+example_object = SyntopicTable("Test",
+                                releve_ids, 
+                                releve_n, 
+                                species_n, 
+                                "cover_proportion",
+                                species_names,
+                                vec(rel_frequency),
+                                vec(abs_frequency),
+                                vec(min_abundance),
+                                vec(mean_abundance),
+                                vec(median_abundance),
+                                vec(max_abundance)
+                                )
 ```
 
 ## Create function to compose syntopic table
@@ -171,30 +186,32 @@ function compose_syntopic_table_object(name::String, mat::NamedArray)
 
     mat = mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
     mat = mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
+
     releve_n = size(mat)[1]
     releve_ids = names(mat)[1]
-    species_names = names(mat)[2]
     species_n = size(mat)[2]
-    abs_frequency = sum(x->x>0, mat, dims=1)
-    rel_frequency = abs_frequency ./ releve_n
-    mat_nozeros = copy(mat)
-    mat_nozeros[iszero.(mat_nozeros)] .= 1
-    min_abundance = minimum(mat_nozeros, dims = 1)
-    max_abundance = maximum(mat, dims = 1)
-    mean_abundance = mean(mat, dims = 1)
-    median_abundance = median(mat, dims = 1)
+    species_names = names(mat)[2]
 
-    # Create table
-    table = DataFrame(Species = vec(species_names), RelativeFrequency = vec(rel_frequency), AbsoluteFrequency = vec(abs_frequency),
-                      MinimumAbundance = vec(min_abundance), MaximumAbundance = vec(max_abundance), MeanAbundance = vec(mean_abundance),
-                      MedianAbundance = vec(median_abundance))
-    table[!, :Abundance] = string.(table.MedianAbundance, " (", table.MinimumAbundance, " - ", table.MaximumAbundance, ")")
-
-    # Order table by relative frequency
-    sort!(table,[:RelativeFrequency,:MedianAbundance], rev = true)
+    abs_frequency = vec(sum(x->x>0, mat, dims=1))
+    rel_frequency = vec(abs_frequency ./ releve_n)
+    min_abundance = vec(EcoVeg.nzfunc(minimum, mat, dims = 1))
+    max_abundance = vec(maximum(mat, dims = 1))
+    mean_abundance = vec(mean(mat, dims = 1))
+    median_abundance = vec(EcoVeg.nzfunc(median, mat, dims = 1))
     
-    # Form object
-    syntopic_table_object = SyntopicTable(name, table, releve_ids, releve_n, species_n, "cover_proportion")
+    syntopic_table_object = SyntopicTable(name,
+                                          releve_n,
+                                          releve_ids, 
+                                          species_n, 
+                                          species_names,
+                                          "cover_proportion",
+                                          rel_frequency,
+                                          abs_frequency,
+                                          min_abundance,
+                                          mean_abundance,
+                                          median_abundance,
+                                          max_abundance
+                                          )
 
     return syntopic_table_object
 
@@ -211,9 +228,24 @@ syntopic_table_object = compose_syntopic_table_object("example", mat)
 
 ```{julia print_summary_syntopic_table}
 function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, frequency_scale::String, cover_abundance_scale::String)
+        
+    # Create table
+    table = DataFrame(Species = syntopic_table_object.species_names, 
+                      RelativeFrequency = round.(syntopic_table_object.relative_frequency, digits = 1), 
+                      AbsoluteFrequency = round.(syntopic_table_object.absolute_frequency, digits = 1),
+                      MinimumAbundance = round.(syntopic_table_object.minimum_abundance, digits = 1), 
+                      MaximumAbundance = round.(syntopic_table_object.maximum_abundance, digits = 1), 
+                      MeanAbundance = round.(syntopic_table_object.mean_abundance, digits = 1),
+                      MedianAbundance = round.(syntopic_table_object.median_abundance, digits = 1)
+                      )
+
+    table[!, :Abundance] = string.(table.MedianAbundance, " (", table.MinimumAbundance, " - ", table.MaximumAbundance, ")")
+
+    # Order table by relative frequency
+    sort!(table,[:RelativeFrequency,:MedianAbundance], rev = true)
 
     # Select relevant columns
-    summary_syntopic_table = syntopic_table_object.table[:, [:Species, :RelativeFrequency, :Abundance]]
+    summary_syntopic_table = table[:, [:Species, :RelativeFrequency, :Abundance]]
 
     # Convert frequency values to the desired format
     if frequency_scale == "normal"
@@ -239,6 +271,15 @@ end
 
 ```{julia prepare_summary_syntopic_table_test}
 print_summary_syntopic_table(syntopic_table_object, "normal", "cover_proportion")
+```
+
+## Extract syntopic table in matrix format
+
+```{julia extract syntopic_matrix}
+rowname = [syntopic_table_object.name]
+species_names = syntopic_table_object.species_names
+median_abundance = syntopic_table_object.median_abundance
+syntopic_matrix = NamedArrays.NamedArray(reshape(median_abundance, 1, :), names = (rowname, species_names))
 ```
 
 
