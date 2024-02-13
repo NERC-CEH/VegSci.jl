@@ -22,9 +22,11 @@ using NamedArrays
         @test all(nzfunc_results != 0)
         @test names(nzfunc_results)[2] == names(x)[2]
     end
-    @testset "align_array_columns" begin
-        aac_results = EcoVeg.align_array_columns(x[:,Not(["Species3", "Species10"])], y[:,Not(["Species4"])])
-        @test keys(aac_results) == (:x, :y)
-        @test names(aac_results.x)[2] == names(aac_results.y)[2]
+    @testset "merge_namedarrays" begin
+        merna_results = EcoVeg.merge_namedarrays([x[:,Not(["Species3", "Species10"])], y[:,Not(["Species4"])]])
+        @test typeof(merna_results) <: NamedMatrix
+        @test size(merna_results) == (15, 10)
+        @test names(merna_results)[1] == cat(names(x)[1], names(y)[1], dims = 1) 
+        @test Set(names(merna_results)[2]) == Set(unique(cat(names(x)[2], names(y)[2], dims = 1)))
     end
 end

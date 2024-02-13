@@ -20,54 +20,15 @@ using BenchmarkTools
 using DataFrames
 ```
 
-```{julia helper_functions}
-#| include: false
-function align_array_columns(x::NamedArray, y::NamedArray, colorder::String = "x")
-
-    # Check which columns are missing from x and y
-    x_missing_cols = setdiff(Set(names(y)[2]), Set(names(x)[2]))
-    y_missing_cols = setdiff(Set(names(x)[2]), Set(names(y)[2]))
-
-    # If there are missing columns in the x matrix
-    x_mat = copy(x)
-    if length(x_missing_cols) != 0
-        x_mat_missing = NamedArray(zeros(size(x,1), length(x_missing_cols)), names = (vec(names(x)[1]), collect(x_missing_cols)))
-        x_mat_colnames = names(x)[2]
-        x_mat = [x x_mat_missing]
-        setnames!(x_mat, [x_mat_colnames; collect(x_missing_cols)], 2)
-    end
-    
-    # If there are missing columns in the x matrix
-    y_mat = copy(y)
-    if length(y_missing_cols) != 0
-        y_mat_missing = NamedArray(zeros(size(y,1), length(y_missing_cols)), names = (vec(names(y)[1]), collect(y_missing_cols)))
-        y_mat_colnames = names(y)[2]
-        y_mat = [y y_mat_missing]
-        setnames!(y_mat, [y_mat_colnames; collect(y_missing_cols)], 2)
-    end
-
-    if colorder == "x"
-        y_mat = y_mat[:, names(x_mat)[2]]
-    elseif colorder == "y"
-        x_mat = x_mat[:, names(y_mat)[2]]
-    end
-
-    aligned_mats = (x = x_mat, y = y_mat)
-
-    return aligned_mats
-
-end
-```
-
 ## Czekanowski index
 
 The Czekanowski index, also known as the proportional similarity index, Bray-Curtis similarity, Steinhaus similarity, Pielou's similarity, Sorensen's quantitative similarity is a well-known and commonly used measure of community similarity.
 @eq-czekanowski_index outlines two formulations of the Czekanowski index, where $N_{ij}$ is the abundance of species $i$ at site $j$, $N_{ik}$ is the abundance of species $i$ at site $k$, $p$ is the total number of species in the samples, $W$ is the sum of the minimum abundances of each species $i$, $A$ is the sum of abundances of all species at site $j$ ($\sum_{i=1}^{p} N_{ij}$), and $B$ is the sum of abundances of all species at site $k$ ($\sum_{i=1}^{p} N_{ik}$). This index is often also expressed in percentage terms [@gauch1982], and or as a dissimilarity.
 
 
-$$
+```math
 C_{jk} = 2 \cdot \frac{\sum_{i=1}^{p} min(N_{ij}, N_{ik})}{\sum_{i=1}^{p} N_{ij} + \sum_{i=1}^{p} N_{ik}} = 2 \cdot \frac{W}{A + B}
-$$ {#eq-czekanowski_index}
+```
 
 ## Create example data
 
@@ -128,8 +89,8 @@ Let's create some new example data, note that the sample plots data is missing t
 ```{julia create_example_data_samples}
 #| code-fold: true
 begin
-    rows = 5
-    cols = 11
+    rows = 500
+    cols = 1100
 	rownames = vec(["SampReleve"].*string.([1:1:rows;]))
     colnames = vec(["Spp"].*string.([1:1:cols;]))
 	samp_mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))[:,Not(["Spp3", "Spp11"])]
@@ -139,8 +100,8 @@ end
 ```{julia create_example_data_references}
 #| code-fold: true
 begin
-    rows = 5
-    cols = 11
+    rows = 500
+    cols = 1100
 	rownames = vec(["RefReleve"].*string.([1:1:rows;]))
     colnames = vec(["Spp"].*string.([1:1:cols;]))
 	ref_mat = NamedArray(rand(0:5, rows, cols), names = (rownames, colnames), dimnames = ("Releve", "Species"))[:,Not(["Spp4"])]
@@ -185,7 +146,7 @@ end
 ```
 
 ```{julia run_czekanowski_index}
-results = czekanowski_index(samp_mat_prepped, ref_mat_prepped)
+results = czekanowski_index(samp_mat, ref_mat)
 ```
 
 ```{julia benchmark_czekanowski_index}

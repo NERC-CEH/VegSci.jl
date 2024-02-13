@@ -13,6 +13,11 @@ julia: julia-1.10
 bibliography: ../../../references.bib
 ---
 
+```{julia activate_environment}
+#| include: false
+using Pkg; Pkg.activate("docs")
+```
+
 ## Outline
 
 This page details how to perform correspondence analysis in Julia following the computational algorithm outlined in appendix A of @greenacre2017 and implemented in the R package `ca` [@nenadic2007].
@@ -26,7 +31,6 @@ The Julia package MultivariateStats.jl does not currently contain an implementat
 ## Julia
 
 ```{julia import_packages}
-using Pkg; Pkg.activate("docs")
 using EcoVeg
 using NamedArrays
 using LinearAlgebra
@@ -54,7 +58,7 @@ Create example data in the form of a site by species named matrix, N.
 
 ```{julia create_example_data}
 #| code-fold: true
-N = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+N = EcoVeg.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 
@@ -231,8 +235,6 @@ function correspondence_analysis(N::NamedMatrix)
   # G = Γ * D
   G = Dc^(-1/2) * V * D
   G = G[1:end,1:end .!= end]
-
-  # [1:end, 1:end .∉ [[20]]]
 
   results = (sv = D, # Singular values
              rownames = names(N)[1], # Row names

@@ -15,9 +15,9 @@ bibliography: ../../references.bib
 # EcoVeg
 
 ```{julia}
-#| include: false
 using Pkg; Pkg.activate("docs")
 using EcoVeg
+using InvertedIndices
 ```
 
 Tools for vegetation science.
@@ -56,7 +56,7 @@ To demonstrate...
 First we begin with generating two example plot by species `NamedArrays.NamedMatrix` object using the function `EcoVeg.generate_test_array` as test data.
 
 ```{julia example_data}
-x = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+x = generate_test_array(rown = 20, coln = 30, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 ### Classification
@@ -75,7 +75,7 @@ Once the plots have been grouped into clusters, we can proceed to summarise thei
 ```{julia syntopic_table_x}
 syn_1 = EcoVeg.compose_syntopic_table_object("Syn1", x[cluster1,:])
 syn_2 = EcoVeg.compose_syntopic_table_object("Syn2", x[cluster2,:])
-print_summary_syntopic_table(syn_2)
+print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
 ```
 
 ### Identification of High-Fidelity Species
@@ -87,7 +87,7 @@ print_summary_syntopic_table(syn_2)
 Let's generate a second example matrix, consisting of sample 5 releves, against which we want to calculate the similarity.
 
 ```{julia example_data}
-y = generate_test_array(rown = 5, coln = 30, meancoloccs = 10, rowprefix = "SiteB-", colprefix = "Species")
+y = generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
 ```
 
 Three methods will be demonstrated.
@@ -106,16 +106,25 @@ syn_2_mat = extract_syntopic_matrix(syn_2)
 ```
 
 Now we have three matrices, containg the relative frequencies of each species present in the sample releves which constitute the phytocoenosis'.
-However, each of the phytocoenosis is composed of a different set of species, in Julia we need a helper function to ensure all columns are present in each of the matrices before joining.
+However, each of the phytocoenosis is composed of a different set of species, in Julia we need a helper function to merge these matrices and ensure each matric contains each species across all the matrices.
 
-```{julia align_columns}
-# align_array_columns(syn_y_mat, syn_2_mat)
-# align_array_columns(syn_y_mat, syn_1_mat)
+```{julia merge_arrays}
+merged_syn_mats = EcoVeg.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
+```
+
+```{julia czekanowski_index}
+EcoVeg.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
 ```
 
 ### Multivariate Analysis
 
 ### Ecological Trajectory Analysis
+
+### Example Workflow
+
+```{julia drwatson}
+
+```
 
 ## External Resources 
 

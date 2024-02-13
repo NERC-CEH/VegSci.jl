@@ -2,7 +2,7 @@ module EcoVeg
 
 export generate_test_array
 export nzfunc
-export align_array_columns
+export merge_namedarrays
 include("Utilities.jl")
 
 export binary_similarity
