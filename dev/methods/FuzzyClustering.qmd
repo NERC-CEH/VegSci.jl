@@ -1,0 +1,96 @@
+---
+title: "Fuzzy Clustering"
+execute: 
+  enabled: true
+julia: julia-1.10
+bibliography: ../references.bib
+---
+
+## Outline
+
+This page outlines a variety of utility functions for helping wrangle data into the desired format...
+
+@decaceres2010
+
+@decaceres2013
+
+## Import Required Packages
+
+```{julia activate_environment}
+using Pkg; Pkg.activate("docs")
+```
+
+```{julia import_packages_julia}
+using EcoVeg
+using NamedArrays
+using DataFrames
+using CSV
+using BenchmarkTools
+using Statistics
+using Distances
+using Clustering
+# using Skipper
+```
+
+## Create example data
+
+Create example data in the form of a site by species named matrix, making row (SiteA-2) and column (Species7) contain all zero entries, for testing.
+
+```{julia create_example_data}
+mat = EcoVeg.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+```
+
+## Steps
+
+```{julia clustering}
+r = Clustering.fuzzy_cmeans(mat, 3, 2)
+
+memberships = r.weights
+memberships_vec = vec(Tuple.(findmax(memberships, dims = 2)[2]))
+memberships_mat = hcat(first.(memberships_vec), last.(memberships_vec))
+
+memberships_final = Dict
+for i in unique(memberships_mat[:,2])
+
+    rowids = memberships_mat[memberships_mat[:,2] .== i, :][:,1]
+    memberships_i = Dict(i => rowids)
+    memberships_final = merge(memberships_final, memberships_i)
+    
+end
+```
+
+```{julia access_cartesianindex}
+clusters = Array()
+```
+
+
+### Define the number of clusters
+
+```{julia define_n_clusters}
+c = 3
+```
+
+### Calculate Euclidean Distance
+
+```{julia euclidean_distance}
+mat_dist = Distances.pairwise(sqeuclidean, mat, dims = 2)
+```
+
+### Fuzziness co-efficient
+
+```{julia fuzziness co-efficient}
+```
+
+### Calculate the co-ordinates of each cluster centroid
+
+Calculate the co-ordinates of each clusts centroid $v_{i}$ by averaging the co-ordinates of the row vectors $x_{j}$, weighted by the releve membership values $u_{ij}$.
+
+$$
+v_{i} = \frac{\sum_{j=1}^{n} u_{ij}^{m} \cdot x_{j}}{\sum_{j=1}^{n} u_{ij}^{m}}
+$$
+
+```{julia cluster_centroid_coords}
+
+v = dot(sum(mat_dist, dims = 2), )
+
+```
