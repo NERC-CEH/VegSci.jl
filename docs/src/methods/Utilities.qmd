@@ -14,11 +14,13 @@ This page outlines a variety of utility functions for helping wrangle data into 
 ## Import Required Packages
 
 ```{julia import_packages_julia}
+using Pkg; Pkg.activate("docs")
 using EcoVeg
 using NamedArrays
 using BenchmarkTools
 using SparseArrays
 using DataFrames
+using Random
 ```
 
 ## Generate test arrays {#sec-generate_test_arrays}
@@ -40,9 +42,11 @@ colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
 # x = NamedArrays.NamedArray(rand(min:increment:max, rown, coln), names = (rownames, colnames), dimnames = (rowdim, coldim))
 x = NamedArrays.NamedArray(Array(sprand(Float64, rown, coln, zerop)), names = (rownames, colnames), dimnames = (rowdim, coldim))
 # x = NamedArrays.NamedArray(Array(sprand(rown, coln, zerop, randn)), names = (rownames, colnames), dimnames = (rowdim, coldim))
+# x = NamedArrays.NamedArray(Array(sprand(rown , coln, zerop, randexp)), names = (rownames, colnames), dimnames = (rowdim, coldim))
 y = x ./ sum(x, dims = 2)
 
 sum(x, dims = 2)
+sum(y, dims = 2)
 mean(count(i->i>0, x, dims = 2))
 ```
 

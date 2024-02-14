@@ -12,6 +12,11 @@ julia: julia-1.10
 bibliography: ../../references.bib
 ---
 
+```{julia activate_environment}
+#| include: false
+using Pkg; Pkg.activate("docs")
+```
+
 ```@meta
 CurrentModule = EcoVeg
 ```
