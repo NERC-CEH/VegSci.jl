@@ -41,22 +41,7 @@ library(microbenchmark)
 Create example data in the form of a site by species named matrix, making row (Releve2) and column (Spp7) contain all zero entries, for testing.
 
 ```{julia create_example_data}
-#| code-fold: true
-begin
-    mat = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
-	mat[:,"Species7"] .= 0.0
-	mat["SiteA-2",:] .= 0.0
-	mat
-end
-```
-
-Prepare the data by removing all empty rows and columns.
-
-```{julia remove_zero_rowcols}
-begin
-	mat = mat[:, vec(map(col -> any(col .!= 0), eachcol(mat)))]
-    mat = mat[vec(map(col -> any(col .!= 0), eachrow(mat))), :]
-end
+mat = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 Create a presence-absence matrix by replacing all non-zero values with an Integer value of 1.
@@ -64,6 +49,10 @@ Create a presence-absence matrix by replacing all non-zero values with an Intege
 ```{julia create_sample_data}
 samp = Int.(mat .!= 0)
 ```
+
+Using this prescence-absence matric we then need to create a contingency table....
+
+
 
 ## Calculate the transposed cross product
 
