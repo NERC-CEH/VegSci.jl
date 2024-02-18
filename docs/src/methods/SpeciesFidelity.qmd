@@ -6,9 +6,115 @@ julia: julia-1.10
 bibliography: ../references.bib
 ---
 
+```{julia activate_environment}
+#| include: false
+using Pkg; Pkg.activate("docs")
+```
+
+```{julia load_packages}
+using EcoVeg
+using Clustering
+using CSV
+using DataFrames
+using NamedArrays
+```
+
 ## Outline
 
 This page outlines a variety of utility functions for helping wrangle data into the desired format...
 
 The functionality outlined here draws heavily on the functionality found in the program JUICE @tichy2002.
 Fidelity measures follow @chytry2002.
+
+## Load example data.
+
+Load the `dune` dataset bundled with the R package `vegan`.
+
+```{julia load_dune_julia}
+begin
+	dune_df = CSV.read("./docs/src/data/dune.csv", DataFrame, header = 1)
+	dune_na = NamedArray(Array(dune_df))
+	NamedArrays.setnames!(dune_na, names(dune_df), 2)
+  dune_na = float.(dune_na)
+end
+```
+
+Let's identify some clusters.
+
+```{julia fuzzy_c_clusters}
+r = Clustering.fuzzy_cmeans(transpose(dune_na), 3, 2)
+
+cluster_weights = r.weights
+memberships_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
+memberships_mat = hcat(first.(memberships_vec), last.(memberships_vec))
+
+memberships = Dict
+
+for i in unique(memberships_mat[:,2])
+
+    rowids = memberships_mat[memberships_mat[:,2] .== i, :][:,1]
+    memberships_i = Dict(i => rowids)
+    memberships = merge(memberships, memberships_i)
+    
+end
+
+memberships
+```
+
+Create a presence-absence matrix by replacing all non-zero values with an Integer value of 1.
+
+```{julia create_sample_data}
+dune_pa = Int.(dune_na .!= 0)
+```
+
+### Calculate $N$ the number of releves in the dataset
+
+```{julia N}
+N = size(dune_pa)[1]
+```
+
+### Calculate $N_{p}$ the number of releves in each vegetation unit
+
+```{julia Np}
+
+# Np = 
+
+```
+
+### Calculate $n$ the number of occurrences of the species in the matrix
+
+```{julia n}
+n = sum(dune_pa, dims = 1)
+setnames!(n, ["all"], 1)
+n
+```
+
+### Calculate $n_{p}$ the number of occureences of the species in the particular vegetation unit
+
+```{julia np}
+iter = 0
+
+for i in keys(memberships)
+
+  dune_pa_i = dune_pa[getindex(memberships, i),:]
+  dune_pa_i_sum = sum(dune_pa_i, dims = 1)
+  setnames!(dune_pa_i_sum, [string(i)], 1)
+
+  if n == 0
+    np = dune_pa_i_sum
+  else
+    np = vcat(np, dune_pa_i_sum)
+  end
+
+  iter = iter + 1
+
+end
+```
+
+### Calculate $n - n_{p}$ the number of releves in the dataset
+
+```{julia n_np}
+
+
+
+```

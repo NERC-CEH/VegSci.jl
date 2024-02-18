@@ -26,10 +26,6 @@ The Julia package MultivariateStats.jl does not currently contain an implementat
 
 ## Import Required Packages
 
-::: {.panel-tabset}
-
-## Julia
-
 ```{julia import_packages}
 using EcoVeg
 using NamedArrays
@@ -37,34 +33,21 @@ using LinearAlgebra
 using CSV
 using BenchmarkTools
 using DataFrames
-# using Plots
+using Plots
 ```
-
-## R
-
-```{r import_packages_r}
-library(ca)
-library(microbenchmark)
-library(ggplot2)
-library(dplyr)
-library(JuliaCall)
-```
-
-:::
 
 ## Create example data
 
 Create example data in the form of a site by species named matrix, N.
 
 ```{julia create_example_data}
-#| code-fold: true
 N = EcoVeg.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 
 ## A.1 Create the correspondence matrix
 
-Calculate the correspondence matrix $P$ following @eq-p.
+Calculate the correspondence matrix $P$ following.
 
 ```math
 P = \frac{1}{n}N
@@ -79,7 +62,7 @@ end
 
 ## A.2 Calculate column and row masses
 
-Calculate the row and and column masses using @eq-row_masses and @eq-column_masses respectively.
+Calculate the row and and column masses.
 
 ```math
 r = P1 \space \space
@@ -139,11 +122,6 @@ end
 
 ```{julia standard_coordinates_rows}
 Φ = Dr^(-1/2) * U
-```
-
-```{julia phi_names}
-# NamedArrays.setnames!(NamedArray(Φ), names = vec(names(N)[1]))
-# NamedArray(Φ, names(N)[1])
 ```
 
 ## A.7 Standard coordinates $\Gamma$ of columns
@@ -265,7 +243,7 @@ ca_results = correspondence_analysis(N)
 
 ### Plot Test Results
 
-```{julia plot_correspondence_analysis_function_test}
+```{julia plot_correspondence_analysis_function}
 begin
   plots_x = ca_results.rowcoord[:,"Dim1"]
   plots_y = ca_results.rowcoord[:,"Dim2"]
@@ -273,132 +251,9 @@ begin
   species_x = ca_results.colcoord[:,"Dim1"]
   species_y = ca_results.colcoord[:,"Dim2"]
 
-  # scatter(species_x, species_y, series_annotations = text.(ca_results.colnames, 8, :right, :bottom), framestyle=:origin, label = "Species")
-  # scatter!(plots_x, plots_y, series_annotations = text.(ca_results.rownames, 8, :right, :bottom), label = "Plots")
+  Plots.scatter(species_x, species_y, series_annotations = text.(ca_results.colnames, 8, :right, :bottom), framestyle=:origin, label = "Species")
+  Plots.scatter!(plots_x, plots_y, series_annotations = text.(ca_results.rownames, 8, :right, :bottom), label = "Plots")
 end
 ```
-
-## R vs Julia Dune Data
-
-Let's see how the R function `ca::ca()` compares to the Julia function `correspondence_analysis()` defined above.
-
-First load the `dune` dataset bundled in `{vegan}`.
-
-
-::: {.panel-tabset}
-
-## Julia
-
-```{julia load_dune_julia}
-begin
-	dune_df = CSV.read("../data/dune.csv", DataFrame, header = 1)
-	dune_na = NamedArray(Array(dune_df))
-	NamedArrays.setnames!(dune_na, names(dune_df), 2)
-end
-```
-
-## R
-
-```{r load_dune_r}
-dune <- as.matrix(read.csv(file = "../data/dune.csv"))
-```
-
-:::
-
-### Run CA in Julia on Dune data
-
-```{julia dune_ca_julia}
-dune_ca_julia = correspondence_analysis(dune_na)
-```
-
-### Run CA in R using Dune data
-
-```{r dune_ca_r}
-dune_ca_r <- ca::ca(dune)
-```
-
-```{r dune_ca_r_results}
-dune_ca_coords_r <- ca::cacoord(dune_ca_r)
-dune_ca_r_rowcoord <- dune_ca_coords_r$rows
-dune_ca_r_colcoord <- dune_ca_coords_r$columns
-```
-
-### Check equality of R and Julia CA results
-
-Check whether the standard row (plot) and column (species) coordinates produced by the Julia function `correspondence_analaysis()` the R function `ca::ca()` are identical.
-
-First retrieve the Julia results in R.
-
-```{r dune_julia_vs_r}
-dune_ca_julia <- JuliaCall::julia_eval("dune_ca_julia")
-dune_ca_julia_rowcoord <- dune_ca_julia$rowcoord
-dune_ca_julia_colcoord <- dune_ca_julia$colcoord
-```
-
-Then check for equivalence. Note that the row and column names are stripped from the Julia results when calling `JuliaCall::julia_eval("dune_ca_julia")`, so the R results are also unnamed.
-
-The R function `all.equal` is used rather than `identical` as the Julia implementation returns results with higher precision.
-
-```{r all.equal}
-plots_allequal <- all.equal(dune_ca_julia_rowcoord, unname(dune_ca_r_rowcoord))
-species_allequal <- all.equal(dune_ca_julia_colcoord, unname(dune_ca_r_colcoord))
-isTRUE(all(plots_allequal, species_allequal))
-```
-
-Let's view the first two dimensions of the Julia and R results side-by-side.
-
-```{r prepare_data}
-#| echo: false
-r_species <- dune_ca_r_rowcoord[, c("Dim1", "Dim2")] |>
-  as.data.frame()
-r_species["Language"] <- "R"
-r_species["Group"] <- "Species"
-
-julia_species <- dune_ca_julia_rowcoord[, 1:2] |>
-  as.data.frame()
-names(julia_species) <- c("Dim1", "Dim2")
-julia_species["Language"] <- "Julia"
-julia_species["Group"] <- "Species"
-
-both_species <- rbind(r_species, julia_species)
-
-r_plots <- dune_ca_r_colcoord[, c("Dim1", "Dim2")] |>
-  as.data.frame()
-r_plots["Language"] <- "R"
-r_plots["Group"] <- "Plots"
-
-julia_plots <- dune_ca_julia_colcoord[, 1:2] |>
-  as.data.frame()
-names(julia_plots) <- c("Dim1", "Dim2")
-julia_plots["Language"] <- "Julia"
-julia_plots["Group"] <- "Plots"
-
-both_plots <- rbind(r_plots, julia_plots)
-
-```
-
-### Visualise standard coordinates
-
-```{r plot_dune_julia_vs_r}
-#| echo: false
-ggplot2::ggplot() +
-  ggplot2::geom_point(data = both_species, mapping = ggplot2::aes(x = Dim1, y = Dim2, color = "Species")) +
-  ggplot2::geom_point(data = both_plots, mapping = ggplot2::aes(x = Dim1, y = Dim2, color = "Plots")) +
-  ggplot2::facet_wrap(vars(Language)) +
-  ggplot2::theme_minimal() +
-  NULL
-```
-
-### Benchmark Functions
-
-```{julia benchmark_julia}
-@benchmark correspondence_analysis(dune_na)
-```
-
-```{r benchmark_r}
-microbenchmark::microbenchmark(ca::ca(dune))
-```
-
 
 ## References
-
