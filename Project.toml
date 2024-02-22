@@ -1,7 +1,10 @@
 name = "VegSci"
-uuid = "a2c99ba7-3265-411d-b6fc-9affb657b665"
-authors = ["Zeke Marshall"]
-version = "1.0.0-DEV"
+uuid = "31ef3d96-7648-423b-b844-5d3d759e611e"
+keywords = ["Vegetation Science"]
+license = "MIT"
+desc = "Tools for Vegetation Science."
+authors = ["Zeke Marshall <zekmar@ceh.ac.uk>"]
+version = "0.1.0"
 
 [deps]
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"

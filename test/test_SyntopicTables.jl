@@ -5,7 +5,7 @@ using NamedArrays
 using DataFrames
 
 @testset "SyntopicTables.jl" begin
-    x = generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
+    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
     csto_results = VegSci.compose_syntopic_table_object("Test", x)
     @testset "compose_syntopic_table_object" begin 
         @test typeof(csto_results) <: SyntopicTable
