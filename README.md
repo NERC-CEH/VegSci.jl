@@ -15,7 +15,7 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 
 `VegSci.jl` is a package containing tools for vegetation science using
 the Julia (Bezanson et al. 2017), a growing scientific programming
-language which solves the ‘two language problem’ (@ Roesch et al. 2023),
+language which solves the ‘two language problem’ (Roesch et al. 2023),
 offering C and FORTRAN-like performance alongside the readability and
 user-friendliness of higher level languages such as Python. `VegSci.jl`
 aims to collate selected functionality found in popular vegetation
@@ -27,6 +27,8 @@ pipelines in vegetation research (Sperandii et al. 2024), developed
 primarily with the application to the vegetation of Great Britain in
 mind, but fully generalisable. Nomenclature follows Theurillat et al.
 (2021).
+
+## References
 
 Bezanson, Jeff, Alan Edelman, Stefan Karpinksi, and Viral B. Shah. 2017.
 “Julia: A Fresh Approach to Numerical Computing.” *SIAM Review* 59 (1):
