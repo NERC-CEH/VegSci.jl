@@ -21,7 +21,7 @@ using Pkg; Pkg.activate("docs")
 ```
 
 ```{julia import_packages_julia}
-using EcoVeg
+using VegSci
 using NamedArrays
 using DataFrames
 using CSV
@@ -37,7 +37,7 @@ using Clustering
 Create example data in the form of a site by species named matrix, making row (SiteA-2) and column (Species7) contain all zero entries, for testing.
 
 ```{julia create_example_data}
-mat = EcoVeg.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+mat = VegSci.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 ## Steps

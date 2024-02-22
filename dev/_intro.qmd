@@ -12,7 +12,7 @@ julia: julia-1.10
 bibliography: ../../references.bib
 ---
 
-# EcoVeg
+# VegSci
 
 ```{julia activate_environment}
 #| include: false
@@ -21,7 +21,7 @@ using Pkg; Pkg.activate("docs")
 
 ```{julia load_packages}
 #| include: false
-using EcoVeg
+using VegSci
 using InvertedIndices
 using Clustering
 ```
@@ -30,7 +30,7 @@ Tools for vegetation science.
 
 ## Background
 
-`EcoVeg.jl` contains tools for vegetation science using the Julia programming language [@bezanson2017].
+`VegSci.jl` contains tools for vegetation science using the Julia programming language [@bezanson2017].
 
 Solves two language problem [@roesch2023]
 
@@ -41,28 +41,28 @@ Nomenclature follows @theurillat2021.
 
 ## Installation 
 
-To install the latest stable release of `EcoVeg`:
+To install the latest stable release of `VegSci`:
 
 ```{.julia}
 using Pkg
-Pkg.add("EcoVeg")
+Pkg.add("VegSci")
 ```
 
-To install the development version of `EcoVeg`:
+To install the development version of `VegSci`:
 
 ```{.julia}
 using Pkg
-Pkg.add(url="https://github.com/ZekeMarshall/EcoVeg.jl", rev = "develop")
+Pkg.add(url="https://github.com/ZekeMarshall/VegSci.jl", rev = "develop")
 ```
 
 ## Usage Example 
 
 To demonstrate...
 
-First we begin with generating two example plot by species `NamedArrays.NamedMatrix` object using the function `EcoVeg.generate_test_array` as test data.
+First we begin with generating two example plot by species `NamedArrays.NamedMatrix` object using the function `VegSci.generate_test_array` as test data.
 
 ```{julia example_data}
-x = EcoVeg.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+x = VegSci.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 ### Classification
@@ -94,9 +94,9 @@ memberships
 Once the plots have been grouped into clusters, we can proceed to summarise their composition via the creation of `SyntopicTable` objects.
 
 ```{julia syntopic_table_x}
-syn_1 = EcoVeg.compose_syntopic_table_object("Syn1", x[getindex(memberships, 1),:])
-syn_2 = EcoVeg.compose_syntopic_table_object("Syn2", x[getindex(memberships, 2),:])
-EcoVeg.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
+syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(memberships, 1),:])
+syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(memberships, 2),:])
+VegSci.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
 ```
 
 ### Identification of High-Fidelity Species
@@ -108,7 +108,7 @@ EcoVeg.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
 Let's generate a second example matrix, consisting of sample 5 releves, against which we want to calculate the similarity.
 
 ```{julia example_data}
-y = EcoVeg.generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
+y = VegSci.generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
 ```
 
 Three methods will be demonstrated.
@@ -120,21 +120,21 @@ Three methods will be demonstrated.
 First, let's compose a syntopic table object from the "y" sample data and extract the syntopic tables in matrix format.
 
 ```{julia syntopic_table_y}
-syn_y = EcoVeg.compose_syntopic_table_object("Sample", y)
-syn_y_mat = EcoVeg.extract_syntopic_matrix(syn_y)
-syn_1_mat = EcoVeg.extract_syntopic_matrix(syn_1)
-syn_2_mat = EcoVeg.extract_syntopic_matrix(syn_2)
+syn_y = VegSci.compose_syntopic_table_object("Sample", y)
+syn_y_mat = VegSci.extract_syntopic_matrix(syn_y)
+syn_1_mat = VegSci.extract_syntopic_matrix(syn_1)
+syn_2_mat = VegSci.extract_syntopic_matrix(syn_2)
 ```
 
 Now we have three matrices, containg the relative frequencies of each species present in the sample releves which constitute each syntaxon.
 However, each of the syntaxa are composed of a different set of species, in Julia we need a helper function to merge these matrices and ensure each matrix contains each species across all the matrices. This function is broadly equivalent to the R function `base::merge`.
 
 ```{julia merge_arrays}
-merged_syn_mats = EcoVeg.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
+merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
 ```
 
 ```{julia czekanowski_index}
-EcoVeg.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
+VegSci.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
 ```
 
 ### Multivariate Analysis

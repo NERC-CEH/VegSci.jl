@@ -27,7 +27,7 @@ The Julia package MultivariateStats.jl does not currently contain an implementat
 ## Import Required Packages
 
 ```{julia import_packages}
-using EcoVeg
+using VegSci
 using NamedArrays
 using LinearAlgebra
 using CSV
@@ -41,7 +41,7 @@ using Plots
 Create example data in the form of a site by species named matrix, N.
 
 ```{julia create_example_data}
-N = EcoVeg.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+N = VegSci.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
 

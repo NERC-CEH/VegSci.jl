@@ -15,7 +15,7 @@ This page outlines a variety of utility functions for helping wrangle data into 
 
 ```{julia import_packages_julia}
 using Pkg; Pkg.activate("docs")
-using EcoVeg
+using VegSci
 using NamedArrays
 using BenchmarkTools
 using SparseArrays

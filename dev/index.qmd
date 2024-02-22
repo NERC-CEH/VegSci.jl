@@ -18,9 +18,9 @@ using Pkg; Pkg.activate("docs")
 ```
 
 ```@meta
-CurrentModule = EcoVeg
+CurrentModule = VegSci
 ```
 
-Documentation for [EcoVeg.jl](https://github.com/ZekeMarhshall/EcoVeg.jl).
+Documentation for [VegSci.jl](https://github.com/ZekeMarhshall/VegSci.jl).
 
 {{< include _intro.qmd >}}
