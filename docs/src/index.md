@@ -13,17 +13,20 @@ Tools for vegetation science.
 
 ## Background
 
-`VegSci.jl` contains tools for vegetation science using the Julia
-programming language (Bezanson et al. 2017).
-
-Solves two language problem (Roesch et al. 2023)
-
-Aims to collate functionality found in JUICE, vegan, MAVIS into a single
-location with a user-friendly API and transparent methodologies. With
-the aim of assisting in the creation of reproducible analysis (Sperandii
-et al. 2024).
-
-Nomenclature follows Theurillat et al. (2021).
+`VegSci.jl` is a package containing tools for vegetation science using
+the Julia (Bezanson et al. 2017), a growing scientific programming
+language which solves the ‘two language problem’ (@ Roesch et al. 2023),
+offering C and FORTRAN-like performance alongside the readability and
+user-friendliness of higher level languages such as Python. `VegSci.jl`
+aims to collate selected functionality found in popular vegetation
+science software programs/packages such as JUICE, vegan, ade4, vegclust,
+vegsoup, and ecotraj into a single location with a user-friendly API and
+transparent methodologies. `VegSci.jl` is being developed with the aim
+of assisting in the creation of high-performance, reproducible analysis
+pipelines in vegetation research (Sperandii et al. 2024), developed
+primarily with the application to the vegetation of Great Britain in
+mind, but fully generalisable. Nomenclature follows Theurillat et al.
+(2021).
 
 ## Installation
 
@@ -56,29 +59,29 @@ x = VegSci.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix
     30×20 Named Matrix{Float64}
     Releve ╲ Species │   Species1    Species2  …   Species19   Species20
     ─────────────────┼──────────────────────────────────────────────────
-    SiteA-1          │   0.126303    0.187072  …    0.210793         0.0
-    SiteA-2          │        0.0    0.144847            0.0   0.0936073
-    SiteA-3          │   0.125143   0.0774974            0.0   0.0216059
-    SiteA-4          │        0.0         0.0            0.0   0.0820958
-    SiteA-5          │    0.11744         0.0            0.0         0.0
-    SiteA-6          │   0.143738         0.0            0.0   0.0366179
-    SiteA-7          │   0.200434         0.0       0.109825         0.0
-    SiteA-8          │   0.039486   0.0575995            0.0   0.0494997
-    SiteA-9          │        0.0         0.0        0.16484   0.0646168
-    SiteA-10         │   0.044275   0.0280082            0.0         0.0
-    SiteA-11         │   0.112592    0.144315            0.0         0.0
+    SiteA-1          │        0.0   0.0961665  …         0.0         0.0
+    SiteA-2          │        0.0         0.0       0.101352         0.0
+    SiteA-3          │   0.232736         0.0            0.0         0.0
+    SiteA-4          │        0.0         0.0      0.0112884    0.113199
+    SiteA-5          │  0.0343561    0.151313       0.119557         0.0
+    SiteA-6          │  0.0482408         0.0       0.132966   0.0459301
+    SiteA-7          │  0.0481567         0.0      0.0787806   0.0791549
+    SiteA-8          │        0.0         0.0       0.163913         0.0
+    SiteA-9          │   0.119563   0.0542965            0.0   0.0582056
+    SiteA-10         │        0.0  0.00102027            0.0   0.0605912
+    SiteA-11         │        0.0         0.0       0.194125         0.0
     ⋮                           ⋮           ⋮  ⋱           ⋮           ⋮
-    SiteA-20         │   0.257369    0.155278            0.0         0.0
-    SiteA-21         │   0.187503   0.0431709            0.0   0.0543969
-    SiteA-22         │        0.0         0.0       0.183636         0.0
-    SiteA-23         │        0.0    0.139459       0.094891         0.0
-    SiteA-24         │  0.0755919         0.0       0.042628    0.143788
-    SiteA-25         │        0.0    0.147187            0.0         0.0
-    SiteA-26         │  0.0264285         0.0       0.152865         0.0
-    SiteA-27         │        0.0    0.246575       0.209535    0.188035
-    SiteA-28         │        0.0         0.0            0.0         0.0
-    SiteA-29         │   0.117252         0.0      0.0344899         0.0
-    SiteA-30         │        0.0   0.0408142  …         0.0   0.0131516
+    SiteA-20         │   0.157566   0.0929004      0.0696219  0.00322057
+    SiteA-21         │   0.149004   0.0849708            0.0   0.0396169
+    SiteA-22         │        0.0   0.0806118      0.0954818    0.199833
+    SiteA-23         │        0.0         0.0       0.248834   0.0484612
+    SiteA-24         │   0.164072         0.0      0.0217969         0.0
+    SiteA-25         │  0.0938849   0.0388366            0.0   0.0323463
+    SiteA-26         │     0.1296   0.0720648            0.0         0.0
+    SiteA-27         │   0.111855    0.153854       0.153939   0.0567083
+    SiteA-28         │   0.100784         0.0            0.0         0.0
+    SiteA-29         │        0.0         0.0            0.0         0.0
+    SiteA-30         │    0.14317   0.0628497  …         0.0    0.144168
 
 ### Classification
 
@@ -105,9 +108,9 @@ memberships
 ```
 
     Dict{Int64, Vector{Int64}} with 3 entries:
-      2 => [1, 2, 5, 7, 17, 18, 19, 21, 23, 26, 27, 29, 30]
-      3 => [3, 10, 11, 13, 20, 25]
-      1 => [4, 6, 8, 9, 12, 14, 15, 16, 22, 24, 28]
+      2 => [18, 19, 27]
+      3 => [3, 9, 10, 12, 13, 14, 16, 20, 21, 24, 25, 26, 28, 30]
+      1 => [1, 2, 4, 5, 6, 7, 8, 11, 15, 17, 22, 23, 29]
 
 ### Creation of Syntopic Tables
 
@@ -123,31 +126,28 @@ VegSci.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
 
 
     Community Name: Syn2
-    Releves: n = 13
-    Species: n = 20
+    Releves: n = 3
+    Species: n = 17
     ┌───────────┬───────────────────┬─────────────────┐
     │   Species │ RelativeFrequency │       Abundance │
     ├───────────┼───────────────────┼─────────────────┤
-    │ Species16 │               0.8 │ 0.1 (0.0 - 0.2) │
-    │ Species15 │               0.7 │ 0.1 (0.1 - 0.3) │
-    │  Species1 │               0.6 │ 0.1 (0.0 - 0.3) │
-    │  Species2 │               0.6 │ 0.1 (0.0 - 0.2) │
-    │  Species4 │               0.6 │ 0.1 (0.0 - 0.2) │
-    │ Species12 │               0.6 │ 0.1 (0.0 - 0.2) │
-    │ Species14 │               0.6 │ 0.1 (0.0 - 0.1) │
-    │ Species19 │               0.6 │ 0.1 (0.0 - 0.2) │
-    │  Species3 │               0.5 │ 0.2 (0.1 - 0.2) │
-    │  Species5 │               0.5 │ 0.1 (0.0 - 0.2) │
-    │  Species8 │               0.5 │ 0.0 (0.0 - 0.1) │
-    │ Species18 │               0.5 │ 0.0 (0.0 - 0.1) │
-    │ Species10 │               0.4 │ 0.1 (0.0 - 0.2) │
-    │ Species17 │               0.4 │ 0.1 (0.0 - 0.1) │
-    │ Species20 │               0.4 │ 0.1 (0.0 - 0.2) │
-    │  Species6 │               0.3 │ 0.1 (0.0 - 0.1) │
-    │  Species7 │               0.2 │ 0.1 (0.1 - 0.2) │
-    │ Species11 │               0.2 │ 0.1 (0.1 - 0.1) │
-    │ Species13 │               0.2 │ 0.1 (0.0 - 0.2) │
-    │  Species9 │               0.2 │ 0.0 (0.0 - 0.1) │
+    │  Species1 │               1.0 │ 0.1 (0.0 - 0.2) │
+    │ Species18 │               1.0 │ 0.1 (0.1 - 0.2) │
+    │  Species7 │               0.7 │ 0.2 (0.2 - 0.2) │
+    │  Species5 │               0.7 │ 0.1 (0.1 - 0.1) │
+    │  Species8 │               0.7 │ 0.1 (0.0 - 0.2) │
+    │ Species10 │               0.7 │ 0.1 (0.0 - 0.1) │
+    │ Species13 │               0.7 │ 0.1 (0.0 - 0.2) │
+    │ Species15 │               0.7 │ 0.1 (0.0 - 0.2) │
+    │ Species17 │               0.7 │ 0.1 (0.1 - 0.1) │
+    │ Species19 │               0.7 │ 0.1 (0.0 - 0.2) │
+    │  Species2 │               0.3 │ 0.2 (0.2 - 0.2) │
+    │  Species6 │               0.3 │ 0.2 (0.2 - 0.2) │
+    │  Species3 │               0.3 │ 0.1 (0.1 - 0.1) │
+    │ Species20 │               0.3 │ 0.1 (0.1 - 0.1) │
+    │ Species12 │               0.3 │ 0.0 (0.0 - 0.0) │
+    │ Species14 │               0.3 │ 0.0 (0.0 - 0.0) │
+    │ Species16 │               0.3 │ 0.0 (0.0 - 0.0) │
     └───────────┴───────────────────┴─────────────────┘
 
 ### Identification of High-Fidelity Species
@@ -166,11 +166,11 @@ y = VegSci.generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix =
     5×30 Named Matrix{Float64}
     Releve ╲ Species │   Species1    Species2  …   Species29   Species30
     ─────────────────┼──────────────────────────────────────────────────
-    SiteB-1          │        0.0         0.0  …    0.457253         0.0
-    SiteB-2          │   0.393232         0.0            0.0         0.0
-    SiteB-3          │   0.575143         0.0       0.055049         0.0
+    SiteB-1          │        0.0         0.0  …     0.12865         0.0
+    SiteB-2          │        0.0         0.0            0.0         0.0
+    SiteB-3          │        0.0         0.0       0.023333         0.0
     SiteB-4          │        0.0         0.0            0.0         0.0
-    SiteB-5          │        0.0         0.0  …         0.0   0.0581744
+    SiteB-5          │        0.0         0.0  …         0.0         0.0
 
 Three methods will be demonstrated.
 
@@ -188,10 +188,10 @@ syn_1_mat = VegSci.extract_syntopic_matrix(syn_1)
 syn_2_mat = VegSci.extract_syntopic_matrix(syn_2)
 ```
 
-    1×20 Named Matrix{Float64}
-    A ╲ B │  Species1   Species2   Species3  …  Species18  Species19  Species20
-    ──────┼────────────────────────────────────────────────────────────────────
-    Syn2  │  0.121872   0.135754   0.174128  …  0.0348915   0.131345  0.0619423
+    1×17 Named Matrix{Float64}
+    A ╲ B │   Species1    Species2  …   Species19   Species20
+    ──────┼──────────────────────────────────────────────────
+    Syn2  │   0.111855    0.153854  …    0.101154   0.0567083
 
 Now we have three matrices, containg the relative frequencies of each
 species present in the sample releves which constitute each syntaxon.
@@ -205,11 +205,11 @@ merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
 ```
 
     3×27 Named Matrix{Float64}
-     A ╲ B │  Species1   Species3   Species5  …  Species14  Species15  Species19
-    ───────┼────────────────────────────────────────────────────────────────────
-    Sample │  0.484188   0.185498   0.242788  …        0.0        0.0        0.0
-    Syn1   │ 0.0554367  0.0892419   0.094885     0.0875246  0.0337278   0.107604
-    Syn2   │  0.121872   0.174128   0.132866  …  0.0861042   0.142692   0.131345
+     A ╲ B │   Species4    Species5  …   Species17   Species20
+    ───────┼──────────────────────────────────────────────────
+    Sample │   0.104638   0.0150727  …         0.0         0.0
+    Syn1   │  0.0642311    0.107037      0.0981027    0.063808
+    Syn2   │        0.0    0.121978  …   0.0648035   0.0567083
 
 ``` julia
 VegSci.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
@@ -218,7 +218,7 @@ VegSci.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"S
     1×2 Named Matrix{Float64}
      A ╲ B │     Syn1      Syn2
     ───────┼───────────────────
-    Sample │ 0.393623  0.467868
+    Sample │ 0.305457  0.231434
 
 ### Multivariate Analysis
 
