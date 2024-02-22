@@ -5,7 +5,8 @@
 [![Codecov](https://codecov.io/gh/ZekeMarshall/VegSci.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/ZekeMarshall/VegSci.jl)
 [![Aqua
 QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](https://github.com/ZekeMarshall/VegSci.jl)
-[![License](https://img.shields.io/github/license/ZekeMarshall/VegSci.jl)](LICENSE)
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999.png)]()
 [![Project Status: WIP – Initial development is in progress, but there
 has not yet been a stable, usable release suitable for the
@@ -14,9 +15,9 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 # VegSci.jl
 
 `VegSci.jl` is a package containing tools for vegetation science using
-the Julia (Bezanson et al. 2017), a growing scientific programming
-language which solves the ‘two language problem’ (Roesch et al. 2023),
-offering C and FORTRAN-like performance alongside the readability and
+Julia (Bezanson et al. 2017), a growing scientific programming language
+which solves the ‘two language problem’ (Roesch et al. 2023), offering C
+and FORTRAN-like performance alongside the readability and
 user-friendliness of higher level languages such as Python. `VegSci.jl`
 aims to collate selected functionality found in popular vegetation
 science software programs/packages such as JUICE, vegan, ade4, vegclust,
