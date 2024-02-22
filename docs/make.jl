@@ -1,24 +1,24 @@
-using EcoVeg
+using VegSci
 using Documenter
 
 ex_meta = quote
     # Import module(s):
-    using EcoVeg
+    using VegSci
 
     # Data:
 
     # Model:
 end
 
-DocMeta.setdocmeta!(EcoVeg, :DocTestSetup, ex_meta; recursive=true)
+DocMeta.setdocmeta!(VegSci, :DocTestSetup, ex_meta; recursive=true)
 
 makedocs(;
-    modules=[EcoVeg],
+    modules=[VegSci],
     authors="Zeke Marshall",
-    sitename="EcoVeg.jl",
+    sitename="VegSci.jl",
     format=Documenter.HTML(;
         prettyurls = get(ENV, "CI", nothing) == "true",
-        canonical="https://ZekeMarshall.github.io/EcoVeg.jl",
+        canonical="https://ZekeMarshall.github.io/VegSci.jl",
         edit_link="main",
         assets=String[],
     ),
@@ -33,6 +33,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/ZekeMarshall/EcoVeg.jl.git",
+    repo="github.com/ZekeMarshall/VegSci.jl.git",
     devbranch="main",
 )

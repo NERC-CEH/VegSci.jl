@@ -1,4 +1,4 @@
-using EcoVeg
+using VegSci
 using Test
 using NamedArrays
 
@@ -8,7 +8,7 @@ using NamedArrays
     y = generate_test_array(rown = 5, coln = 10, meancoloccs = 6, rowprefix = "SiteB-", colprefix = "Species")
 
     @testset "czekanowski_index" begin
-        czeksim_results = EcoVeg.czekanowski_index(x, y)
+        czeksim_results = VegSci.czekanowski_index(x, y)
         @test typeof(czeksim_results) <: NamedMatrix
         @test size(czeksim_results) == (10, 5)
         @test all(x -> x .>= 0.0, czeksim_results)

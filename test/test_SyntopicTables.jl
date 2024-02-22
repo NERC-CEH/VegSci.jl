@@ -1,4 +1,4 @@
-using EcoVeg
+using VegSci
 using Test
 using Suppressor
 using NamedArrays
@@ -6,10 +6,10 @@ using DataFrames
 
 @testset "SyntopicTables.jl" begin
     x = generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
-    csto_results = EcoVeg.compose_syntopic_table_object("Test", x)
+    csto_results = VegSci.compose_syntopic_table_object("Test", x)
     @testset "compose_syntopic_table_object" begin 
         @test typeof(csto_results) <: SyntopicTable
-        @test fieldnames(typeof(csto_results)) == fieldnames(EcoVeg.SyntopicTable) 
+        @test fieldnames(typeof(csto_results)) == fieldnames(VegSci.SyntopicTable) 
         @test typeof(csto_results.name) <: String
         @test typeof(csto_results.releve_n) <: Int64
         @test typeof(csto_results.releve_ids) <: Vector{String}
@@ -25,11 +25,11 @@ using DataFrames
     end
     @testset "print_summary_syntopic_table" begin
         # Need to think about how I test this given the complexity of the output.
-        psst_result = @capture_out EcoVeg.print_summary_syntopic_table(csto_results, "normal", "cover_proportion")
+        psst_result = @capture_out VegSci.print_summary_syntopic_table(csto_results, "normal", "cover_proportion")
         @test typeof(psst_result) <: String
     end
     @testset "extract_syntopic_matrix" begin
-        esm_results = EcoVeg.extract_syntopic_matrix(csto_results)
+        esm_results = VegSci.extract_syntopic_matrix(csto_results)
         @test typeof(esm_results) <: NamedMatrix
         @test names(esm_results)[2] == names(x)[2]
         @test size(esm_results) == (1, 10)

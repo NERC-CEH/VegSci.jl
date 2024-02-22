@@ -12,7 +12,7 @@ using Pkg; Pkg.activate("docs")
 ```
 
 ```{julia load_packages}
-using EcoVeg
+using VegSci
 using Clustering
 using CSV
 using DataFrames

@@ -18,7 +18,7 @@ end
 """
 binary_similarity(x::NamedArray, eq::AbstractString)
 
-Create a personalised greeting for EcoVeg using a `name`.
+Create a personalised greeting for VegSci using a `name`.
 
 ...
 # Arguments

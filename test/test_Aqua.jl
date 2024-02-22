@@ -2,7 +2,7 @@ using Aqua
 
 @testset "Aqua.jl" begin
     Aqua.test_all(
-      EcoVeg;
+      VegSci;
       piracies=false,
     )
   end

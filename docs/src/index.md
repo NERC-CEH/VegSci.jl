@@ -1,16 +1,16 @@
 
 
 ``` @meta
-CurrentModule = EcoVeg
+CurrentModule = VegSci
 ```
 
 Documentation for
-[EcoVeg.jl](https://github.com/ZekeMarhshall/EcoVeg.jl).
+[VegSci.jl](https://github.com/ZekeMarhshall/VegSci.jl).
 
-# EcoVeg
+# VegSci
 
 ``` julia
-using EcoVeg
+using VegSci
 using InvertedIndices
 using Clustering
 ```
@@ -19,7 +19,7 @@ Tools for vegetation science.
 
 ## Background
 
-`EcoVeg.jl` contains tools for vegetation science using the Julia
+`VegSci.jl` contains tools for vegetation science using the Julia
 programming language (Bezanson et al. 2017).
 
 Solves two language problem (Roesch et al. 2023)
@@ -33,18 +33,18 @@ Nomenclature follows Theurillat et al. (2021).
 
 ## Installation
 
-To install the latest stable release of `EcoVeg`:
+To install the latest stable release of `VegSci`:
 
 ``` julia
 using Pkg
-Pkg.add("EcoVeg")
+Pkg.add("VegSci")
 ```
 
-To install the development version of `EcoVeg`:
+To install the development version of `VegSci`:
 
 ``` julia
 using Pkg
-Pkg.add(url="https://github.com/ZekeMarshall/EcoVeg.jl", rev = "develop")
+Pkg.add(url="https://github.com/ZekeMarshall/VegSci.jl", rev = "develop")
 ```
 
 ## Usage Example
@@ -53,7 +53,7 @@ To demonstrate…
 
 First we begin with generating two example plot by species
 `NamedArrays.NamedMatrix` object using the function
-`EcoVeg.generate_test_array` as test data.
+`VegSci.generate_test_array` as test data.
 
 ``` julia
 x = generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
@@ -121,8 +121,8 @@ Once the plots have been grouped into clusters, we can proceed to
 summarise their composition via the creation of `SyntopicTable` objects.
 
 ``` julia
-syn_1 = EcoVeg.compose_syntopic_table_object("Syn1", x[getindex(memberships, 1),:])
-syn_2 = EcoVeg.compose_syntopic_table_object("Syn2", x[getindex(memberships, 2),:])
+syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(memberships, 1),:])
+syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(memberships, 2),:])
 print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
 ```
 
@@ -186,7 +186,7 @@ First, let’s compose a syntopic table object from the “y” sample data
 and extract the syntopic tables in matrix format.
 
 ``` julia
-syn_y = EcoVeg.compose_syntopic_table_object("Sample", y)
+syn_y = VegSci.compose_syntopic_table_object("Sample", y)
 syn_y_mat = extract_syntopic_matrix(syn_y)
 syn_1_mat = extract_syntopic_matrix(syn_1)
 syn_2_mat = extract_syntopic_matrix(syn_2)
@@ -205,7 +205,7 @@ these matrices and ensure each matric contains each species across all
 the matrices.
 
 ``` julia
-merged_syn_mats = EcoVeg.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
+merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
 ```
 
     3×27 Named Matrix{Float64}
@@ -216,7 +216,7 @@ merged_syn_mats = EcoVeg.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
     Syn2   │  0.0863782    0.165752  …   0.0743653   0.0928024
 
 ``` julia
-EcoVeg.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
+VegSci.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
 ```
 
     1×2 Named Matrix{Float64}

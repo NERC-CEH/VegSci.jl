@@ -18,7 +18,7 @@ This page outlines how to calculate binary (dis)similarity coefficients using pr
 ## Julia
 
 ```{julia import_packages_julia}
-using EcoVeg
+using VegSci
 using NamedArrays
 using LinearAlgebra
 using CSV

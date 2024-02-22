@@ -51,7 +51,7 @@ dune <- as.matrix(read.csv(file = "./docs/src/data/dune.csv"))
 ### Run CA in Julia on Dune data
 
 ```{julia dune_ca_julia}
-dune_ca_julia = EcoVeg.correspondence_analysis(dune_na)
+dune_ca_julia = VegSci.correspondence_analysis(dune_na)
 ```
 
 ### Run CA in R using Dune data

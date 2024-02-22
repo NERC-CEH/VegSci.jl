@@ -1,12 +1,12 @@
-using EcoVeg
+using VegSci
 using Documenter
 using Test
 
 # Doctests
-doctest(EcoVeg)
+doctest(VegSci)
 
 # Collate all tests
-@testset "EcoVeg.jl" begin
+@testset "VegSci.jl" begin
     include("test_Utilities.jl")
     include("test_SyntopicTables.jl")
     include("test_SimilarityIndices.jl")

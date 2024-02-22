@@ -30,10 +30,10 @@ function compose_syntopic_table_object(name::String, mat::NamedArray)
 
     abs_frequency = vec(sum(x->x>0, mat, dims=1))
     rel_frequency = vec(abs_frequency ./ releve_n)
-    min_abundance = vec(EcoVeg.nzfunc(minimum, mat, dims = 1))
+    min_abundance = vec(VegSci.nzfunc(minimum, mat, dims = 1))
     max_abundance = vec(maximum(mat, dims = 1))
     mean_abundance = vec(mean(mat, dims = 1))
-    median_abundance = vec(EcoVeg.nzfunc(median, mat, dims = 1))
+    median_abundance = vec(VegSci.nzfunc(median, mat, dims = 1))
     
     syntopic_table_object = SyntopicTable(name,
                                           releve_n,

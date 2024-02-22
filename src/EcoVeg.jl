@@ -1,4 +1,4 @@
-module EcoVeg
+module VegSci
 
 export generate_test_array
 export nzfunc

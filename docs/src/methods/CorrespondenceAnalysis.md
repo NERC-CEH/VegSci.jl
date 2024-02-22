@@ -14,7 +14,7 @@ implementation of correspondence analysis.
 ## Import Required Packages
 
 ``` julia
-using EcoVeg
+using VegSci
 using NamedArrays
 using LinearAlgebra
 using CSV
@@ -28,7 +28,7 @@ using Plots
 Create example data in the form of a site by species named matrix, N.
 
 ``` julia
-N = EcoVeg.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+N = VegSci.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
 ```
 
     20×30 Named Matrix{Float64}

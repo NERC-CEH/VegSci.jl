@@ -1,7 +1,7 @@
 
 
 ``` @meta
-CurrentModule = EcoVeg
+CurrentModule = VegSci
 ```
 
 # Reference
@@ -21,7 +21,7 @@ Pages = ["_reference.md"]
 
 ``` @autodocs
 Modules = [
-    EcoVeg,
+    VegSci,
 ]
 Private = false
 ```
@@ -30,7 +30,7 @@ Private = false
 
 ``` @autodocs
 Modules = [
-    EcoVeg,
+    VegSci,
 ]
 Public = false
 ```
