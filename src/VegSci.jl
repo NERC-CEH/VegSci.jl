@@ -5,8 +5,8 @@ export nzfunc
 export merge_namedarrays
 include("Utilities.jl")
 
-export binary_similarity
-export czekanowski_index
+export jaccard_coefficient
+export steinhaus_coefficient
 include("SimilarityIndices.jl")
 
 # include(Fidelity.jl)

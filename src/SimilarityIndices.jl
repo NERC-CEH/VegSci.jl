@@ -3,7 +3,7 @@ using LinearAlgebra
 
 """
 """
-function jaccard_similarity(x::Union{Matrix, NamedMatrix})
+function jaccard_coefficient(x::Union{Matrix, NamedMatrix})
     samp = Int.(x .!= 0)
 	d = samp * transpose(samp)
 	s = Array(diag(d))
@@ -16,13 +16,13 @@ function jaccard_similarity(x::Union{Matrix, NamedMatrix})
 end
 
 """
-binary_similarity(x::NamedArray, eq::AbstractString)
+binary_dissimilarity(x::Union{Matrix, NamedMatrix}, eq::AbstractString)
 
 Create a personalised greeting for VegSci using a `name`.
 
 ...
 # Arguments
-- `x::NamedArray`: A site by species 
+- `x::Union{Matrix, NamedMatrix}`: A site by species matrix of the class Matrix or NamedArrays.NamedMatrix
 - `eq::AbstractString`: A representing an equation using the terms a, b, and c. The Jaccard similarity by default. "(a ./ (a .+ b .+ c)) + I".
 ...
 
@@ -48,7 +48,7 @@ function binary_dissimilarity(x::Union{Matrix, NamedMatrix}, eq::String)
 end
 
 
-function czekanowski_index(x::NamedArray, y::NamedArray)
+function steinhaus_coefficient(x::NamedArray, y::NamedArray)
 
     # Create a vector of pairwise samples and references to iterate over
     comp_vec = vec(collect(Iterators.product(names(x)[1], names(y)[1])))
@@ -56,7 +56,7 @@ function czekanowski_index(x::NamedArray, y::NamedArray)
     # Create an empty matrix to store results
     results = NamedArray(zeros(size(x, 1), size(y, 1)), names = (names(x)[1], names(y)[1]))
 
-    # Loop through each pair of samples and references, calculate the Czekanowski index, and store the results in the matrix
+    # Loop through each pair of samples and references, calculate the Steinhaus coefficient, and store the results in the matrix
 	# There will be a much better way to iterate through each pair of samples and references!
     for i in comp_vec
         x_i = x[[i[1]],:]

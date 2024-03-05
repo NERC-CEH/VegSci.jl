@@ -23,11 +23,11 @@ aims to collate selected functionality found in popular vegetation
 science software programs/packages such as JUICE, vegan, ade4, vegclust,
 vegsoup, and ecotraj into a single location with a user-friendly API and
 transparent methodologies. `VegSci.jl` is being developed with the aim
-of assisting in the creation of high-performance, reproducible analysis
-pipelines in vegetation research (Sperandii et al. 2024), developed
-primarily with the application to the vegetation of Great Britain in
-mind, but fully generalisable. Nomenclature follows Theurillat et al.
-(2021).
+of assisting in the creation of high-performance, reproducible
+analytical pipelines in vegetation research (Sperandii et al. 2024),
+developed primarily with the application to the vegetation of Great
+Britain in mind, but fully generalisable. Nomenclature follows
+Theurillat et al. (2021).
 
 ## References
 

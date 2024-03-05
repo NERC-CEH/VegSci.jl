@@ -120,7 +120,7 @@ LinearAlgebra.LowerTriangular(j_i)
 Collate the above code into a function, which accepts a Matrix or NamedMatrix, x, and returns a Matrix or NamedMatrix containing the site x site Jaccard similarity values.
 
 ```{julia jaccard_function}
-function jaccard_similarity(x::Union{Matrix, NamedMatrix})
+function jaccard_coefficient(x::Union{Matrix, NamedMatrix})
 	samp = Int.(x .!= 0)
 	d = samp * transpose(samp)
 	s = Array(diag(d))
@@ -136,7 +136,7 @@ end
 Execute function.
 
 ```{julia jaccard_function_execute}
-jaccard_similarity(mat)
+jaccard_coefficient(mat)
 ```
 
 ## Store equations in object
