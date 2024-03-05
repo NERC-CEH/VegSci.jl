@@ -30,9 +30,9 @@ Tools for vegetation science.
 
 ## Background
 
-`VegSci.jl` is a package containing tools for vegetation science using the Julia [@bezanson2017], a growing scientific programming language which solves the 'two language problem' [@@roesch2023], offering C and FORTRAN-like performance alongside the readability and user-friendliness of higher level languages such as Python.
+`VegSci.jl` is a package containing tools for vegetation science using Julia [@bezanson2017], a growing scientific programming language which solves the 'two language problem' [@roesch2023], offering C and FORTRAN-like performance alongside the readability and user-friendliness of higher level languages such as Python.
 `VegSci.jl` aims to collate selected functionality found in popular vegetation science software programs/packages such as JUICE, vegan, ade4, vegclust, vegsoup, and ecotraj into a single location with a user-friendly API and transparent methodologies. 
-`VegSci.jl` is being developed with the aim of assisting in the creation of high-performance, reproducible analysis pipelines in vegetation research [@sperandii2024], developed primarily with the application to the vegetation of Great Britain in mind, but fully generalisable.
+`VegSci.jl` is being developed with the aim of assisting in the creation of high-performance, reproducible analytical pipelines in vegetation research [@sperandii2024], developed primarily with the application to the vegetation of Great Britain in mind, but fully generalisable.
 Nomenclature follows @theurillat2021.
 
 
@@ -112,7 +112,7 @@ Three methods will be demonstrated.
 
 ### Jaccard Similarity
 
-### Czekanowski Index
+### Steinhaus coefficient
 
 First, let's compose a syntopic table object from the "y" sample data and extract the syntopic tables in matrix format.
 
@@ -130,8 +130,8 @@ However, each of the syntaxa are composed of a different set of species, in Juli
 merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
 ```
 
-```{julia czekanowski_index}
-VegSci.czekanowski_index(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
+```{julia steinhaus_coefficient}
+VegSci.steinhaus_coefficient(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
 ```
 
 ### Multivariate Analysis
