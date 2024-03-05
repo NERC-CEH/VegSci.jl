@@ -70,20 +70,20 @@ Let's identify some clusters.
 r = Clustering.fuzzy_cmeans(transpose(x), 3, 2)
 
 cluster_weights = r.weights
-memberships_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
-memberships_mat = hcat(first.(memberships_vec), last.(memberships_vec))
+clusters_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
+clusters_mat = hcat(first.(clusters_vec), last.(clusters_vec))
 
-memberships = Dict
+clusters = Dict
 
-for i in unique(memberships_mat[:,2])
+for i in unique(clusters_mat[:,2])
 
-    rowids = memberships_mat[memberships_mat[:,2] .== i, :][:,1]
-    memberships_i = Dict(i => rowids)
-    memberships = merge(memberships, memberships_i)
+    rowids = clusters_mat[clusters_mat[:,2] .== i, :][:,1]
+    clusters_i = Dict(i => rowids)
+    clusters = merge(clusters, clusters_i)
     
 end
 
-memberships
+clusters
 ```
 
 ### Creation of Syntopic Tables
@@ -91,8 +91,8 @@ memberships
 Once the plots have been grouped into clusters, we can proceed to summarise their composition via the creation of `SyntopicTable` objects.
 
 ```{julia syntopic_table_x}
-syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(memberships, 1),:])
-syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(memberships, 2),:])
+syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(clusters, 1),:])
+syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(clusters, 2),:])
 VegSci.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
 ```
 
