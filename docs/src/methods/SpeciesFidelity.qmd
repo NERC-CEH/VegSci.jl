@@ -1,9 +1,16 @@
 ---
 title: "Species Fidelity"
+format: 
+  commonmark:
+    variant: -raw_html+tex_math_dollars
+    wrap: none
 execute: 
-  enabled: true
+  freeze: auto
+  eval: true
+  echo: true
+  output: true
 julia: julia-1.10
-bibliography: ../references.bib
+bibliography: ../../../references.bib
 ---
 
 ```{julia activate_environment}
@@ -21,10 +28,9 @@ using NamedArrays
 
 ## Outline
 
-This page outlines a variety of utility functions for helping wrangle data into the desired format...
+This methods page provides an overview of the step-by-step implementation of the fidelity metrics following @chytry2002.
 
-The functionality outlined here draws heavily on the functionality found in the program JUICE @tichy2002.
-Fidelity measures follow @chytry2002.
+The functionality outlined here aims to replicate the functionality found in the program JUICE @tichy2002.
 
 ## Load example data.
 
@@ -32,12 +38,14 @@ Load the `dune` dataset bundled with the R package `vegan`.
 
 ```{julia load_dune_julia}
 begin
-	dune_df = CSV.read("./docs/src/data/dune.csv", DataFrame, header = 1)
+	dune_df = CSV.read("../data/dune.csv", DataFrame, header = 1)
 	dune_na = NamedArray(Array(dune_df))
 	NamedArrays.setnames!(dune_na, names(dune_df), 2)
   dune_na = float.(dune_na)
 end
 ```
+
+## Identify Clusters
 
 Let's identify some clusters.
 
@@ -45,20 +53,20 @@ Let's identify some clusters.
 r = Clustering.fuzzy_cmeans(transpose(dune_na), 3, 2)
 
 cluster_weights = r.weights
-memberships_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
-memberships_mat = hcat(first.(memberships_vec), last.(memberships_vec))
+clusters_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
+clusters_mat = hcat(first.(clusters_vec), last.(clusters_vec))
 
-memberships = Dict
+clusters = Dict
 
-for i in unique(memberships_mat[:,2])
+for i in unique(clusters_mat[:,2])
 
-    rowids = memberships_mat[memberships_mat[:,2] .== i, :][:,1]
-    memberships_i = Dict(i => rowids)
-    memberships = merge(memberships, memberships_i)
+    rowids = clusters_mat[clusters_mat[:,2] .== i, :][:,1]
+    clusters_i = Dict(i => rowids)
+    clusters = merge(clusters, clusters_i)
     
 end
 
-memberships
+clusters
 ```
 
 Create a presence-absence matrix by replacing all non-zero values with an Integer value of 1.
@@ -67,21 +75,33 @@ Create a presence-absence matrix by replacing all non-zero values with an Intege
 dune_pa = Int.(dune_na .!= 0)
 ```
 
-### Calculate $N$ the number of releves in the dataset
+## Calculate fidelity metrics
+
+Using cluster 1 as an example, $p = 1$.
+
+### Observed Frequencies
+
+First, calculate the observed frequencies $f(o)_{i}$.
+
+**$N$**
+
+Calculate $N$ the number of releves in the matrix.
 
 ```{julia N}
 N = size(dune_pa)[1]
 ```
 
-### Calculate $N_{p}$ the number of releves in each vegetation unit
+**$N_{p}$**
+
+Calculate $N_{p}$ the number of releves in the particular vegetation unit.
 
 ```{julia Np}
-
-# Np = 
-
+Np = length(getindex(clusters, 1))
 ```
 
-### Calculate $n$ the number of occurrences of the species in the matrix
+**$n$**
+
+Calculate $n$ the number of occurrences of the species in the matrix.
 
 ```{julia n}
 n = sum(dune_pa, dims = 1)
@@ -89,32 +109,79 @@ setnames!(n, ["all"], 1)
 n
 ```
 
-### Calculate $n_{p}$ the number of occureences of the species in the particular vegetation unit
+**$f(o)_{1}$**
 
-```{julia np}
-iter = 0
+Calculate $f(o)_{1}$ or $n_{p}$, the number of occurences of the species in the particular vegetation unit.
 
-for i in keys(memberships)
-
-  dune_pa_i = dune_pa[getindex(memberships, i),:]
-  dune_pa_i_sum = sum(dune_pa_i, dims = 1)
-  setnames!(dune_pa_i_sum, [string(i)], 1)
-
-  if n == 0
-    np = dune_pa_i_sum
-  else
-    np = vcat(np, dune_pa_i_sum)
-  end
-
-  iter = iter + 1
-
-end
+```{julia fo_1}
+np = sum(dune_pa[getindex(clusters, 1),:], dims = 1)
+fo_1 = np
 ```
 
-### Calculate $n - n_{p}$ the number of releves in the dataset
+**$f(o)_{2}$**
 
-```{julia n_np}
+Calculate $n - n_{p}$ the number of releves containing the species that aren't in a particular vegetation unit.
+
+```{julia fo_2}
+fo_2 = n - np
+```
+
+**$f(o)_{3}$**
+
+Calculate $N_{p} - n_{p}$ the number of releves which don't contain the species in a particular vegetation unit.
+
+```{julia fo_3}
+fo_3 = Np .- np
+```
+
+**$f(o)_{4}$**
+
+Calculate $N - N_{p} - n + n_{p}$ the number of releves not containing the species and not in the vegetation unit
+
+```{julia fo_4}
+fo_4 = N - Np .- n .+ np
+```
+
+### Expected Frequencies
+
+Then calculate the expected frequencies $f(e)_{i}$
+
+**$f(e)_{1}**
+
+Calculate the expected number of the releves containing the species in the particular vegetation unit $n \cdot N_{p}/N$.
+
+```{julia fe_1}
+fe_1 = n .* (Np / N)
+```
+
+**$f(e)_{2}**
+
+Cal
+
+```{julia fe_2}
+fe_2 = n .* ((N - Np) / N)
+```
+
+**$f(e)_{3}**
+
+```{julia fe_3}
+fe_3 = (N .- n) .* (Np ./ N)
+```
+
+**$f(e)_{4}**
+
+```{julia fe_4}
+fe_4 = (N .- n) .* ((N - Np) / N)
+```
 
 
+### Dufrêne-Legendre Indicator Value Index
 
+```{julia indval}
+indval = ((np .* (N - Np)) ./ ((n .* (Np .- (2 .* np))) .+ (np .* N))) .* (np ./ Np)
+```
+
+## Compose function
+
+```{julia fidelity_function}
 ```
