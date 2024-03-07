@@ -80,3 +80,41 @@ function merge_namedarrays(mats::Vector)
     return results
 
 end
+
+function align_array_columns(x::NamedArray, y::NamedArray, colorder::String = "x")
+
+    # Check which columns are missing from x and y
+    x_missing_cols = setdiff(Set(names(y)[2]), Set(names(x)[2]))
+    y_missing_cols = setdiff(Set(names(x)[2]), Set(names(y)[2]))
+
+    x_mat = copy(x)
+
+    # If there are missing columns in the x matrix
+    if length(x_missing_cols) != 0
+        x_mat_missing = NamedArray(zeros(size(x,1), length(x_missing_cols)), names = (vec(names(x)[1]), collect(x_missing_cols)))
+        x_mat_colnames = names(x)[2]
+        x_mat = [x x_mat_missing]
+        setnames!(x_mat, [x_mat_colnames; collect(x_missing_cols)], 2)
+    end
+
+    y_mat = copy(y)
+
+    # If there are missing columns in the x matrix
+    if length(y_missing_cols) != 0
+        y_mat_missing = NamedArray(zeros(size(y,1), length(y_missing_cols)), names = (vec(names(y)[1]), collect(y_missing_cols)))
+        y_mat_colnames = names(y)[2]
+        y_mat = [y y_mat_missing]
+        setnames!(y_mat, [y_mat_colnames; collect(y_missing_cols)], 2)
+    end
+
+    if colorder == "x"
+        y_mat = y_mat[:, names(x_mat)[2]]
+    elseif colorder == "y"
+        x_mat = x_mat[:, names(y_mat)[2]]
+    end
+
+    aligned_mats = (x = x_mat, y = y_mat)
+
+    return aligned_mats
+
+end

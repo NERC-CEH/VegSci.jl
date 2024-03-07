@@ -64,7 +64,7 @@ x = VegSci.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix
 
 ### Classification
 
-Let's identify some clusters.
+Let's identify some clusters, storing the cluster-releve memberships as a dictionary.
 
 ```{julia fuzzy_c_clusters}
 r = Clustering.fuzzy_cmeans(transpose(x), 3, 2)
@@ -78,7 +78,7 @@ clusters = Dict
 for i in unique(clusters_mat[:,2])
 
     rowids = clusters_mat[clusters_mat[:,2] .== i, :][:,1]
-    clusters_i = Dict(i => rowids)
+    clusters_i = Dict(string(i) => string.(rowids))
     clusters = merge(clusters, clusters_i)
     
 end

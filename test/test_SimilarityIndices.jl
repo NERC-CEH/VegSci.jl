@@ -4,8 +4,8 @@ using NamedArrays
 
 @testset "SimilarityIndices.jl" begin
 
-    x = generate_test_array(rown = 10, coln = 10, meancoloccs = 6, rowprefix = "SiteA-", colprefix = "Species")
-    y = generate_test_array(rown = 5, coln = 10, meancoloccs = 6, rowprefix = "SiteB-", colprefix = "Species")
+    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 6, rowprefix = "SiteA-", colprefix = "Species")
+    y = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 6, rowprefix = "SiteB-", colprefix = "Species")
     xy = VegSci.merge_namedarrays([x, y])
 
     @testset "steinhaus_coefficient" begin

@@ -26,7 +26,7 @@ makedocs(;
         "Home" => "index.md",
         "Methods" => [
             "Correspondence Analysis" => "methods/CorrespondenceAnalysis.md"
-            "Species Fidelity" => "methods/SpeciesFidelity.md"
+            "Fidelity Measures" => "methods/FidelityMeasures.md"
             # "Binary Similarity" => "BinarySimilarity.md"
         ],
         "Reference" => "reference.md"

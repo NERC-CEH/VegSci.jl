@@ -1,5 +1,5 @@
 ---
-title: "Species Fidelity"
+title: "Fidelity Measures"
 format: 
   commonmark:
     variant: -raw_html+tex_math_dollars
@@ -38,7 +38,8 @@ Load the `dune` dataset bundled with the R package `vegan`.
 
 ```{julia load_dune_julia}
 begin
-	dune_df = CSV.read("../data/dune.csv", DataFrame, header = 1)
+	# dune_df = CSV.read("../data/dune.csv", DataFrame, header = 1)
+  dune_df = CSV.read("docs/src/data/dune.csv", DataFrame, header = 1)
 	dune_na = NamedArray(Array(dune_df))
 	NamedArrays.setnames!(dune_na, names(dune_df), 2)
   dune_na = float.(dune_na)
@@ -47,7 +48,7 @@ end
 
 ## Identify Clusters
 
-Let's identify some clusters.
+Let's identify some clusters, storing the cluster-releve memberships as a dictionary.
 
 ```{julia fuzzy_c_clusters}
 r = Clustering.fuzzy_cmeans(transpose(dune_na), 3, 2)
@@ -61,7 +62,7 @@ clusters = Dict
 for i in unique(clusters_mat[:,2])
 
     rowids = clusters_mat[clusters_mat[:,2] .== i, :][:,1]
-    clusters_i = Dict(i => rowids)
+    clusters_i = Dict(string(i) => string.(rowids))
     clusters = merge(clusters, clusters_i)
     
 end
@@ -178,10 +179,35 @@ fe_4 = (N .- n) .* ((N - Np) / N)
 ### Dufrêne-Legendre Indicator Value Index
 
 ```{julia indval}
-indval = ((np .* (N - Np)) ./ ((n .* (Np .- (2 .* np))) .+ (np .* N))) .* (np ./ Np)
+indval = ((np .* (N - Np)) ./ (((n .* Np) .- (2 .* np)) .+ (np .* N))) .* (np ./ Np)
 ```
 
-## Compose function
+## Compose functions
 
-```{julia fidelity_function}
+Here we create two functions, the first which doesn't use observed and expected frequencies - the Dufrêne-Legendre Indicator Value Index function.
+
+```{julia indval_function}
+function indval_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}})
+
+    N = size(x)[1]
+    n = sum(x, dims = 1)
+
+    indval_all = NamedArrays.NamedArray(zeros(length(names(clusters)), size(x)[2]), names = (names(clusters), names(x)[2]))
+    
+    for i in names(clusters)
+        Np = length(getindex(clusters, i))
+        np = sum(x[getindex(clusters, i),:], dims = 1)
+        indval = ((np .* (N - Np)) ./ (((n .* Np) .- (2 .* np)) .+ (np .* N))) .* (np ./ Np)
+        indval_all[i,:] = indval
+    end
+
+    return indval_all
+
+end
+```
+
+Test the `indval_fidelity` function.
+
+```{julia test_indval_function}
+indval_fidelity(dune_pa, clusters)
 ```

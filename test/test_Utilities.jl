@@ -3,8 +3,8 @@ using Test
 using NamedArrays
 
 @testset "Utilities.jl" begin
-    x = generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
-    y = generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
+    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
+    y = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
     @testset "generate_test_array" begin
         gta_results = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
         @test typeof(gta_results) <: NamedMatrix
@@ -28,5 +28,9 @@ using NamedArrays
         @test size(merna_results) == (15, 10)
         @test names(merna_results)[1] == cat(names(x)[1], names(y)[1], dims = 1) 
         @test Set(names(merna_results)[2]) == Set(unique(cat(names(x)[2], names(y)[2], dims = 1)))
+    end
+    @testset "align_array_columns" begin
+        aac_results = VegSci.align_array_columns(x[:,Not(["Species3", "Species10"])], y[:,Not(["Species4"])])
+        @test names(aac_results.x)[2] == names(aac_results.y)[2]
     end
 end
