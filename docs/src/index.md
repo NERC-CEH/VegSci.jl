@@ -59,58 +59,60 @@ x = VegSci.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix
     30×20 Named Matrix{Float64}
     Releve ╲ Species │    Species1     Species2  …    Species19    Species20
     ─────────────────┼──────────────────────────────────────────────────────
-    SiteA-1          │         0.0     0.130287  …     0.104092          0.0
-    SiteA-2          │         0.0    0.0575279        0.126437          0.0
-    SiteA-3          │    0.135692     0.126111             0.0          0.0
-    SiteA-4          │         0.0     0.228196             0.0          0.0
-    SiteA-5          │         0.0          0.0             0.0     0.129159
-    SiteA-6          │         0.0    0.0696195        0.159017    0.0175125
-    SiteA-7          │         0.0    0.0100315             0.0     0.107451
-    SiteA-8          │    0.123417    0.0887687             0.0          0.0
-    SiteA-9          │         0.0     0.123951        0.110472    0.0810747
-    SiteA-10         │    0.170721    0.0522378        0.148841    0.0838056
-    SiteA-11         │         0.0    0.0381516             0.0     0.151037
+    SiteA-1          │         0.0          0.0  …     0.157852   0.00555798
+    SiteA-2          │    0.130109          0.0       0.0747752          0.0
+    SiteA-3          │    0.153157     0.177941             0.0    0.0164033
+    SiteA-4          │         0.0     0.108419        0.102789    0.0942697
+    SiteA-5          │   0.0104223   0.00789441        0.152983     0.139453
+    SiteA-6          │         0.0    0.0747113       0.0036627     0.154264
+    SiteA-7          │         0.0     0.104619        0.121775    0.0622911
+    SiteA-8          │         0.0          0.0        0.100688     0.054472
+    SiteA-9          │         0.0          0.0             0.0          0.0
+    SiteA-10         │    0.180499          0.0             0.0          0.0
+    SiteA-11         │    0.164635          0.0        0.161734     0.187418
     ⋮                            ⋮            ⋮  ⋱            ⋮            ⋮
-    SiteA-20         │         0.0    0.0645953             0.0     0.145417
-    SiteA-21         │    0.157137          0.0             0.0    0.0812415
-    SiteA-22         │   0.0251965          0.0        0.152538          0.0
-    SiteA-23         │         0.0     0.284651             0.0          0.0
-    SiteA-24         │   0.0192188     0.115009             0.0    0.0657227
-    SiteA-25         │         0.0     0.137841       0.0377793     0.153853
-    SiteA-26         │         0.0     0.107912             0.0          0.0
-    SiteA-27         │         0.0     0.139419             0.0          0.0
-    SiteA-28         │   0.0373618       0.0713             0.0    0.0592767
-    SiteA-29         │    0.156715    0.0565809             0.0    0.0503391
-    SiteA-30         │   0.0664498          0.0  …     0.174712          0.0
+    SiteA-20         │   0.0763144          0.0        0.105427          0.0
+    SiteA-21         │    0.015283    0.0269463       0.0264219          0.0
+    SiteA-22         │         0.0          0.0             0.0     0.124375
+    SiteA-23         │    0.127401          0.0        0.177078          0.0
+    SiteA-24         │         0.0      0.16006        0.192652     0.112483
+    SiteA-25         │   0.0192523     0.114235       0.0634028     0.119082
+    SiteA-26         │   0.0798989          0.0       0.0466872          0.0
+    SiteA-27         │   0.0228354          0.0       0.0488663     0.103179
+    SiteA-28         │         0.0    0.0207325             0.0          0.0
+    SiteA-29         │         0.0          0.0             0.0          0.0
+    SiteA-30         │         0.0          0.0  …          0.0          0.0
 
 ### Classification
 
-Let’s identify some clusters.
+Let’s identify some clusters, storing the cluster-releve memberships as
+a dictionary.
 
 ``` julia
 r = Clustering.fuzzy_cmeans(transpose(x), 3, 2)
 
 cluster_weights = r.weights
-memberships_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
-memberships_mat = hcat(first.(memberships_vec), last.(memberships_vec))
+clusters_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
+clusters_mat = hcat(first.(clusters_vec), last.(clusters_vec))
 
-memberships = Dict
+clusters = Dict
 
-for i in unique(memberships_mat[:,2])
+for i in unique(clusters_mat[:,2])
 
-    rowids = memberships_mat[memberships_mat[:,2] .== i, :][:,1]
-    memberships_i = Dict(i => rowids)
-    memberships = merge(memberships, memberships_i)
+    rowids = clusters_mat[clusters_mat[:,2] .== i, :][:,1]
+    rownames = names(x)[1][rowids]
+    clusters_i = Dict(string(i) => string.(rownames))
+    clusters = merge(clusters, clusters_i)
     
 end
 
-memberships
+clusters
 ```
 
-    Dict{Int64, Vector{Int64}} with 3 entries:
-      2 => [1, 4, 7, 9, 11, 18, 20, 23, 25, 26, 28, 30]
-      3 => [2, 3, 6, 8, 13, 16, 17, 21, 24, 27, 29]
-      1 => [5, 10, 12, 14, 15, 19, 22]
+    Dict{String, Vector{String}} with 3 entries:
+      "1" => ["SiteA-4", "SiteA-5", "SiteA-6", "SiteA-11", "SiteA-12", "SiteA-14", …
+      "2" => ["SiteA-2", "SiteA-3", "SiteA-7", "SiteA-15", "SiteA-21", "SiteA-25"]
+      "3" => ["SiteA-1", "SiteA-8", "SiteA-9", "SiteA-10", "SiteA-13", "SiteA-17", …
 
 ### Creation of Syntopic Tables
 
@@ -118,39 +120,38 @@ Once the plots have been grouped into clusters, we can proceed to
 summarise their composition via the creation of `SyntopicTable` objects.
 
 ``` julia
-syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(memberships, 1),:])
-syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(memberships, 2),:])
+syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(clusters, "1"),:])
+syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(clusters, "2"),:])
 VegSci.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
 ```
 
 
 
     Community Name: Syn2
-    Releves: n = 12
-    Species: n = 20
+    Releves: n = 6
+    Species: n = 19
     ┌───────────┬───────────────────┬─────────────────┐
     │   Species │ RelativeFrequency │       Abundance │
     ├───────────┼───────────────────┼─────────────────┤
-    │  Species2 │               0.8 │ 0.1 (0.0 - 0.3) │
-    │ Species12 │               0.8 │ 0.1 (0.0 - 0.2) │
-    │ Species14 │               0.8 │ 0.1 (0.1 - 0.2) │
-    │ Species17 │               0.8 │ 0.1 (0.0 - 0.2) │
-    │  Species9 │               0.7 │ 0.1 (0.0 - 0.1) │
-    │ Species10 │               0.7 │ 0.1 (0.0 - 0.2) │
-    │ Species13 │               0.7 │ 0.1 (0.0 - 0.2) │
-    │ Species18 │               0.7 │ 0.1 (0.0 - 0.3) │
-    │  Species4 │               0.6 │ 0.1 (0.0 - 0.2) │
-    │  Species7 │               0.5 │ 0.1 (0.0 - 0.2) │
-    │  Species8 │               0.5 │ 0.1 (0.0 - 0.2) │
-    │ Species20 │               0.5 │ 0.1 (0.1 - 0.2) │
-    │  Species3 │               0.4 │ 0.1 (0.0 - 0.2) │
-    │  Species6 │               0.3 │ 0.1 (0.1 - 0.1) │
-    │ Species15 │               0.3 │ 0.1 (0.0 - 0.3) │
-    │ Species19 │               0.3 │ 0.1 (0.0 - 0.2) │
-    │  Species5 │               0.3 │ 0.0 (0.0 - 0.0) │
-    │ Species11 │               0.2 │ 0.1 (0.0 - 0.1) │
-    │  Species1 │               0.2 │ 0.0 (0.0 - 0.1) │
-    │ Species16 │               0.1 │ 0.1 (0.1 - 0.1) │
+    │  Species3 │               1.0 │ 0.1 (0.0 - 0.2) │
+    │ Species16 │               1.0 │ 0.1 (0.1 - 0.1) │
+    │  Species1 │               0.8 │ 0.1 (0.0 - 0.2) │
+    │  Species2 │               0.8 │ 0.1 (0.0 - 0.2) │
+    │  Species7 │               0.8 │ 0.1 (0.0 - 0.1) │
+    │ Species12 │               0.8 │ 0.1 (0.0 - 0.1) │
+    │  Species4 │               0.7 │ 0.1 (0.0 - 0.1) │
+    │  Species5 │               0.7 │ 0.1 (0.0 - 0.1) │
+    │ Species10 │               0.7 │ 0.1 (0.1 - 0.1) │
+    │ Species15 │               0.7 │ 0.1 (0.0 - 0.1) │
+    │ Species18 │               0.7 │ 0.1 (0.1 - 0.1) │
+    │ Species19 │               0.7 │ 0.1 (0.0 - 0.1) │
+    │ Species11 │               0.5 │ 0.1 (0.0 - 0.1) │
+    │ Species17 │               0.5 │ 0.1 (0.0 - 0.1) │
+    │ Species20 │               0.5 │ 0.1 (0.0 - 0.1) │
+    │ Species14 │               0.3 │ 0.0 (0.0 - 0.0) │
+    │  Species6 │               0.2 │ 0.1 (0.1 - 0.1) │
+    │  Species8 │               0.2 │ 0.0 (0.0 - 0.0) │
+    │  Species9 │               0.2 │ 0.0 (0.0 - 0.0) │
     └───────────┴───────────────────┴─────────────────┘
 
 ### Identification of High-Fidelity Species
@@ -169,11 +170,11 @@ y = VegSci.generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix =
     5×30 Named Matrix{Float64}
     Releve ╲ Species │   Species1    Species2  …   Species29   Species30
     ─────────────────┼──────────────────────────────────────────────────
-    SiteB-1          │  0.0297561         0.0  …         0.0         0.0
-    SiteB-2          │        0.0    0.173407            0.0         0.0
-    SiteB-3          │        0.0         0.0      0.0633288         0.0
+    SiteB-1          │        0.0         0.0  …         0.0         0.0
+    SiteB-2          │        0.0   0.0641312      0.0955262         0.0
+    SiteB-3          │        0.0         0.0       0.045238         0.0
     SiteB-4          │        0.0         0.0            0.0         0.0
-    SiteB-5          │        0.0         0.0  …   0.0526365    0.151109
+    SiteB-5          │        0.0    0.245125  …    0.181263         0.0
 
 Three methods will be demonstrated.
 
@@ -191,10 +192,10 @@ syn_1_mat = VegSci.extract_syntopic_matrix(syn_1)
 syn_2_mat = VegSci.extract_syntopic_matrix(syn_2)
 ```
 
-    1×20 Named Matrix{Float64}
-    A ╲ B │  Species1   Species2   Species3  …  Species18  Species19  Species20
-    ──────┼────────────────────────────────────────────────────────────────────
-    Syn2  │ 0.0472968   0.115932  0.0741902  …    0.10908   0.107282   0.126434
+    1×19 Named Matrix{Float64}
+    A ╲ B │   Species1    Species2  …   Species19   Species20
+    ──────┼──────────────────────────────────────────────────
+    Syn2  │   0.130109    0.114235  …    0.069089   0.0622911
 
 Now we have three matrices, containg the relative frequencies of each
 species present in the sample releves which constitute each syntaxon.
@@ -207,12 +208,12 @@ is broadly equivalent to the R function `base::merge`.
 merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
 ```
 
-    3×27 Named Matrix{Float64}
-     A ╲ B │   Species1    Species2  …   Species19   Species12
+    3×26 Named Matrix{Float64}
+     A ╲ B │   Species2    Species3  …   Species19   Species20
     ───────┼──────────────────────────────────────────────────
-    Sample │  0.0297561    0.173407  …         0.0         0.0
-    Syn1   │   0.145251   0.0794433       0.127773         0.0
-    Syn2   │  0.0472968    0.115932  …    0.107282   0.0904342
+    Sample │   0.154628    0.130323  …         0.0         0.0
+    Syn1   │  0.0860061   0.0715421       0.104108    0.134974
+    Syn2   │   0.114235    0.119714  …    0.069089   0.0622911
 
 ``` julia
 VegSci.steinhaus_coefficient(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
@@ -221,7 +222,7 @@ VegSci.steinhaus_coefficient(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not
     1×2 Named Matrix{Float64}
      A ╲ B │     Syn1      Syn2
     ───────┼───────────────────
-    Sample │ 0.337378  0.324535
+    Sample │ 0.302282  0.268195
 
 ### Multivariate Analysis
 

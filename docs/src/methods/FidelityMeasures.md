@@ -56,7 +56,8 @@ end
 
 ## Identify Clusters
 
-Let’s identify some clusters.
+Let’s identify some clusters, storing the cluster-releve memberships as
+a dictionary.
 
 ``` julia
 r = Clustering.fuzzy_cmeans(transpose(dune_na), 3, 2)
@@ -70,7 +71,8 @@ clusters = Dict
 for i in unique(clusters_mat[:,2])
 
     rowids = clusters_mat[clusters_mat[:,2] .== i, :][:,1]
-    clusters_i = Dict(i => rowids)
+    rownames = names(dune_na)[1][rowids]
+    clusters_i = Dict(string(i) => string.(rownames))
     clusters = merge(clusters, clusters_i)
     
 end
@@ -78,10 +80,10 @@ end
 clusters
 ```
 
-    Dict{Int64, Vector{Int64}} with 3 entries:
-      2 => [1, 2, 5, 6, 7, 10, 11, 17, 18]
-      3 => [14, 15, 16, 19, 20]
-      1 => [3, 4, 8, 9, 12, 13]
+    Dict{String, Vector{String}} with 3 entries:
+      "1" => ["3", "4", "8", "9", "12", "13"]
+      "2" => ["1", "2", "5", "6", "7", "10", "11", "17", "18"]
+      "3" => ["14", "15", "16", "19", "20"]
 
 Create a presence-absence matrix by replacing all non-zero values with
 an Integer value of 1.
@@ -138,7 +140,7 @@ Calculate *N*<sub>*p*</sub> the number of releves in the particular
 vegetation unit.
 
 ``` julia
-Np = length(getindex(clusters, 1))
+Np = length(getindex(clusters, "1"))
 ```
 
     6
@@ -164,7 +166,7 @@ Calculate *f*(*o*)<sub>1</sub> or *n*<sub>*p*</sub>, the number of
 occurences of the species in the particular vegetation unit.
 
 ``` julia
-np = sum(dune_pa[getindex(clusters, 1),:], dims = 1)
+np = sum(dune_pa[getindex(clusters, "1"),:], dims = 1)
 fo_1 = np
 ```
 
@@ -172,6 +174,21 @@ fo_1 = np
      A ╲ B │ Achimill  Agrostol  Airaprae  …  Vicilath  Bracruta  Callcusp
     ───────┼──────────────────────────────────────────────────────────────
     sum(A) │        0         6         0  …         0         5         0
+
+### Dufrêne-Legendre Indicator Value Index
+
+Calculate the Dufrêne-Legendre Indicator Value Index (IndVal) measure of
+species fidelity (Dufrêne and Legendre 1997) which does not use observed
+and expected frequencies.
+
+``` julia
+indval = ((np .* (N - Np)) ./ (((n .* Np) .- (2 .* np)) .+ (np .* N))) .* (np ./ Np)
+```
+
+    1×30 Named Matrix{Float64}
+     A ╲ B │  Achimill   Agrostol   Airaprae  …   Vicilath   Bracruta   Callcusp
+    ───────┼────────────────────────────────────────────────────────────────────
+    sum(A) │       0.0        0.5        0.0  …        0.0   0.324074        0.0
 
 ***f*(*o*)<sub>2</sub>**
 
@@ -271,23 +288,58 @@ fe_4 = (N .- n) .* ((N - Np) / N)
     ──────┼──────────────────────────────────────────────────────────────
     all   │      9.1       7.0      12.6  …      11.9       3.5      11.9
 
-### Dufrêne-Legendre Indicator Value Index
+## Compose functions
+
+Here we create two functions, the first which doesn’t use observed and
+expected frequencies - the Dufrêne-Legendre Indicator Value Index
+function.
 
 ``` julia
-indval = ((np .* (N - Np)) ./ ((n .* (Np .- (2 .* np))) .+ (np .* N))) .* (np ./ Np)
+function indval_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}})
+
+    N = size(x)[1]
+    n = sum(x, dims = 1)
+
+    indval_all = NamedArrays.NamedArray(zeros(length(names(clusters)), size(x)[2]), names = (names(clusters), names(x)[2]))
+
+    for i in names(clusters)
+        Np = length(getindex(clusters, i))
+        np = sum(x[getindex(clusters, i),:], dims = 1)
+        indval = ((np .* (N - Np)) ./ (((n .* Np) .- (2 .* np)) .+ (np .* N))) .* (np ./ Np)
+        indval_all[i,:] = indval
+    end
+
+    return indval_all
+
+end
 ```
 
-    1×30 Named Matrix{Float64}
-     A ╲ B │  Achimill   Agrostol   Airaprae  …   Vicilath   Bracruta   Callcusp
-    ───────┼────────────────────────────────────────────────────────────────────
-    sum(A) │       0.0        1.4        0.0  …        0.0    1.45833        0.0
+    indval_fidelity (generic function with 1 method)
 
-## Compose function
+Test the `indval_fidelity` function.
+
+``` julia
+indval_fidelity(dune_pa, clusters)
+```
+
+    3×30 Named Matrix{Float64}
+    A ╲ B │  Achimill   Agrostol   Airaprae  …   Vicilath   Bracruta   Callcusp
+    ──────┼────────────────────────────────────────────────────────────────────
+    1     │       0.0        0.5        0.0  …        0.0   0.324074        0.0
+    2     │  0.316872        0.0  0.0339506      0.135802    0.18107        0.0
+    3     │       0.0   0.393443   0.107143  …        0.0   0.326531   0.391304
+
+## References
 
 Chytrý, Milan, Lubomír Tichý, Jason Holt, and Zoltán Botta-Dukát. 2002.
 “Determination of Diagnostic Species with Statistical Fidelity
 Measures.” *Journal of Vegetation Science* 13 (1): 79–90.
 <https://doi.org/10.1111/j.1654-1103.2002.tb02025.x>.
+
+Dufrêne, Marc, and Pierre Legendre. 1997. “Species Assemblages and
+Indicator Species:the Need for a Flexible Asymmetrical Approach.”
+*Ecological Monographs* 67 (3): 345–66.
+[https://doi.org/10.1890/0012-9615(1997)067\[0345:SAAIST\]2.0.CO;2](https://doi.org/10.1890/0012-9615(1997)067[0345:SAAIST]2.0.CO;2).
 
 Tichý, Lubomír. 2002. “JUICE, Software for Vegetation Classification.”
 *Journal of Vegetation Science* 13 (3): 451–53.
