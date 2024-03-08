@@ -38,8 +38,7 @@ Load the `dune` dataset bundled with the R package `vegan`.
 
 ```{julia load_dune_julia}
 begin
-	# dune_df = CSV.read("../data/dune.csv", DataFrame, header = 1)
-  dune_df = CSV.read("docs/src/data/dune.csv", DataFrame, header = 1)
+	dune_df = CSV.read("../data/dune.csv", DataFrame, header = 1)
 	dune_na = NamedArray(Array(dune_df))
 	NamedArrays.setnames!(dune_na, names(dune_df), 2)
   dune_na = float.(dune_na)
@@ -62,7 +61,8 @@ clusters = Dict
 for i in unique(clusters_mat[:,2])
 
     rowids = clusters_mat[clusters_mat[:,2] .== i, :][:,1]
-    clusters_i = Dict(string(i) => string.(rowids))
+    rownames = names(dune_na)[1][rowids]
+    clusters_i = Dict(string(i) => string.(rownames))
     clusters = merge(clusters, clusters_i)
     
 end
@@ -97,7 +97,7 @@ N = size(dune_pa)[1]
 Calculate $N_{p}$ the number of releves in the particular vegetation unit.
 
 ```{julia Np}
-Np = length(getindex(clusters, 1))
+Np = length(getindex(clusters, "1"))
 ```
 
 **$n$**
@@ -115,8 +115,16 @@ n
 Calculate $f(o)_{1}$ or $n_{p}$, the number of occurences of the species in the particular vegetation unit.
 
 ```{julia fo_1}
-np = sum(dune_pa[getindex(clusters, 1),:], dims = 1)
+np = sum(dune_pa[getindex(clusters, "1"),:], dims = 1)
 fo_1 = np
+```
+
+### Dufrêne-Legendre Indicator Value Index
+
+Calculate the Dufrêne-Legendre Indicator Value Index (IndVal) measure of species fidelity [@dufrene1997] which does not use observed and expected frequencies.
+
+```{julia indval}
+indval = ((np .* (N - Np)) ./ (((n .* Np) .- (2 .* np)) .+ (np .* N))) .* (np ./ Np)
 ```
 
 **$f(o)_{2}$**
@@ -175,13 +183,6 @@ fe_3 = (N .- n) .* (Np ./ N)
 fe_4 = (N .- n) .* ((N - Np) / N)
 ```
 
-
-### Dufrêne-Legendre Indicator Value Index
-
-```{julia indval}
-indval = ((np .* (N - Np)) ./ (((n .* Np) .- (2 .* np)) .+ (np .* N))) .* (np ./ Np)
-```
-
 ## Compose functions
 
 Here we create two functions, the first which doesn't use observed and expected frequencies - the Dufrêne-Legendre Indicator Value Index function.
@@ -193,7 +194,7 @@ function indval_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}})
     n = sum(x, dims = 1)
 
     indval_all = NamedArrays.NamedArray(zeros(length(names(clusters)), size(x)[2]), names = (names(clusters), names(x)[2]))
-    
+
     for i in names(clusters)
         Np = length(getindex(clusters, i))
         np = sum(x[getindex(clusters, i),:], dims = 1)
@@ -211,3 +212,5 @@ Test the `indval_fidelity` function.
 ```{julia test_indval_function}
 indval_fidelity(dune_pa, clusters)
 ```
+
+## References
