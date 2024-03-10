@@ -35,12 +35,12 @@ using DataFrames
         @test all(x -> x .<= 1.0, esm_results)
     end
     @testset "extract_syntopic_table" begin
-        est_results = VegSci.extract_syntopic_table(csto_results)
+        est_results = VegSci.extract_syntopic_table(csto_results, "normal", "proportion")
         @test typeof(est_results) <: DataFrame
     end
     @testset "print_summary_syntopic_table" begin
         # Need to think about how I test this given the complexity of the output.
-        psst_result = @capture_out VegSci.print_summary_syntopic_table(csto_results, "normal", "cover_proportion")
+        psst_result = @capture_out VegSci.print_summary_syntopic_table(csto_results, "normal", "proportion")
         @test typeof(psst_result) <: String
     end
 end
