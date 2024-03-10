@@ -2,13 +2,13 @@
 title: "Steinhaus coefficient"
 execute: 
   enabled: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../references.bib
 ---
 
 ## Outline
 
-This page demonstrates the use of the Steinhaus coefficient in calculating community similarities between sets of site by species matrices.
+This page demonstrates the use of the Steinhaus coefficient in calculating community similarities between sets of releve by species matrices.
 
 ## Import Required Packages
 
@@ -23,7 +23,7 @@ using DataFrames
 ## Steinhaus coefficient
 
 The Steinhaus coefficient, also known as the proportional similarity index, Bray-Curtis similarity, Steinhaus similarity, Pielou's similarity, Sorensen's quantitative similarity is a well-known and commonly used measure of community similarity.
-@eq-steinhaus_coefficient outlines two formulations of the Steinhaus coefficient, where $N_{ij}$ is the abundance of species $i$ at site $j$, $N_{ik}$ is the abundance of species $i$ at site $k$, $p$ is the total number of species in the samples, $W$ is the sum of the minimum abundances of each species $i$, $A$ is the sum of abundances of all species at site $j$ ($\sum_{i=1}^{p} N_{ij}$), and $B$ is the sum of abundances of all species at site $k$ ($\sum_{i=1}^{p} N_{ik}$). This index is often also expressed in percentage terms [@gauch1982], and or as a dissimilarity.
+@eq-steinhaus_coefficient outlines two formulations of the Steinhaus coefficient, where $N_{ij}$ is the abundance of species $i$ at releve $j$, $N_{ik}$ is the abundance of species $i$ at releve $k$, $p$ is the total number of species in the samples, $W$ is the sum of the minimum abundances of each species $i$, $A$ is the sum of abundances of all species at releve $j$ ($\sum_{i=1}^{p} N_{ij}$), and $B$ is the sum of abundances of all species at releve $k$ ($\sum_{i=1}^{p} N_{ik}$). This index is often also expressed in percentage terms [@gauch1982], and or as a dissimilarity.
 
 
 ```math
@@ -32,7 +32,7 @@ C_{jk} = 2 \cdot \frac{\sum_{i=1}^{p} min(N_{ij}, N_{ik})}{\sum_{i=1}^{p} N_{ij}
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix using the generate_test_array function defined in [Data Wrangling](DataWrangling.qmd#sec-align_array_columns).
+Create example data in the form of a releve by species named matrix using the generate_test_array function defined in [Data Wrangling](DataWrangling.qmd#sec-align_array_columns).
 
 ```{julia create_example_data}
 #| code-fold: true
@@ -67,7 +67,7 @@ czek_sim = 2 * W / (A + B)
 
 ## Create function
 
-Create a function to return the Steinhaus coefficient for two sites contained in a single matrix.
+Create a function to return the Steinhaus coefficient for two releves contained in a single matrix.
 
 ```{julia steinhaus_coefficient_once_function}
 function steinhaus_coefficient_once(mat::NamedArray)

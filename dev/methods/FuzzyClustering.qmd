@@ -2,7 +2,7 @@
 title: "Fuzzy Clustering"
 execute: 
   enabled: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../references.bib
 ---
 
@@ -34,7 +34,7 @@ using Clustering
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix, making row (SiteA-2) and column (Species7) contain all zero entries, for testing.
+Create example data in the form of a releve by species named matrix, making row (SiteA-2) and column (Species7) contain all zero entries, for testing.
 
 ```{julia create_example_data}
 mat = VegSci.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")

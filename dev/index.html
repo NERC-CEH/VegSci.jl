@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · VegSci.jl</title><meta name="title" content="Home · VegSci.jl"/><meta property="og:title" content="Home · VegSci.jl"/><meta property="twitter:title" content="Home · VegSci.jl"/><meta name="description" content="Documentation for VegSci.jl."/><meta property="og:description" content="Documentation for VegSci.jl."/><meta property="twitter:description" content="Documentation for VegSci.jl."/><meta property="og:url" content="https://ZekeMarshall.github.io/VegSci.jl/"/><meta property="twitter:url" content="https://ZekeMarshall.github.io/VegSci.jl/"/><link rel="canonical" href="https://ZekeMarshall.github.io/VegSci.jl/"/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>VegSci.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Background"><span>Background</span></a></li><li><a class="tocitem" href="#Installation"><span>Installation</span></a></li><li><a class="tocitem" href="#Usage-Example"><span>Usage Example</span></a></li><li><a class="tocitem" href="#External-Resources"><span>External Resources</span></a></li><li><a class="tocitem" href="#Implemented-Methodologies"><span>Implemented Methodologies</span></a></li><li><a class="tocitem" href="#Contribute"><span>Contribute</span></a></li><li><a class="tocitem" href="#Acknowledgements"><span>Acknowledgements</span></a></li><li><a class="tocitem" href="#References"><span>References</span></a></li></ul></li><li><span class="tocitem">Methods</span><ul><li><a class="tocitem" href="methods/CorrespondenceAnalysis/">Correspondence Analysis</a></li><li><a class="tocitem" href="methods/FidelityMeasures/">Fidelity Measures</a></li></ul></li><li><a class="tocitem" href="reference/">Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/ZekeMarshall/VegSci.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/ZekeMarshall/VegSci.jl/blob/main/docs/src/index.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><p>Documentation for <a href="https://github.com/ZekeMarhshall/VegSci.jl">VegSci.jl</a>.</p><h1 id="VegSci"><a class="docs-heading-anchor" href="#VegSci">VegSci</a><a id="VegSci-1"></a><a class="docs-heading-anchor-permalink" href="#VegSci" title="Permalink"></a></h1><p>Tools for vegetation science.</p><h2 id="Background"><a class="docs-heading-anchor" href="#Background">Background</a><a id="Background-1"></a><a class="docs-heading-anchor-permalink" href="#Background" title="Permalink"></a></h2><p><code>VegSci.jl</code> is a package containing tools for vegetation science using Julia (Bezanson et al. 2017), a growing scientific programming language which solves the ‘two language problem’ (Roesch et al. 2023), offering C and FORTRAN-like performance alongside the readability and user-friendliness of higher level languages such as Python. <code>VegSci.jl</code> aims to collate selected functionality found in popular vegetation science software programs/packages such as JUICE, vegan, ade4, vegclust, vegsoup, and ecotraj into a single location with a user-friendly API and transparent methodologies. <code>VegSci.jl</code> is being developed with the aim of assisting in the creation of high-performance, reproducible analytical pipelines in vegetation research (Sperandii et al. 2024), developed primarily with the application to the vegetation of Great Britain in mind, but fully generalisable. Nomenclature follows Theurillat et al. (2021).</p><h2 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h2><p>To install the latest stable release of <code>VegSci</code>:</p><pre><code class="language-julia hljs">using Pkg
 Pkg.add(&quot;VegSci&quot;)</code></pre><p>To install the development version of <code>VegSci</code>:</p><pre><code class="language-julia hljs">using Pkg
-Pkg.add(url=&quot;https://github.com/ZekeMarshall/VegSci.jl&quot;, rev = &quot;develop&quot;)</code></pre><h2 id="Usage-Example"><a class="docs-heading-anchor" href="#Usage-Example">Usage Example</a><a id="Usage-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Usage-Example" title="Permalink"></a></h2><p>To demonstrate…</p><p>First we begin with generating two example plot by species <code>NamedArrays.NamedMatrix</code> object using the function <code>VegSci.generate_test_array</code> as test data.</p><pre><code class="language-julia hljs">x = VegSci.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix = &quot;SiteA-&quot;, colprefix = &quot;Species&quot;)</code></pre><pre><code class="nohighlight hljs">30×20 Named Matrix{Float64}
-Releve ╲ Species │    Species1     Species2  …    Species19    Species20
-─────────────────┼──────────────────────────────────────────────────────
-SiteA-1          │         0.0          0.0  …     0.157852   0.00555798
-SiteA-2          │    0.130109          0.0       0.0747752          0.0
-SiteA-3          │    0.153157     0.177941             0.0    0.0164033
-SiteA-4          │         0.0     0.108419        0.102789    0.0942697
-SiteA-5          │   0.0104223   0.00789441        0.152983     0.139453
-SiteA-6          │         0.0    0.0747113       0.0036627     0.154264
-SiteA-7          │         0.0     0.104619        0.121775    0.0622911
-SiteA-8          │         0.0          0.0        0.100688     0.054472
-SiteA-9          │         0.0          0.0             0.0          0.0
-SiteA-10         │    0.180499          0.0             0.0          0.0
-SiteA-11         │    0.164635          0.0        0.161734     0.187418
-⋮                            ⋮            ⋮  ⋱            ⋮            ⋮
-SiteA-20         │   0.0763144          0.0        0.105427          0.0
-SiteA-21         │    0.015283    0.0269463       0.0264219          0.0
-SiteA-22         │         0.0          0.0             0.0     0.124375
-SiteA-23         │    0.127401          0.0        0.177078          0.0
-SiteA-24         │         0.0      0.16006        0.192652     0.112483
-SiteA-25         │   0.0192523     0.114235       0.0634028     0.119082
-SiteA-26         │   0.0798989          0.0       0.0466872          0.0
-SiteA-27         │   0.0228354          0.0       0.0488663     0.103179
-SiteA-28         │         0.0    0.0207325             0.0          0.0
-SiteA-29         │         0.0          0.0             0.0          0.0
-SiteA-30         │         0.0          0.0  …          0.0          0.0</code></pre><h3 id="Classification"><a class="docs-heading-anchor" href="#Classification">Classification</a><a id="Classification-1"></a><a class="docs-heading-anchor-permalink" href="#Classification" title="Permalink"></a></h3><p>Let’s identify some clusters, storing the cluster-releve memberships as a dictionary.</p><pre><code class="language-julia hljs">r = Clustering.fuzzy_cmeans(transpose(x), 3, 2)
+Pkg.add(url=&quot;https://github.com/ZekeMarshall/VegSci.jl&quot;, rev = &quot;develop&quot;)</code></pre><h2 id="Usage-Example"><a class="docs-heading-anchor" href="#Usage-Example">Usage Example</a><a id="Usage-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Usage-Example" title="Permalink"></a></h2><p>To demonstrate…</p><p>First we begin with generating two example plot by species <code>NamedArrays.NamedMatrix</code> object using the function <code>VegSci.generate_test_array</code> as test data.</p><pre><code class="language-julia hljs">dune = CSV.read(&quot;./data/dune.csv&quot;, DataFrame, header = 1)
+x = float(NamedArray(Array(dune)))
+NamedArrays.setnames!(x, names(dune), 2)
+x</code></pre><pre><code class="nohighlight hljs">20×30 Named Matrix{Float64}
+A ╲ B │ Achimill  Agrostol  Airaprae  …  Vicilath  Bracruta  Callcusp
+──────┼──────────────────────────────────────────────────────────────
+1     │      1.0       0.0       0.0  …       0.0       0.0       0.0
+2     │      3.0       0.0       0.0          0.0       0.0       0.0
+3     │      0.0       4.0       0.0          0.0       2.0       0.0
+4     │      0.0       8.0       0.0          0.0       2.0       0.0
+5     │      2.0       0.0       0.0          0.0       2.0       0.0
+6     │      2.0       0.0       0.0          0.0       6.0       0.0
+7     │      2.0       0.0       0.0          0.0       2.0       0.0
+8     │      0.0       4.0       0.0          0.0       2.0       0.0
+9     │      0.0       3.0       0.0          0.0       2.0       0.0
+10    │      4.0       0.0       0.0          1.0       2.0       0.0
+11    │      0.0       0.0       0.0          2.0       4.0       0.0
+12    │      0.0       4.0       0.0          0.0       4.0       0.0
+13    │      0.0       5.0       0.0          0.0       0.0       0.0
+14    │      0.0       4.0       0.0          0.0       0.0       4.0
+15    │      0.0       4.0       0.0          0.0       4.0       0.0
+16    │      0.0       7.0       0.0          0.0       4.0       3.0
+17    │      2.0       0.0       2.0          0.0       0.0       0.0
+18    │      0.0       0.0       0.0          1.0       6.0       0.0
+19    │      0.0       0.0       3.0          0.0       3.0       0.0
+20    │      0.0       5.0       0.0  …       0.0       4.0       3.0</code></pre><h3 id="Classification"><a class="docs-heading-anchor" href="#Classification">Classification</a><a id="Classification-1"></a><a class="docs-heading-anchor-permalink" href="#Classification" title="Permalink"></a></h3><p>Let’s identify some potential associations using fuzzy c-means clustering, storing the cluster-releve memberships as a dictionary.</p><pre><code class="language-julia hljs">r = Clustering.fuzzy_cmeans(transpose(x), 3, 2)
 
 cluster_weights = r.weights
 clusters_vec = vec(Tuple.(findmax(cluster_weights, dims = 2)[2]))
@@ -44,54 +44,82 @@ for i in unique(clusters_mat[:,2])
 end
 
 clusters</code></pre><pre><code class="nohighlight hljs">Dict{String, Vector{String}} with 3 entries:
-  &quot;1&quot; =&gt; [&quot;SiteA-4&quot;, &quot;SiteA-5&quot;, &quot;SiteA-6&quot;, &quot;SiteA-11&quot;, &quot;SiteA-12&quot;, &quot;SiteA-14&quot;, …
-  &quot;2&quot; =&gt; [&quot;SiteA-2&quot;, &quot;SiteA-3&quot;, &quot;SiteA-7&quot;, &quot;SiteA-15&quot;, &quot;SiteA-21&quot;, &quot;SiteA-25&quot;]
-  &quot;3&quot; =&gt; [&quot;SiteA-1&quot;, &quot;SiteA-8&quot;, &quot;SiteA-9&quot;, &quot;SiteA-10&quot;, &quot;SiteA-13&quot;, &quot;SiteA-17&quot;, …</code></pre><h3 id="Creation-of-Syntopic-Tables"><a class="docs-heading-anchor" href="#Creation-of-Syntopic-Tables">Creation of Syntopic Tables</a><a id="Creation-of-Syntopic-Tables-1"></a><a class="docs-heading-anchor-permalink" href="#Creation-of-Syntopic-Tables" title="Permalink"></a></h3><p>Once the plots have been grouped into clusters, we can proceed to summarise their composition via the creation of <code>SyntopicTable</code> objects.</p><pre><code class="language-julia hljs">syn_1 = VegSci.compose_syntopic_table_object(&quot;Syn1&quot;, x[getindex(clusters, &quot;1&quot;),:])
+  &quot;1&quot; =&gt; [&quot;3&quot;, &quot;4&quot;, &quot;8&quot;, &quot;9&quot;, &quot;12&quot;, &quot;13&quot;]
+  &quot;2&quot; =&gt; [&quot;1&quot;, &quot;2&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;10&quot;, &quot;11&quot;, &quot;17&quot;, &quot;18&quot;]
+  &quot;3&quot; =&gt; [&quot;14&quot;, &quot;15&quot;, &quot;16&quot;, &quot;19&quot;, &quot;20&quot;]</code></pre><h3 id="Creation-of-Syntopic-Tables"><a class="docs-heading-anchor" href="#Creation-of-Syntopic-Tables">Creation of Syntopic Tables</a><a id="Creation-of-Syntopic-Tables-1"></a><a class="docs-heading-anchor-permalink" href="#Creation-of-Syntopic-Tables" title="Permalink"></a></h3><p>Once the plots have been grouped into clusters, we can proceed to summarise their composition via the creation of <code>SyntopicTable</code> objects.</p><pre><code class="language-julia hljs">syn_1 = VegSci.compose_syntopic_table_object(&quot;Syn1&quot;, x[getindex(clusters, &quot;1&quot;),:])
 syn_2 = VegSci.compose_syntopic_table_object(&quot;Syn2&quot;, x[getindex(clusters, &quot;2&quot;),:])
-VegSci.print_summary_syntopic_table(syn_2, &quot;normal&quot;, &quot;cover_proportion&quot;)</code></pre><pre><code class="nohighlight hljs">Community Name: Syn2
+VegSci.print_summary_syntopic_table(syn_1, &quot;normal&quot;, &quot;proportion&quot;)</code></pre><pre><code class="nohighlight hljs">Community Name: Syn1
 Releves: n = 6
 Species: n = 19
-┌───────────┬───────────────────┬─────────────────┐
-│   Species │ RelativeFrequency │       Abundance │
-├───────────┼───────────────────┼─────────────────┤
-│  Species3 │               1.0 │ 0.1 (0.0 - 0.2) │
-│ Species16 │               1.0 │ 0.1 (0.1 - 0.1) │
-│  Species1 │               0.8 │ 0.1 (0.0 - 0.2) │
-│  Species2 │               0.8 │ 0.1 (0.0 - 0.2) │
-│  Species7 │               0.8 │ 0.1 (0.0 - 0.1) │
-│ Species12 │               0.8 │ 0.1 (0.0 - 0.1) │
-│  Species4 │               0.7 │ 0.1 (0.0 - 0.1) │
-│  Species5 │               0.7 │ 0.1 (0.0 - 0.1) │
-│ Species10 │               0.7 │ 0.1 (0.1 - 0.1) │
-│ Species15 │               0.7 │ 0.1 (0.0 - 0.1) │
-│ Species18 │               0.7 │ 0.1 (0.1 - 0.1) │
-│ Species19 │               0.7 │ 0.1 (0.0 - 0.1) │
-│ Species11 │               0.5 │ 0.1 (0.0 - 0.1) │
-│ Species17 │               0.5 │ 0.1 (0.0 - 0.1) │
-│ Species20 │               0.5 │ 0.1 (0.0 - 0.1) │
-│ Species14 │               0.3 │ 0.0 (0.0 - 0.0) │
-│  Species6 │               0.2 │ 0.1 (0.1 - 0.1) │
-│  Species8 │               0.2 │ 0.0 (0.0 - 0.0) │
-│  Species9 │               0.2 │ 0.0 (0.0 - 0.0) │
-└───────────┴───────────────────┴─────────────────┘</code></pre><h3 id="Identification-of-High-Fidelity-Species"><a class="docs-heading-anchor" href="#Identification-of-High-Fidelity-Species">Identification of High-Fidelity Species</a><a id="Identification-of-High-Fidelity-Species-1"></a><a class="docs-heading-anchor-permalink" href="#Identification-of-High-Fidelity-Species" title="Permalink"></a></h3><h3 id="Generation-of-Pseudo-Releves"><a class="docs-heading-anchor" href="#Generation-of-Pseudo-Releves">Generation of Pseudo-Releves</a><a id="Generation-of-Pseudo-Releves-1"></a><a class="docs-heading-anchor-permalink" href="#Generation-of-Pseudo-Releves" title="Permalink"></a></h3><h3 id="Assignment-of-Releves-to-Vegetation-Classes"><a class="docs-heading-anchor" href="#Assignment-of-Releves-to-Vegetation-Classes">Assignment of Releves to Vegetation Classes</a><a id="Assignment-of-Releves-to-Vegetation-Classes-1"></a><a class="docs-heading-anchor-permalink" href="#Assignment-of-Releves-to-Vegetation-Classes" title="Permalink"></a></h3><p>Let’s generate a second example matrix, consisting of sample 5 releves, against which we want to calculate the similarity.</p><pre><code class="language-julia hljs">y = VegSci.generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix = &quot;SiteB-&quot;, colprefix = &quot;Species&quot;)</code></pre><pre><code class="nohighlight hljs">5×30 Named Matrix{Float64}
-Releve ╲ Species │   Species1    Species2  …   Species29   Species30
-─────────────────┼──────────────────────────────────────────────────
-SiteB-1          │        0.0         0.0  …         0.0         0.0
-SiteB-2          │        0.0   0.0641312      0.0955262         0.0
-SiteB-3          │        0.0         0.0       0.045238         0.0
-SiteB-4          │        0.0         0.0            0.0         0.0
-SiteB-5          │        0.0    0.245125  …    0.181263         0.0</code></pre><p>Three methods will be demonstrated.</p><h3 id="Jaccard-Similarity"><a class="docs-heading-anchor" href="#Jaccard-Similarity">Jaccard Similarity</a><a id="Jaccard-Similarity-1"></a><a class="docs-heading-anchor-permalink" href="#Jaccard-Similarity" title="Permalink"></a></h3><h3 id="Steinhaus-coefficient"><a class="docs-heading-anchor" href="#Steinhaus-coefficient">Steinhaus coefficient</a><a id="Steinhaus-coefficient-1"></a><a class="docs-heading-anchor-permalink" href="#Steinhaus-coefficient" title="Permalink"></a></h3><p>First, let’s compose a syntopic table object from the “y” sample data and extract the syntopic tables in matrix format.</p><pre><code class="language-julia hljs">syn_y = VegSci.compose_syntopic_table_object(&quot;Sample&quot;, y)
-syn_y_mat = VegSci.extract_syntopic_matrix(syn_y)
-syn_1_mat = VegSci.extract_syntopic_matrix(syn_1)
-syn_2_mat = VegSci.extract_syntopic_matrix(syn_2)</code></pre><pre><code class="nohighlight hljs">1×19 Named Matrix{Float64}
-A ╲ B │   Species1    Species2  …   Species19   Species20
-──────┼──────────────────────────────────────────────────
-Syn2  │   0.130109    0.114235  …    0.069089   0.0622911</code></pre><p>Now we have three matrices, containg the relative frequencies of each species present in the sample releves which constitute each syntaxon. However, each of the syntaxa are composed of a different set of species, in Julia we need a helper function to merge these matrices and ensure each matrix contains each species across all the matrices. This function is broadly equivalent to the R function <code>base::merge</code>.</p><pre><code class="language-julia hljs">merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])</code></pre><pre><code class="nohighlight hljs">3×26 Named Matrix{Float64}
- A ╲ B │   Species2    Species3  …   Species19   Species20
-───────┼──────────────────────────────────────────────────
-Sample │   0.154628    0.130323  …         0.0         0.0
-Syn1   │  0.0860061   0.0715421       0.104108    0.134974
-Syn2   │   0.114235    0.119714  …    0.069089   0.0622911</code></pre><pre><code class="language-julia hljs">VegSci.steinhaus_coefficient(merged_syn_mats[[:&quot;Sample&quot;],:], merged_syn_mats[Not(:&quot;Sample&quot;), :])</code></pre><pre><code class="nohighlight hljs">1×2 Named Matrix{Float64}
- A ╲ B │     Syn1      Syn2
-───────┼───────────────────
-Sample │ 0.302282  0.268195</code></pre><h3 id="Multivariate-Analysis"><a class="docs-heading-anchor" href="#Multivariate-Analysis">Multivariate Analysis</a><a id="Multivariate-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Multivariate-Analysis" title="Permalink"></a></h3><h3 id="Ecological-Trajectory-Analysis"><a class="docs-heading-anchor" href="#Ecological-Trajectory-Analysis">Ecological Trajectory Analysis</a><a id="Ecological-Trajectory-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Ecological-Trajectory-Analysis" title="Permalink"></a></h3><h3 id="Example-Workflow"><a class="docs-heading-anchor" href="#Example-Workflow">Example Workflow</a><a id="Example-Workflow-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Workflow" title="Permalink"></a></h3><h2 id="External-Resources"><a class="docs-heading-anchor" href="#External-Resources">External Resources</a><a id="External-Resources-1"></a><a class="docs-heading-anchor-permalink" href="#External-Resources" title="Permalink"></a></h2><h2 id="Implemented-Methodologies"><a class="docs-heading-anchor" href="#Implemented-Methodologies">Implemented Methodologies</a><a id="Implemented-Methodologies-1"></a><a class="docs-heading-anchor-permalink" href="#Implemented-Methodologies" title="Permalink"></a></h2><h2 id="Contribute"><a class="docs-heading-anchor" href="#Contribute">Contribute</a><a id="Contribute-1"></a><a class="docs-heading-anchor-permalink" href="#Contribute" title="Permalink"></a></h2><h2 id="Acknowledgements"><a class="docs-heading-anchor" href="#Acknowledgements">Acknowledgements</a><a id="Acknowledgements-1"></a><a class="docs-heading-anchor-permalink" href="#Acknowledgements" title="Permalink"></a></h2><h2 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h2><p>Bezanson, Jeff, Alan Edelman, Stefan Karpinksi, and Viral B. Shah. 2017. “Julia: A Fresh Approach to Numerical Computing.” <em>SIAM Review</em> 59 (1): 65–98. <a href="https://doi.org/10.1137/141000671">https://doi.org/10.1137/141000671</a>.</p><p>Roesch, Elisabeth, Joe G. Greener, Adam L. MacLean, Huda Nassar, Christopher Rackauckas, Timothy E. Holy, and Michael P. H. Stumpf. 2023. “Julia for Biologists.” <em>Nature Methods</em> 20 (5): 655–64. <a href="https://doi.org/10.1038/s41592-023-01832-z">https://doi.org/10.1038/s41592-023-01832-z</a>.</p><p>Sperandii, Marta Gaia, Manuele Bazzichetto, Glenda Mendieta-Leiva, Sebastian Schmidtlein, Michael Bott, Renato A. Ferreira de Lima, Valério D. Pillar, Jodi N. Price, Viktoria Wagner, and Milan Chytrý. 2024. “Towards More Reproducibility in Vegetation Research.” <em>Journal of Vegetation Science</em> 35 (1): e13224. <a href="https://doi.org/10.1111/jvs.13224">https://doi.org/10.1111/jvs.13224</a>.</p><p>Theurillat, Jean-Paul, Wolfgang Willner, Federico Fernández-González, Helga Bültmann, Andraž Čarni, Daniela Gigante, Ladislav Mucina, and Heinrich Weber. 2021. “International Code of Phytosociological Nomenclature. 4th Edition.” <em>Applied Vegetation Science</em> 24 (1): e12491. <a href="https://doi.org/10.1111/avsc.12491">https://doi.org/10.1111/avsc.12491</a>.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="methods/CorrespondenceAnalysis/">Correspondence Analysis »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.3.0 on <span class="colophon-date" title="Friday 8 March 2024 08:19">Friday 8 March 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Postive Indicators: 
+Negative Indicators: 
+┌──────────┬───────────────────┬─────────────────┐
+│  Species │ RelativeFrequency │       Abundance │
+├──────────┼───────────────────┼─────────────────┤
+│ Alopgeni │               1.0 │ 5.0 (2.0 - 8.0) │
+│  Poatriv │               1.0 │ 5.0 (4.0 - 9.0) │
+│ Agrostol │               1.0 │ 4.0 (3.0 - 8.0) │
+│ Scorautu │               1.0 │ 2.0 (2.0 - 3.0) │
+│ Trifrepe │               1.0 │ 2.0 (1.0 - 3.0) │
+│  Poaprat │               0.8 │ 4.0 (2.0 - 5.0) │
+│ Sagiproc │               0.8 │ 2.0 (2.0 - 5.0) │
+│ Bracruta │               0.8 │ 2.0 (2.0 - 4.0) │
+│ Lolipere │               0.7 │ 4.5 (2.0 - 6.0) │
+│ Elymrepe │               0.5 │ 4.0 (4.0 - 6.0) │
+│ Juncbufo │               0.5 │ 4.0 (3.0 - 4.0) │
+│ Juncarti │               0.3 │ 4.0 (4.0 - 4.0) │
+│ Bellpere │               0.3 │ 2.0 (2.0 - 2.0) │
+│ Ranuflam │               0.3 │ 2.0 (2.0 - 2.0) │
+│ Rumeacet │               0.3 │ 2.0 (2.0 - 2.0) │
+│ Eleopalu │               0.2 │ 4.0 (4.0 - 4.0) │
+│ Bromhord │               0.2 │ 3.0 (3.0 - 3.0) │
+│ Cirsarve │               0.2 │ 2.0 (2.0 - 2.0) │
+│ Chenalbu │               0.2 │ 1.0 (1.0 - 1.0) │
+└──────────┴───────────────────┴─────────────────┘</code></pre><h3 id="Species-Fidelity"><a class="docs-heading-anchor" href="#Species-Fidelity">Species Fidelity</a><a id="Species-Fidelity-1"></a><a class="docs-heading-anchor-permalink" href="#Species-Fidelity" title="Permalink"></a></h3><p>Calculate the species fidelity scores using the Dufrêne-Legendre Indicator Value Index (IndVal) metric for each cluster.</p><pre><code class="language-julia hljs">indval_fidelity = VegSci.indval_fidelity(x, clusters)</code></pre><pre><code class="nohighlight hljs">3×30 Named Matrix{Float64}
+A ╲ B │  Achimill   Agrostol   Airaprae  …   Vicilath   Bracruta   Callcusp
+──────┼────────────────────────────────────────────────────────────────────
+1     │       0.0    2.30976        0.0  …        0.0   0.658824        0.0
+2     │   0.72428        0.0  0.0603567       0.18107   0.706757        0.0
+3     │       0.0        2.0   0.341772  …        0.0    1.31068    1.30435</code></pre><p>Let’s update the syntopic table objects with the fidelity values. By default the IndVal fidelity measure does not distinguish negative fidelity (Chytrý et al. 2002), so we just provide a ‘cut value’ to extract the postive, high-fidelity species.</p><pre><code class="language-julia hljs">syn_1_f_mat = indval_fidelity[[&quot;1&quot;], :]
+p_cut = 0.5
+syn_1.fidelity = vec(syn_1_f_mat)
+syn_1.fidelity_p = names(syn_1_f_mat[:, vec(map(col -&gt; any(col .&gt;= 0.5), eachcol(syn_1_f_mat)))])[2]
+VegSci.print_summary_syntopic_table(syn_1, &quot;normal&quot;, &quot;proportion&quot;)</code></pre><pre><code class="nohighlight hljs">Community Name: Syn1
+Releves: n = 6
+Species: n = 19
+Postive Indicators: Agrostol Alopgeni Elymrepe Juncarti Juncbufo Lolipere Poaprat Poatriv Sagiproc Scorautu Trifrepe Bracruta
+Negative Indicators: 
+┌──────────┬───────────────────┬─────────────────┐
+│  Species │ RelativeFrequency │       Abundance │
+├──────────┼───────────────────┼─────────────────┤
+│ Alopgeni │               1.0 │ 5.0 (2.0 - 8.0) │
+│  Poatriv │               1.0 │ 5.0 (4.0 - 9.0) │
+│ Agrostol │               1.0 │ 4.0 (3.0 - 8.0) │
+│ Scorautu │               1.0 │ 2.0 (2.0 - 3.0) │
+│ Trifrepe │               1.0 │ 2.0 (1.0 - 3.0) │
+│  Poaprat │               0.8 │ 4.0 (2.0 - 5.0) │
+│ Sagiproc │               0.8 │ 2.0 (2.0 - 5.0) │
+│ Bracruta │               0.8 │ 2.0 (2.0 - 4.0) │
+│ Lolipere │               0.7 │ 4.5 (2.0 - 6.0) │
+│ Elymrepe │               0.5 │ 4.0 (4.0 - 6.0) │
+│ Juncbufo │               0.5 │ 4.0 (3.0 - 4.0) │
+│ Juncarti │               0.3 │ 4.0 (4.0 - 4.0) │
+│ Bellpere │               0.3 │ 2.0 (2.0 - 2.0) │
+│ Ranuflam │               0.3 │ 2.0 (2.0 - 2.0) │
+│ Rumeacet │               0.3 │ 2.0 (2.0 - 2.0) │
+│ Eleopalu │               0.2 │ 4.0 (4.0 - 4.0) │
+│ Bromhord │               0.2 │ 3.0 (3.0 - 3.0) │
+│ Cirsarve │               0.2 │ 2.0 (2.0 - 2.0) │
+│ Chenalbu │               0.2 │ 1.0 (1.0 - 1.0) │
+└──────────┴───────────────────┴─────────────────┘</code></pre><h3 id="Generation-of-Pseudo-Releves"><a class="docs-heading-anchor" href="#Generation-of-Pseudo-Releves">Generation of Pseudo-Releves</a><a id="Generation-of-Pseudo-Releves-1"></a><a class="docs-heading-anchor-permalink" href="#Generation-of-Pseudo-Releves" title="Permalink"></a></h3><h3 id="Assignment-of-Releves-to-Vegetation-Classes"><a class="docs-heading-anchor" href="#Assignment-of-Releves-to-Vegetation-Classes">Assignment of Releves to Vegetation Classes</a><a id="Assignment-of-Releves-to-Vegetation-Classes-1"></a><a class="docs-heading-anchor-permalink" href="#Assignment-of-Releves-to-Vegetation-Classes" title="Permalink"></a></h3><p>Let’s compare the similarity of <code>syn_1</code> and <code>syn_2</code>.</p><h3 id="Steinhaus-coefficient"><a class="docs-heading-anchor" href="#Steinhaus-coefficient">Steinhaus coefficient</a><a id="Steinhaus-coefficient-1"></a><a class="docs-heading-anchor-permalink" href="#Steinhaus-coefficient" title="Permalink"></a></h3><p>First, let’s compose a syntopic table object from the “y” sample data and extract the syntopic tables in matrix format.</p><pre><code class="language-julia hljs">syn_1_mat = VegSci.extract_syntopic_matrix(syn_1)
+syn_2_mat = VegSci.extract_syntopic_matrix(syn_2)</code></pre><pre><code class="nohighlight hljs">1×21 Named Matrix{Float64}
+A ╲ B │ Achimill  Airaprae  Alopgeni  …  Trifrepe  Vicilath  Bracruta
+──────┼──────────────────────────────────────────────────────────────
+Syn2  │      2.0       2.0       2.0  …       3.0       1.0       3.0</code></pre><p>Now we have three matrices, containing the relative frequencies of each species present in the sample releves which constitute each syntaxon. However, each of the syntaxa are composed of a different set of species, in Julia we need a helper function to merge these matrices and ensure each matrix contains each species across all the matrices. This function is broadly equivalent to the R function <code>base::merge</code>.</p><pre><code class="language-julia hljs">merged_syn_mats = VegSci.merge_namedarrays([syn_1_mat, syn_2_mat])</code></pre><pre><code class="nohighlight hljs">2×27 Named Matrix{Float64}
+A ╲ B │ Agrostol  Alopgeni  Bellpere  …  Salirepe  Trifprat  Vicilath
+──────┼──────────────────────────────────────────────────────────────
+Syn1  │      4.0       5.0       2.0  …       0.0       0.0       0.0
+Syn2  │      0.0       2.0       2.0  …       3.0       2.0       1.0</code></pre><pre><code class="language-julia hljs">VegSci.steinhaus_coefficient(merged_syn_mats[[:&quot;Syn1&quot;], :], merged_syn_mats[Not(:&quot;Syn1&quot;), :])</code></pre><pre><code class="nohighlight hljs">1×1 Named Matrix{Float64}
+A ╲ B │     Syn2
+──────┼─────────
+Syn1  │ 0.595041</code></pre><h3 id="Multivariate-Analysis"><a class="docs-heading-anchor" href="#Multivariate-Analysis">Multivariate Analysis</a><a id="Multivariate-Analysis-1"></a><a class="docs-heading-anchor-permalink" href="#Multivariate-Analysis" title="Permalink"></a></h3><h3 id="Example-Workflow"><a class="docs-heading-anchor" href="#Example-Workflow">Example Workflow</a><a id="Example-Workflow-1"></a><a class="docs-heading-anchor-permalink" href="#Example-Workflow" title="Permalink"></a></h3><h2 id="External-Resources"><a class="docs-heading-anchor" href="#External-Resources">External Resources</a><a id="External-Resources-1"></a><a class="docs-heading-anchor-permalink" href="#External-Resources" title="Permalink"></a></h2><h2 id="Implemented-Methodologies"><a class="docs-heading-anchor" href="#Implemented-Methodologies">Implemented Methodologies</a><a id="Implemented-Methodologies-1"></a><a class="docs-heading-anchor-permalink" href="#Implemented-Methodologies" title="Permalink"></a></h2><h2 id="Contribute"><a class="docs-heading-anchor" href="#Contribute">Contribute</a><a id="Contribute-1"></a><a class="docs-heading-anchor-permalink" href="#Contribute" title="Permalink"></a></h2><h2 id="Acknowledgements"><a class="docs-heading-anchor" href="#Acknowledgements">Acknowledgements</a><a id="Acknowledgements-1"></a><a class="docs-heading-anchor-permalink" href="#Acknowledgements" title="Permalink"></a></h2><h2 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h2><p>Bezanson, Jeff, Alan Edelman, Stefan Karpinksi, and Viral B. Shah. 2017. “Julia: A Fresh Approach to Numerical Computing.” <em>SIAM Review</em> 59 (1): 65–98. <a href="https://doi.org/10.1137/141000671">https://doi.org/10.1137/141000671</a>.</p><p>Chytrý, Milan, Lubomír Tichý, Jason Holt, and Zoltán Botta-Dukát. 2002. “Determination of Diagnostic Species with Statistical Fidelity Measures.” <em>Journal of Vegetation Science</em> 13 (1): 79–90. <a href="https://doi.org/10.1111/j.1654-1103.2002.tb02025.x">https://doi.org/10.1111/j.1654-1103.2002.tb02025.x</a>.</p><p>Roesch, Elisabeth, Joe G. Greener, Adam L. MacLean, Huda Nassar, Christopher Rackauckas, Timothy E. Holy, and Michael P. H. Stumpf. 2023. “Julia for Biologists.” <em>Nature Methods</em> 20 (5): 655–64. <a href="https://doi.org/10.1038/s41592-023-01832-z">https://doi.org/10.1038/s41592-023-01832-z</a>.</p><p>Sperandii, Marta Gaia, Manuele Bazzichetto, Glenda Mendieta-Leiva, Sebastian Schmidtlein, Michael Bott, Renato A. Ferreira de Lima, Valério D. Pillar, Jodi N. Price, Viktoria Wagner, and Milan Chytrý. 2024. “Towards More Reproducibility in Vegetation Research.” <em>Journal of Vegetation Science</em> 35 (1): e13224. <a href="https://doi.org/10.1111/jvs.13224">https://doi.org/10.1111/jvs.13224</a>.</p><p>Theurillat, Jean-Paul, Wolfgang Willner, Federico Fernández-González, Helga Bültmann, Andraž Čarni, Daniela Gigante, Ladislav Mucina, and Heinrich Weber. 2021. “International Code of Phytosociological Nomenclature. 4th Edition.” <em>Applied Vegetation Science</em> 24 (1): e12491. <a href="https://doi.org/10.1111/avsc.12491">https://doi.org/10.1111/avsc.12491</a>.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="methods/CorrespondenceAnalysis/">Correspondence Analysis »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.3.0 on <span class="colophon-date" title="Sunday 10 March 2024 07:53">Sunday 10 March 2024</span>. Using Julia version 1.10.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

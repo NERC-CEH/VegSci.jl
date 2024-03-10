@@ -2,7 +2,7 @@
 title: "Data Wrangling"
 execute: 
   enabled: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../references.bib
 ---
 
@@ -71,9 +71,9 @@ end
 generate_test_array(rown = 10, coln = 10, meancoloccs = 6)
 ```
 
-## Aligning site by species matrices {#sec-align_array_columns}
+## Aligning releve by species matrices {#sec-align_array_columns}
 
-Many analyses in vegetation science require site by species matrices. Frequently, such matrices contain different sets of species in the columns. Combining matrices, often `NamedArrays.NamedArray` objects in Julia, or ensuring these matrices have the same sets of species in the columns is a non-trivial task in Julia given the lack of a function to merge matrices in `NamedArrays`. Using R and in contrast, given two matrices (x and y) the R function `base::merge(x, y, by = "row.names", all = TRUE)` achieves this.
+Many analyses in vegetation science require releve by species matrices. Frequently, such matrices contain different sets of species in the columns. Combining matrices, often `NamedArrays.NamedArray` objects in Julia, or ensuring these matrices have the same sets of species in the columns is a non-trivial task in Julia given the lack of a function to merge matrices in `NamedArrays`. Using R and in contrast, given two matrices (x and y) the R function `base::merge(x, y, by = "row.names", all = TRUE)` achieves this.
 
 Below is a helper function to align the columns in two `NamedArrays.NamedArray` objects.
 
