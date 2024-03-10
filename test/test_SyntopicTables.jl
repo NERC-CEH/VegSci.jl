@@ -22,11 +22,9 @@ using DataFrames
         @test typeof(csto_results.mean_abundance) <: Vector{Float64}
         @test typeof(csto_results.median_abundance) <: Vector{Float64}
         @test typeof(csto_results.maximum_abundance) <: Vector{Float64}
-    end
-    @testset "print_summary_syntopic_table" begin
-        # Need to think about how I test this given the complexity of the output.
-        psst_result = @capture_out VegSci.print_summary_syntopic_table(csto_results, "normal", "cover_proportion")
-        @test typeof(psst_result) <: String
+        @test typeof(csto_results.fidelity) <: Vector{Float64}
+        @test typeof(csto_results.fidelity_p) <: Vector{String}
+        @test typeof(csto_results.fidelity_n) <: Vector{String}
     end
     @testset "extract_syntopic_matrix" begin
         esm_results = VegSci.extract_syntopic_matrix(csto_results)
@@ -35,5 +33,14 @@ using DataFrames
         @test size(esm_results) == (1, 10)
         @test all(x -> x .>= 0.0, esm_results)
         @test all(x -> x .<= 1.0, esm_results)
+    end
+    @testset "extract_syntopic_table" begin
+        est_results = VegSci.extract_syntopic_table(csto_results)
+        @test typeof(est_results) <: DataFrame
+    end
+    @testset "print_summary_syntopic_table" begin
+        # Need to think about how I test this given the complexity of the output.
+        psst_result = @capture_out VegSci.print_summary_syntopic_table(csto_results, "normal", "cover_proportion")
+        @test typeof(psst_result) <: String
     end
 end

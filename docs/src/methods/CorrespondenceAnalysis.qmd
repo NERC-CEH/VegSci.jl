@@ -9,7 +9,7 @@ execute:
   eval: true
   echo: true
   output: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../../../references.bib
 ---
 
@@ -38,7 +38,7 @@ using Plots
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix, N.
+Create example data in the form of a releve by species named matrix, N.
 
 ```{julia create_example_data}
 N = VegSci.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
@@ -196,12 +196,12 @@ function correspondence_analysis(N::NamedMatrix)
 
   # A.6 Standard coordinates Φ of rows
   Φ_rownames = names(N)[1]
-  Φ_colnames = vec(["Dim"].*string.([1:1:size(N,1);]))
+  Φ_colnames = vec(["Dim"].*string.([1:1:size(D,1);]))
   Φ = NamedArray(Dr^(-1/2) * U, names = (Φ_rownames, Φ_colnames), dimnames = ("Plot", "Dimension"))[1:end,1:end .!= end]
   
   # A.7 Standard coordinates Γ of columns
   Γ_rownames = names(N)[2]
-  Γ_colnames = vec(["Dim"].*string.([1:1:size(N,1);]))
+  Γ_colnames = vec(["Dim"].*string.([1:1:size(D,1);]))
   Γ = NamedArray(Dc^(-1/2) * V, names = (Γ_rownames, Γ_colnames), dimnames = ("Species", "Dimension"))[1:end,1:end .!= end]
   
   # A.8 Principal coordinates F of rows
@@ -217,17 +217,17 @@ function correspondence_analysis(N::NamedMatrix)
   results = (sv = D, # Singular values
              rownames = names(N)[1], # Row names
              rowmass = r, # Row masses
-            #  rowdist = , # Row chi-square distances to centroid
-            #  rowinertia = , # Row inertias
+             #  rowdist = , # Row chi-square distances to centroid
+             #  rowinertia = , # Row inertias
              rowcoord = Φ, # Row standard coordinates
-            #  rowsup = , # Indicies of row supplementary points
+             #  rowsup = , # Indicies of row supplementary points
              colnames = names(N)[2], # Column names
              colmass = c, # Column masses
-            #  coldist = , # Column chi-square distances to centroid
-            #  colinertia = , # Column inertias
+             #  coldist = , # Column chi-square distances to centroid
+             #  colinertia = , # Column inertias
              colcoord = Γ, # Column standard coordinates
-            #  colsup = , # Indices of column supplementary points
-            N = N # The frequency table
+             #  colsup = , # Indices of column supplementary points
+             N = N # The frequency table
             )
 
   return results

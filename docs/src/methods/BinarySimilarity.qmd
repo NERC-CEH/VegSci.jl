@@ -2,7 +2,7 @@
 title: "Binary (Dis)similarity"
 execute: 
   enabled: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../../../references.bib
 ---
 
@@ -38,7 +38,7 @@ library(microbenchmark)
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix, making row (Releve2) and column (Spp7) contain all zero entries, for testing.
+Create example data in the form of a releve by species named matrix, making row (Releve2) and column (Spp7) contain all zero entries, for testing.
 
 ```{julia create_example_data}
 mat = generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
@@ -117,7 +117,7 @@ LinearAlgebra.LowerTriangular(j_i)
 
 ## Create a binary (dis)similarity metric function
 
-Collate the above code into a function, which accepts a Matrix or NamedMatrix, x, and returns a Matrix or NamedMatrix containing the site x site Jaccard similarity values.
+Collate the above code into a function, which accepts a Matrix or NamedMatrix, x, and returns a Matrix or NamedMatrix containing the releve x releve Jaccard similarity values.
 
 ```{julia jaccard_function}
 function jaccard_coefficient(x::Union{Matrix, NamedMatrix})

@@ -1,0 +1,79 @@
+---
+title: "Benchmarking"
+format: 
+  commonmark:
+    variant: -raw_html+tex_math_dollars
+    wrap: none
+execute: 
+  freeze: auto
+  eval: true
+  echo: true
+  output: true
+julia: julia-1.10.2
+bibliography: ../../../references.bib
+---
+
+```{julia activate_environment}
+#| include: false
+using Pkg; Pkg.activate("docs")
+```
+
+## Import Required Packages
+
+```{julia import_packages}
+using VegSci
+using NamedArrays
+using CSV
+using BenchmarkTools
+using DataFrames
+```
+
+## Outline
+
+
+## R vs Julia Dune Data
+
+Let's see how the R function `ca::ca()` compares to the Julia function `correspondence_analysis()` defined above.
+
+First load the `dune` dataset bundled in `{vegan}`.
+
+
+::: {.panel-tabset}
+
+## Julia
+
+```{julia load_dune_julia}
+begin
+	dune_df = CSV.read("./docs/src/data/dune.csv", DataFrame, header = 1)
+	dune_na = NamedArray(Array(dune_df))
+	NamedArrays.setnames!(dune_na, names(dune_df), 2)
+end
+```
+
+## R
+
+```{r load_dune_r}
+dune <- as.matrix(read.csv(file = "./docs/src/data/dune.csv"))
+```
+
+:::
+
+## Benchmark Functions
+
+### Correspondence Analysis
+
+```{julia benchmark_julia}
+ca_julia = @benchmark VegSci.correspondence_analysis(dune_na)
+```
+
+```{r benchmark_r}
+ca_r <- microbenchmark::microbenchmark(ca::ca(dune), times = 1000)
+```
+
+
+### Benchmarking Results
+
+```{r collate benchmarking results}
+# ca_julia <- JuliaCall::julia_eval("ca_julia")
+# ca_julia
+```

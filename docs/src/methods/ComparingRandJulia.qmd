@@ -9,7 +9,7 @@ execute:
   eval: true
   echo: true
   output: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../../../references.bib
 ---
 
@@ -130,16 +130,6 @@ ggplot2::ggplot() +
   ggplot2::facet_wrap(vars(Language)) +
   ggplot2::theme_minimal() +
   NULL
-```
-
-### Benchmark Functions
-
-```{julia benchmark_julia}
-@benchmark correspondence_analysis(dune_na)
-```
-
-```{r benchmark_r}
-microbenchmark::microbenchmark(ca::ca(dune))
 ```
 
 

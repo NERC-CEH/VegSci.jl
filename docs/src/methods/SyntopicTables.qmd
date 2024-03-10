@@ -2,7 +2,7 @@
 title: "Syntopic Tables"
 execute: 
   enabled: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../references.bib
 ---
 
@@ -28,7 +28,7 @@ using Statistics
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix, making row (SiteA-2) and column (Species7) contain all zero entries, for testing.
+Create example data in the form of a releve by species named matrix, making row (SiteA-2) and column (Species7) contain all zero entries, for testing.
 
 ```{julia create_example_data}
 #| code-fold: true

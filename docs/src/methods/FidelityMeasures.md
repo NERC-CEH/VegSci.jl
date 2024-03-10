@@ -9,6 +9,9 @@ using DataFrames
 using NamedArrays
 ```
 
+    [ Info: Precompiling VegSci [31ef3d96-7648-423b-b844-5d3d759e611e]
+    [ Info: Precompiling Clustering [aaaa29a8-35af-508c-8bc3-b662a17a0fe5]
+
 ## Outline
 
 This methods page provides an overview of the step-by-step
@@ -82,8 +85,8 @@ clusters
 
     Dict{String, Vector{String}} with 3 entries:
       "1" => ["3", "4", "8", "9", "12", "13"]
-      "2" => ["1", "2", "5", "6", "7", "10", "11", "17", "18"]
-      "3" => ["14", "15", "16", "19", "20"]
+      "2" => ["14", "15", "16", "19", "20"]
+      "3" => ["1", "2", "5", "6", "7", "10", "11", "17", "18"]
 
 Create a presence-absence matrix by replacing all non-zero values with
 an Integer value of 1.
@@ -326,8 +329,8 @@ indval_fidelity(dune_pa, clusters)
     A ╲ B │  Achimill   Agrostol   Airaprae  …   Vicilath   Bracruta   Callcusp
     ──────┼────────────────────────────────────────────────────────────────────
     1     │       0.0        0.5        0.0  …        0.0   0.324074        0.0
-    2     │  0.316872        0.0  0.0339506      0.135802    0.18107        0.0
-    3     │       0.0   0.393443   0.107143  …        0.0   0.326531   0.391304
+    2     │       0.0   0.393443   0.107143           0.0   0.326531   0.391304
+    3     │  0.316872        0.0  0.0339506  …   0.135802    0.18107        0.0
 
 ## References
 

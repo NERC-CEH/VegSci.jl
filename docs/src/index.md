@@ -53,40 +53,40 @@ First we begin with generating two example plot by species
 `VegSci.generate_test_array` as test data.
 
 ``` julia
-x = VegSci.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+dune = CSV.read("./data/dune.csv", DataFrame, header = 1)
+x = float(NamedArray(Array(dune)))
+NamedArrays.setnames!(x, names(dune), 2)
+x
 ```
 
-    30×20 Named Matrix{Float64}
-    Releve ╲ Species │    Species1     Species2  …    Species19    Species20
-    ─────────────────┼──────────────────────────────────────────────────────
-    SiteA-1          │         0.0          0.0  …     0.157852   0.00555798
-    SiteA-2          │    0.130109          0.0       0.0747752          0.0
-    SiteA-3          │    0.153157     0.177941             0.0    0.0164033
-    SiteA-4          │         0.0     0.108419        0.102789    0.0942697
-    SiteA-5          │   0.0104223   0.00789441        0.152983     0.139453
-    SiteA-6          │         0.0    0.0747113       0.0036627     0.154264
-    SiteA-7          │         0.0     0.104619        0.121775    0.0622911
-    SiteA-8          │         0.0          0.0        0.100688     0.054472
-    SiteA-9          │         0.0          0.0             0.0          0.0
-    SiteA-10         │    0.180499          0.0             0.0          0.0
-    SiteA-11         │    0.164635          0.0        0.161734     0.187418
-    ⋮                            ⋮            ⋮  ⋱            ⋮            ⋮
-    SiteA-20         │   0.0763144          0.0        0.105427          0.0
-    SiteA-21         │    0.015283    0.0269463       0.0264219          0.0
-    SiteA-22         │         0.0          0.0             0.0     0.124375
-    SiteA-23         │    0.127401          0.0        0.177078          0.0
-    SiteA-24         │         0.0      0.16006        0.192652     0.112483
-    SiteA-25         │   0.0192523     0.114235       0.0634028     0.119082
-    SiteA-26         │   0.0798989          0.0       0.0466872          0.0
-    SiteA-27         │   0.0228354          0.0       0.0488663     0.103179
-    SiteA-28         │         0.0    0.0207325             0.0          0.0
-    SiteA-29         │         0.0          0.0             0.0          0.0
-    SiteA-30         │         0.0          0.0  …          0.0          0.0
+    20×30 Named Matrix{Float64}
+    A ╲ B │ Achimill  Agrostol  Airaprae  …  Vicilath  Bracruta  Callcusp
+    ──────┼──────────────────────────────────────────────────────────────
+    1     │      1.0       0.0       0.0  …       0.0       0.0       0.0
+    2     │      3.0       0.0       0.0          0.0       0.0       0.0
+    3     │      0.0       4.0       0.0          0.0       2.0       0.0
+    4     │      0.0       8.0       0.0          0.0       2.0       0.0
+    5     │      2.0       0.0       0.0          0.0       2.0       0.0
+    6     │      2.0       0.0       0.0          0.0       6.0       0.0
+    7     │      2.0       0.0       0.0          0.0       2.0       0.0
+    8     │      0.0       4.0       0.0          0.0       2.0       0.0
+    9     │      0.0       3.0       0.0          0.0       2.0       0.0
+    10    │      4.0       0.0       0.0          1.0       2.0       0.0
+    11    │      0.0       0.0       0.0          2.0       4.0       0.0
+    12    │      0.0       4.0       0.0          0.0       4.0       0.0
+    13    │      0.0       5.0       0.0          0.0       0.0       0.0
+    14    │      0.0       4.0       0.0          0.0       0.0       4.0
+    15    │      0.0       4.0       0.0          0.0       4.0       0.0
+    16    │      0.0       7.0       0.0          0.0       4.0       3.0
+    17    │      2.0       0.0       2.0          0.0       0.0       0.0
+    18    │      0.0       0.0       0.0          1.0       6.0       0.0
+    19    │      0.0       0.0       3.0          0.0       3.0       0.0
+    20    │      0.0       5.0       0.0  …       0.0       4.0       3.0
 
 ### Classification
 
-Let’s identify some clusters, storing the cluster-releve memberships as
-a dictionary.
+Let’s identify some potential associations using fuzzy c-means
+clustering, storing the cluster-releve memberships as a dictionary.
 
 ``` julia
 r = Clustering.fuzzy_cmeans(transpose(x), 3, 2)
@@ -110,9 +110,9 @@ clusters
 ```
 
     Dict{String, Vector{String}} with 3 entries:
-      "1" => ["SiteA-4", "SiteA-5", "SiteA-6", "SiteA-11", "SiteA-12", "SiteA-14", …
-      "2" => ["SiteA-2", "SiteA-3", "SiteA-7", "SiteA-15", "SiteA-21", "SiteA-25"]
-      "3" => ["SiteA-1", "SiteA-8", "SiteA-9", "SiteA-10", "SiteA-13", "SiteA-17", …
+      "1" => ["3", "4", "8", "9", "12", "13"]
+      "2" => ["1", "2", "5", "6", "7", "10", "11", "17", "18"]
+      "3" => ["14", "15", "16", "19", "20"]
 
 ### Creation of Syntopic Tables
 
@@ -122,63 +122,105 @@ summarise their composition via the creation of `SyntopicTable` objects.
 ``` julia
 syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(clusters, "1"),:])
 syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(clusters, "2"),:])
-VegSci.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
+VegSci.print_summary_syntopic_table(syn_1, "normal", "proportion")
 ```
 
 
 
-    Community Name: Syn2
+    Community Name: Syn1
     Releves: n = 6
     Species: n = 19
-    ┌───────────┬───────────────────┬─────────────────┐
-    │   Species │ RelativeFrequency │       Abundance │
-    ├───────────┼───────────────────┼─────────────────┤
-    │  Species3 │               1.0 │ 0.1 (0.0 - 0.2) │
-    │ Species16 │               1.0 │ 0.1 (0.1 - 0.1) │
-    │  Species1 │               0.8 │ 0.1 (0.0 - 0.2) │
-    │  Species2 │               0.8 │ 0.1 (0.0 - 0.2) │
-    │  Species7 │               0.8 │ 0.1 (0.0 - 0.1) │
-    │ Species12 │               0.8 │ 0.1 (0.0 - 0.1) │
-    │  Species4 │               0.7 │ 0.1 (0.0 - 0.1) │
-    │  Species5 │               0.7 │ 0.1 (0.0 - 0.1) │
-    │ Species10 │               0.7 │ 0.1 (0.1 - 0.1) │
-    │ Species15 │               0.7 │ 0.1 (0.0 - 0.1) │
-    │ Species18 │               0.7 │ 0.1 (0.1 - 0.1) │
-    │ Species19 │               0.7 │ 0.1 (0.0 - 0.1) │
-    │ Species11 │               0.5 │ 0.1 (0.0 - 0.1) │
-    │ Species17 │               0.5 │ 0.1 (0.0 - 0.1) │
-    │ Species20 │               0.5 │ 0.1 (0.0 - 0.1) │
-    │ Species14 │               0.3 │ 0.0 (0.0 - 0.0) │
-    │  Species6 │               0.2 │ 0.1 (0.1 - 0.1) │
-    │  Species8 │               0.2 │ 0.0 (0.0 - 0.0) │
-    │  Species9 │               0.2 │ 0.0 (0.0 - 0.0) │
-    └───────────┴───────────────────┴─────────────────┘
+    Postive Indicators: 
+    Negative Indicators: 
+    ┌──────────┬───────────────────┬─────────────────┐
+    │  Species │ RelativeFrequency │       Abundance │
+    ├──────────┼───────────────────┼─────────────────┤
+    │ Alopgeni │               1.0 │ 5.0 (2.0 - 8.0) │
+    │  Poatriv │               1.0 │ 5.0 (4.0 - 9.0) │
+    │ Agrostol │               1.0 │ 4.0 (3.0 - 8.0) │
+    │ Scorautu │               1.0 │ 2.0 (2.0 - 3.0) │
+    │ Trifrepe │               1.0 │ 2.0 (1.0 - 3.0) │
+    │  Poaprat │               0.8 │ 4.0 (2.0 - 5.0) │
+    │ Sagiproc │               0.8 │ 2.0 (2.0 - 5.0) │
+    │ Bracruta │               0.8 │ 2.0 (2.0 - 4.0) │
+    │ Lolipere │               0.7 │ 4.5 (2.0 - 6.0) │
+    │ Elymrepe │               0.5 │ 4.0 (4.0 - 6.0) │
+    │ Juncbufo │               0.5 │ 4.0 (3.0 - 4.0) │
+    │ Juncarti │               0.3 │ 4.0 (4.0 - 4.0) │
+    │ Bellpere │               0.3 │ 2.0 (2.0 - 2.0) │
+    │ Ranuflam │               0.3 │ 2.0 (2.0 - 2.0) │
+    │ Rumeacet │               0.3 │ 2.0 (2.0 - 2.0) │
+    │ Eleopalu │               0.2 │ 4.0 (4.0 - 4.0) │
+    │ Bromhord │               0.2 │ 3.0 (3.0 - 3.0) │
+    │ Cirsarve │               0.2 │ 2.0 (2.0 - 2.0) │
+    │ Chenalbu │               0.2 │ 1.0 (1.0 - 1.0) │
+    └──────────┴───────────────────┴─────────────────┘
 
-### Identification of High-Fidelity Species
+### Species Fidelity
+
+Calculate the species fidelity scores using the Dufrêne-Legendre
+Indicator Value Index (IndVal) metric for each cluster.
+
+``` julia
+indval_fidelity = VegSci.indval_fidelity(x, clusters)
+```
+
+    3×30 Named Matrix{Float64}
+    A ╲ B │  Achimill   Agrostol   Airaprae  …   Vicilath   Bracruta   Callcusp
+    ──────┼────────────────────────────────────────────────────────────────────
+    1     │       0.0    2.30976        0.0  …        0.0   0.658824        0.0
+    2     │   0.72428        0.0  0.0603567       0.18107   0.706757        0.0
+    3     │       0.0        2.0   0.341772  …        0.0    1.31068    1.30435
+
+Let’s update the syntopic table objects with the fidelity values. By
+default the IndVal fidelity measure does not distinguish negative
+fidelity (Chytrý et al. 2002), so we just provide a ‘cut value’ to
+extract the postive, high-fidelity species.
+
+``` julia
+syn_1_f_mat = indval_fidelity[["1"], :]
+p_cut = 0.5
+syn_1.fidelity = vec(syn_1_f_mat)
+syn_1.fidelity_p = names(syn_1_f_mat[:, vec(map(col -> any(col .>= 0.5), eachcol(syn_1_f_mat)))])[2]
+VegSci.print_summary_syntopic_table(syn_1, "normal", "proportion")
+```
+
+
+
+    Community Name: Syn1
+    Releves: n = 6
+    Species: n = 19
+    Postive Indicators: Agrostol Alopgeni Elymrepe Juncarti Juncbufo Lolipere Poaprat Poatriv Sagiproc Scorautu Trifrepe Bracruta
+    Negative Indicators: 
+    ┌──────────┬───────────────────┬─────────────────┐
+    │  Species │ RelativeFrequency │       Abundance │
+    ├──────────┼───────────────────┼─────────────────┤
+    │ Alopgeni │               1.0 │ 5.0 (2.0 - 8.0) │
+    │  Poatriv │               1.0 │ 5.0 (4.0 - 9.0) │
+    │ Agrostol │               1.0 │ 4.0 (3.0 - 8.0) │
+    │ Scorautu │               1.0 │ 2.0 (2.0 - 3.0) │
+    │ Trifrepe │               1.0 │ 2.0 (1.0 - 3.0) │
+    │  Poaprat │               0.8 │ 4.0 (2.0 - 5.0) │
+    │ Sagiproc │               0.8 │ 2.0 (2.0 - 5.0) │
+    │ Bracruta │               0.8 │ 2.0 (2.0 - 4.0) │
+    │ Lolipere │               0.7 │ 4.5 (2.0 - 6.0) │
+    │ Elymrepe │               0.5 │ 4.0 (4.0 - 6.0) │
+    │ Juncbufo │               0.5 │ 4.0 (3.0 - 4.0) │
+    │ Juncarti │               0.3 │ 4.0 (4.0 - 4.0) │
+    │ Bellpere │               0.3 │ 2.0 (2.0 - 2.0) │
+    │ Ranuflam │               0.3 │ 2.0 (2.0 - 2.0) │
+    │ Rumeacet │               0.3 │ 2.0 (2.0 - 2.0) │
+    │ Eleopalu │               0.2 │ 4.0 (4.0 - 4.0) │
+    │ Bromhord │               0.2 │ 3.0 (3.0 - 3.0) │
+    │ Cirsarve │               0.2 │ 2.0 (2.0 - 2.0) │
+    │ Chenalbu │               0.2 │ 1.0 (1.0 - 1.0) │
+    └──────────┴───────────────────┴─────────────────┘
 
 ### Generation of Pseudo-Releves
 
 ### Assignment of Releves to Vegetation Classes
 
-Let’s generate a second example matrix, consisting of sample 5 releves,
-against which we want to calculate the similarity.
-
-``` julia
-y = VegSci.generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
-```
-
-    5×30 Named Matrix{Float64}
-    Releve ╲ Species │   Species1    Species2  …   Species29   Species30
-    ─────────────────┼──────────────────────────────────────────────────
-    SiteB-1          │        0.0         0.0  …         0.0         0.0
-    SiteB-2          │        0.0   0.0641312      0.0955262         0.0
-    SiteB-3          │        0.0         0.0       0.045238         0.0
-    SiteB-4          │        0.0         0.0            0.0         0.0
-    SiteB-5          │        0.0    0.245125  …    0.181263         0.0
-
-Three methods will be demonstrated.
-
-### Jaccard Similarity
+Let’s compare the similarity of `syn_1` and `syn_2`.
 
 ### Steinhaus coefficient
 
@@ -186,18 +228,16 @@ First, let’s compose a syntopic table object from the “y” sample data
 and extract the syntopic tables in matrix format.
 
 ``` julia
-syn_y = VegSci.compose_syntopic_table_object("Sample", y)
-syn_y_mat = VegSci.extract_syntopic_matrix(syn_y)
 syn_1_mat = VegSci.extract_syntopic_matrix(syn_1)
 syn_2_mat = VegSci.extract_syntopic_matrix(syn_2)
 ```
 
-    1×19 Named Matrix{Float64}
-    A ╲ B │   Species1    Species2  …   Species19   Species20
-    ──────┼──────────────────────────────────────────────────
-    Syn2  │   0.130109    0.114235  …    0.069089   0.0622911
+    1×21 Named Matrix{Float64}
+    A ╲ B │ Achimill  Airaprae  Alopgeni  …  Trifrepe  Vicilath  Bracruta
+    ──────┼──────────────────────────────────────────────────────────────
+    Syn2  │      2.0       2.0       2.0  …       3.0       1.0       3.0
 
-Now we have three matrices, containg the relative frequencies of each
+Now we have three matrices, containing the relative frequencies of each
 species present in the sample releves which constitute each syntaxon.
 However, each of the syntaxa are composed of a different set of species,
 in Julia we need a helper function to merge these matrices and ensure
@@ -205,28 +245,25 @@ each matrix contains each species across all the matrices. This function
 is broadly equivalent to the R function `base::merge`.
 
 ``` julia
-merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
+merged_syn_mats = VegSci.merge_namedarrays([syn_1_mat, syn_2_mat])
 ```
 
-    3×26 Named Matrix{Float64}
-     A ╲ B │   Species2    Species3  …   Species19   Species20
-    ───────┼──────────────────────────────────────────────────
-    Sample │   0.154628    0.130323  …         0.0         0.0
-    Syn1   │  0.0860061   0.0715421       0.104108    0.134974
-    Syn2   │   0.114235    0.119714  …    0.069089   0.0622911
+    2×27 Named Matrix{Float64}
+    A ╲ B │ Agrostol  Alopgeni  Bellpere  …  Salirepe  Trifprat  Vicilath
+    ──────┼──────────────────────────────────────────────────────────────
+    Syn1  │      4.0       5.0       2.0  …       0.0       0.0       0.0
+    Syn2  │      0.0       2.0       2.0  …       3.0       2.0       1.0
 
 ``` julia
-VegSci.steinhaus_coefficient(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
+VegSci.steinhaus_coefficient(merged_syn_mats[[:"Syn1"], :], merged_syn_mats[Not(:"Syn1"), :])
 ```
 
-    1×2 Named Matrix{Float64}
-     A ╲ B │     Syn1      Syn2
-    ───────┼───────────────────
-    Sample │ 0.302282  0.268195
+    1×1 Named Matrix{Float64}
+    A ╲ B │     Syn2
+    ──────┼─────────
+    Syn1  │ 0.595041
 
 ### Multivariate Analysis
-
-### Ecological Trajectory Analysis
 
 ### Example Workflow
 
@@ -243,6 +280,11 @@ VegSci.steinhaus_coefficient(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not
 Bezanson, Jeff, Alan Edelman, Stefan Karpinksi, and Viral B. Shah. 2017.
 “Julia: A Fresh Approach to Numerical Computing.” *SIAM Review* 59 (1):
 65–98. <https://doi.org/10.1137/141000671>.
+
+Chytrý, Milan, Lubomír Tichý, Jason Holt, and Zoltán Botta-Dukát. 2002.
+“Determination of Diagnostic Species with Statistical Fidelity
+Measures.” *Journal of Vegetation Science* 13 (1): 79–90.
+<https://doi.org/10.1111/j.1654-1103.2002.tb02025.x>.
 
 Roesch, Elisabeth, Joe G. Greener, Adam L. MacLean, Huda Nassar,
 Christopher Rackauckas, Timothy E. Holy, and Michael P. H. Stumpf. 2023.

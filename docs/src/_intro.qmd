@@ -8,7 +8,7 @@ execute:
   eval: true
   echo: true
   output: true
-julia: julia-1.10
+julia: julia-1.10.2
 bibliography: ../../references.bib
 ---
 
@@ -24,6 +24,9 @@ using Pkg; Pkg.activate("docs")
 using VegSci
 using InvertedIndices
 using Clustering
+using CSV
+using DataFrames
+using NamedArrays
 ```
 
 Tools for vegetation science.
@@ -59,12 +62,15 @@ To demonstrate...
 First we begin with generating two example plot by species `NamedArrays.NamedMatrix` object using the function `VegSci.generate_test_array` as test data.
 
 ```{julia example_data}
-x = VegSci.generate_test_array(rown = 30, coln = 20, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")
+dune = CSV.read("./data/dune.csv", DataFrame, header = 1)
+x = float(NamedArray(Array(dune)))
+NamedArrays.setnames!(x, names(dune), 2)
+x
 ```
 
 ### Classification
 
-Let's identify some clusters, storing the cluster-releve memberships as a dictionary.
+Let's identify some potential associations using fuzzy c-means clustering, storing the cluster-releve memberships as a dictionary.
 
 ```{julia fuzzy_c_clusters}
 r = Clustering.fuzzy_cmeans(transpose(x), 3, 2)
@@ -91,53 +97,58 @@ clusters
 
 Once the plots have been grouped into clusters, we can proceed to summarise their composition via the creation of `SyntopicTable` objects.
 
-```{julia syntopic_table_x}
+```{julia syntopic_table}
 syn_1 = VegSci.compose_syntopic_table_object("Syn1", x[getindex(clusters, "1"),:])
 syn_2 = VegSci.compose_syntopic_table_object("Syn2", x[getindex(clusters, "2"),:])
-VegSci.print_summary_syntopic_table(syn_2, "normal", "cover_proportion")
+VegSci.print_summary_syntopic_table(syn_1, "normal", "proportion")
 ```
 
-### Identification of High-Fidelity Species
+### Species Fidelity
+
+Calculate the species fidelity scores using the Dufrêne-Legendre Indicator Value Index (IndVal) metric for each cluster.
+
+```{julia fidelity}
+indval_fidelity = VegSci.indval_fidelity(x, clusters)
+```
+
+Let's update the syntopic table objects with the fidelity values.
+By default the IndVal fidelity measure does not distinguish negative fidelity [@chytry2002], so we just provide a 'cut value' to extract the postive, high-fidelity species.
+
+```{julia syntopic_table_fidelity}
+syn_1_f_mat = indval_fidelity[["1"], :]
+p_cut = 0.5
+syn_1.fidelity = vec(syn_1_f_mat)
+syn_1.fidelity_p = names(syn_1_f_mat[:, vec(map(col -> any(col .>= 0.5), eachcol(syn_1_f_mat)))])[2]
+VegSci.print_summary_syntopic_table(syn_1, "normal", "proportion")
+```
 
 ### Generation of Pseudo-Releves
 
 ### Assignment of Releves to Vegetation Classes
 
-Let's generate a second example matrix, consisting of sample 5 releves, against which we want to calculate the similarity.
-
-```{julia example_data}
-y = VegSci.generate_test_array(rown = 5, coln = 30, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
-```
-
-Three methods will be demonstrated.
-
-### Jaccard Similarity
+Let's compare the similarity of `syn_1` and `syn_2`.
 
 ### Steinhaus coefficient
 
 First, let's compose a syntopic table object from the "y" sample data and extract the syntopic tables in matrix format.
 
 ```{julia syntopic_table_y}
-syn_y = VegSci.compose_syntopic_table_object("Sample", y)
-syn_y_mat = VegSci.extract_syntopic_matrix(syn_y)
 syn_1_mat = VegSci.extract_syntopic_matrix(syn_1)
 syn_2_mat = VegSci.extract_syntopic_matrix(syn_2)
 ```
 
-Now we have three matrices, containg the relative frequencies of each species present in the sample releves which constitute each syntaxon.
+Now we have three matrices, containing the relative frequencies of each species present in the sample releves which constitute each syntaxon.
 However, each of the syntaxa are composed of a different set of species, in Julia we need a helper function to merge these matrices and ensure each matrix contains each species across all the matrices. This function is broadly equivalent to the R function `base::merge`.
 
 ```{julia merge_arrays}
-merged_syn_mats = VegSci.merge_namedarrays([syn_y_mat, syn_1_mat, syn_2_mat])
+merged_syn_mats = VegSci.merge_namedarrays([syn_1_mat, syn_2_mat])
 ```
 
 ```{julia steinhaus_coefficient}
-VegSci.steinhaus_coefficient(merged_syn_mats[[:"Sample"],:], merged_syn_mats[Not(:"Sample"), :])
+VegSci.steinhaus_coefficient(merged_syn_mats[[:"Syn1"], :], merged_syn_mats[Not(:"Syn1"), :])
 ```
 
 ### Multivariate Analysis
-
-### Ecological Trajectory Analysis
 
 ### Example Workflow
 

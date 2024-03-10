@@ -25,7 +25,7 @@ using Plots
 
 ## Create example data
 
-Create example data in the form of a site by species named matrix, N.
+Create example data in the form of a releve by species named matrix, N.
 
 ``` julia
 N = VegSci.generate_test_array(rown = 20, coln = 30, meancoloccs = 10, rowprefix = "SiteA-", colprefix = "Species")

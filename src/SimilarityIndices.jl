@@ -22,7 +22,7 @@ Create a personalised greeting for VegSci using a `name`.
 
 ...
 # Arguments
-- `x::Union{Matrix, NamedMatrix}`: A site by species matrix of the class Matrix or NamedArrays.NamedMatrix
+- `x::Union{Matrix, NamedMatrix}`: A releve by species matrix of the class Matrix or NamedArrays.NamedMatrix
 - `eq::AbstractString`: A representing an equation using the terms a, b, and c. The Jaccard similarity by default. "(a ./ (a .+ b .+ c)) + I".
 ...
 

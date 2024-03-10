@@ -8,8 +8,9 @@ include("Utilities.jl")
 
 export SyntopicTable
 export compose_syntopic_table_object
-export print_summary_syntopic_table
 export extract_syntopic_matrix
+export extract_syntopic_table
+export print_summary_syntopic_table
 include("SyntopicTables.jl")
 
 export indval_fidelity
@@ -19,7 +20,7 @@ export jaccard_coefficient
 export steinhaus_coefficient
 include("SimilarityIndices.jl")
 
-# export correspondence_analysis
-# include("CorrespondenceAnalysis.jl")
+export correspondence_analysis
+include("CorrespondenceAnalysis.jl")
 
 end
