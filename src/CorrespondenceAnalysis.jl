@@ -24,12 +24,12 @@ Greenacre, M., 2017. Correspondence Analysis in Practice, Third Edition. CRC Pre
 function correspondence_analysis(N::NamedMatrix)
 
     # Perform checks on input matrix
-    if any(x -> x .< 0.0, indval_results) == true
+    if any(x -> x .< 0.0, N) == true
       println("Matrix cannot contain negative values.")
       return
     end
 
-    if all(x -> x .== 0.0, indval_results) == true
+    if all(x -> x .== 0.0, N) == true
       println("Matrix cannot contain all zero values")
       return
     end

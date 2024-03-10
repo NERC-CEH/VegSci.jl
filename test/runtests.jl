@@ -11,6 +11,6 @@ doctest(VegSci)
     include("test_SyntopicTables.jl")
     include("test_FidelityMeasures.jl")
     include("test_SimilarityIndices.jl")
-    # include("test_CorrespondenceAnalysis.jl")
+    include("test_CorrespondenceAnalysis.jl")
     # include("test_Aqua.jl")
 end
