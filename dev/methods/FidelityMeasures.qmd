@@ -183,12 +183,19 @@ fe_3 = (N .- n) .* (Np ./ N)
 fe_4 = (N .- n) .* ((N - Np) / N)
 ```
 
+## Fidelity Measures Using Frequencies
+
+```{julia}
+```
+
 ## Compose functions
 
 Here we create two functions, the first which doesn't use observed and expected frequencies - the Dufrêne-Legendre Indicator Value Index function.
 
 ```{julia indval_function}
 function indval_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}})
+
+    x = Int.(x .!= 0)
 
     N = size(x)[1]
     n = sum(x, dims = 1)
