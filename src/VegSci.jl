@@ -14,6 +14,10 @@ export print_summary_syntopic_table
 include("SyntopicTables.jl")
 
 export indval_fidelity
+export u_fidelity
+export phi_fidelity
+export chisq_fidelity
+export G_fidelity
 include("FidelityMeasures.jl")
 
 export jaccard_coefficient

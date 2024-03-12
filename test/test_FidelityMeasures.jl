@@ -19,4 +19,68 @@ using NamedArrays
         @test names(indval_results)[1] == names(clusters)
         @test names(indval_results)[2] == names(x)[2]
     end
+    @testset "u_fidelity" begin
+        @testset "u_hyp" begin
+            u_hyp_results = VegSci.u_fidelity(x, clusters, "u_hyp")
+            @test typeof(u_hyp_results) <: NamedMatrix
+            @test size(u_hyp_results) == (3, 10)
+            @test names(u_hyp_results)[1] == names(clusters)
+            @test names(u_hyp_results)[2] == names(x)[2]
+        end
+        @testset "u_binA" begin
+            u_binA_results = VegSci.u_fidelity(x, clusters, "u_binA")
+            @test typeof(u_binA_results) <: NamedMatrix
+            @test size(u_binA_results) == (3, 10)
+            @test names(u_binA_results)[1] == names(clusters)
+            @test names(u_binA_results)[2] == names(x)[2]
+        end
+        @testset "u_binB" begin
+            u_binB_results = VegSci.u_fidelity(x, clusters, "u_binB")
+            @test typeof(u_binB_results) <: NamedMatrix
+            @test size(u_binB_results) == (3, 10)
+            @test names(u_binB_results)[1] == names(clusters)
+            @test names(u_binB_results)[2] == names(x)[2]
+        end
+    end
+    @testset "phi_fidelity" begin
+        phi_results = VegSci.phi_fidelity(x, clusters)
+        @test typeof(phi_results) <: NamedMatrix
+        @test size(phi_results) == (3, 10)
+        @test all(x -> x .>= -1.0, phi_results)
+        @test all(x -> x .<= 1.0, phi_results)
+        @test names(phi_results)[1] == names(clusters)
+        @test names(phi_results)[2] == names(x)[2]
+    end
+    @testset "chisq_fidelity" begin
+        @testset "chisq" begin
+           chisq_results = VegSci.chisq_fidelity(x, clusters, "chisq")
+           @test typeof(chisq_results) <: NamedMatrix
+           @test size(chisq_results) == (3, 10)
+           @test names(chisq_results)[1] == names(clusters)
+           @test names(chisq_results)[2] == names(x)[2]
+        end
+        @testset "chisq_adj" begin
+           chisq_adj_results = VegSci.chisq_fidelity(x, clusters, "chisq_adj")
+           @test typeof(chisq_adj_results) <: NamedMatrix
+           @test size(chisq_adj_results) == (3, 10)
+           @test names(chisq_adj_results)[1] == names(clusters)
+           @test names(chisq_adj_results)[2] == names(x)[2]
+        end
+    end
+    @testset "G_fidelity" begin
+        @testset "G" begin
+           G_results = VegSci.G_fidelity(x, clusters, "G")
+           @test typeof(G_results) <: NamedMatrix
+           @test size(G_results) == (3, 10)
+           @test names(G_results)[1] == names(clusters)
+           @test names(G_results)[2] == names(x)[2]
+        end
+        @testset "G_adj" begin
+           G_adj_results = VegSci.G_fidelity(x, clusters, "G_adj")
+           @test typeof(G_adj_results) <: NamedMatrix
+           @test size(G_adj_results) == (3, 10)
+           @test names(G_adj_results)[1] == names(clusters)
+           @test names(G_adj_results)[2] == names(x)[2]
+        end
+    end
 end
