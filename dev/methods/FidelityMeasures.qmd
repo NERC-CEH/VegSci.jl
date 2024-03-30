@@ -132,7 +132,7 @@ indval = ((np .* (N - Np)) ./ (((n .* Np) .- (2 .* np)) .+ (np .* N))) .* (np ./
 Calculate $n - n_{p}$ the number of releves containing the species that aren't in a particular vegetation unit.
 
 ```{julia fo_2}
-fo_2 = n - np
+fo_2 = n .- np
 ```
 
 **$f(o)_{3}$**
