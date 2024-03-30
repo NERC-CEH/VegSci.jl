@@ -72,3 +72,57 @@ function steinhaus_coefficient(x::NamedArray, y::NamedArray)
     return results
 
 end
+
+
+# """
+# similarity_fqi(x::NamedMatrix)::NamedMatrix
+
+# Calculate the Frequency Index (FQI) between two...
+
+# ### Input
+
+# - `x` -- A releve by species matrix, of class NamedArrays::NamedMatrix
+# - `y` -- A vegetation unit by species matrix, of class NamedArrays::NamedMatrix
+
+# ### Output
+
+# The FQI, a value between 0 and 100.
+
+# ### Notes
+
+
+# ### Algorithm
+
+# This function implements 
+
+# ### References
+
+# Tichý, L., 2005. New similarity indices for the assignment of relevés to the vegetation units of an existing phytosociological classification. Plant Ecol 179, 67–72. https://doi.org/10.1007/s11258-004-5798-8
+
+# """
+# function similarity_fqi(x::NamedMatrix, y::NamedMatrix)
+# 	x = VegSci.generate_test_array(rown = 10, coln = 20, meancoloccs = 15, rowprefix = "SiteX-", colprefix = "Species")[:,Not(["Species5", "Species6", "Species20"])]
+# 	y = VegSci.generate_test_array(rown = 5, coln = 20, meancoloccs = 15, rowprefix = "SiteY-", colprefix = "Species")[:,Not(["Species3", "Species11", "Species17"])]
+# 	cols = collect(intersect(Set(names(y)[2]), Set(names(x)[2])))
+# 	x_sum = sum(y[:, cols], dims = 2)
+# 	y_sum = sum(y, dims = 2)
+# 	fqi = 100 .* (x_sum ./ y_sum)
+# 	setnames!(fqi, names(x)[1], 2)
+# 	setdimnames!(fqi, ["y", "x"])
+
+# 	return fqi
+
+# end
+
+# function similarity_pfdi(x::NamedMatrix, y::NamedMatrix)
+
+# 	cols = collect(intersect(Set(names(y)[2]), Set(names(x)[2])))
+# 	x_sum = sum(y[:, cols], dims = 2)
+# 	y_sum = sum(y, dims = 2)
+# 	fqi = 100 .* (x_sum ./ y_sum)
+# 	setnames!(fqi, names(x)[1], 2)
+# 	setdimnames!(fqi, ["y", "x"])
+
+# 	return fqi
+
+# end

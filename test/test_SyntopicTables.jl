@@ -15,6 +15,9 @@ using DataFrames
         @test typeof(csto_results.releve_ids) <: Vector{String}
         @test typeof(csto_results.species_n) <: Int64
         @test typeof(csto_results.species_names) <: Vector{String}
+        @test typeof(csto_results.minimum_species) <: Int64
+        @test typeof(csto_results.mean_species) <: Float64
+        @test typeof(csto_results.maximum_species) <: Int64
         @test typeof(csto_results.abundance_units) <: String
         @test typeof(csto_results.relative_frequency) <: Vector{Float64}
         @test typeof(csto_results.absolute_frequency) <: Vector{Float64}

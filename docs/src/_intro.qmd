@@ -118,7 +118,7 @@ By default the IndVal fidelity measure does not distinguish negative fidelity [@
 syn_1_f_mat = indval_fidelity[["1"], :]
 p_cut = 0.5
 syn_1.fidelity = vec(syn_1_f_mat)
-syn_1.fidelity_p = names(syn_1_f_mat[:, vec(map(col -> any(col .>= 0.5), eachcol(syn_1_f_mat)))])[2]
+syn_1.fidelity_p = names(syn_1_f_mat[:, vec(map(col -> any(col .>= p_cut), eachcol(syn_1_f_mat)))])[2]
 VegSci.print_summary_syntopic_table(syn_1, "normal", "proportion")
 ```
 

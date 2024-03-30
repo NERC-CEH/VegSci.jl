@@ -12,6 +12,9 @@ SyntopicTable
 - releve_ids -- The ids of the releves used in the construction of the syntopic table object, usually the row names of the releve by species matrix, of class Vector{String}
 - species_n -- The number of species in the syntopic table, of class Int64
 - species_names -- The names of species in the syntopic table, of class Vector{String}
+- minimum_species -- The minimum species richness within the releves, of class Int64
+- mean_species -- The mean species richness across the releves, of class Float64
+- maximum_species -- The maximum species richness within the releves, of class Int64
 - abundance_units -- The abundance units, of class String
 - relative_frequency -- The relative frequency of occurrence of each species across all releves, of class Vector{Float64}
 - absolute_frequency -- Vector{Float64}
@@ -29,6 +32,9 @@ mutable struct SyntopicTable
     releve_ids::Vector{String}
     species_n::Int64
     species_names::Vector{String}
+    minimum_species::Int64
+    mean_species::Float64
+    maximum_species::Int64
     abundance_units::String
     relative_frequency::Vector{Float64}
     absolute_frequency::Vector{Float64}
@@ -54,7 +60,7 @@ Compose a single syntopic table object from a releve by species matrix
 
 ### Output
 
-A object of class VegSci.SyntopicTable. See ...
+A object of class VegSci.SyntopicTable.
 
 ### Notes
 
@@ -66,15 +72,20 @@ A object of class VegSci.SyntopicTable. See ...
 
 """
 function compose_syntopic_table_object(name::String, x::NamedMatrix, cover_abundance_scale::String = "proportion")
-
+    
+    # Remove columns containing all zeros (species which do not occur in any releves)
     x = x[:, vec(map(col -> any(col .!= 0), eachcol(x)))]
     x = x[vec(map(col -> any(col .!= 0), eachrow(x))), :]
+
+    species_count = vec(sum(x->x>0, x, dims=2))
 
     releve_n = size(x)[1]
     releve_ids = names(x)[1]
     species_n = size(x)[2]
     species_names = names(x)[2]
-
+    minimum_species = minimum(species_count)
+    mean_species = mean(species_count)
+    maximum_species = maximum(species_count)
     abs_frequency = vec(sum(x->x>0, x, dims=1))
     rel_frequency = vec(abs_frequency ./ releve_n)
     min_abundance = vec(VegSci.nzfunc(minimum, x, dims = 1))
@@ -90,6 +101,9 @@ function compose_syntopic_table_object(name::String, x::NamedMatrix, cover_abund
                                                  releve_ids, 
                                                  species_n, 
                                                  species_names,
+                                                 minimum_species,
+                                                 mean_species,
+                                                 maximum_species,
                                                  cover_abundance_scale,
                                                  rel_frequency,
                                                  abs_frequency,
@@ -121,12 +135,12 @@ function extract_syntopic_table(syntopic_table_object::SyntopicTable, frequency_
 
     # Create table
     table = DataFrame(Species = syntopic_table_object.species_names, 
-                      RelativeFrequency = round.(syntopic_table_object.relative_frequency, digits = 1), 
-                      AbsoluteFrequency = round.(syntopic_table_object.absolute_frequency, digits = 1),
-                      MinimumAbundance = round.(syntopic_table_object.minimum_abundance, digits = 1), 
-                      MaximumAbundance = round.(syntopic_table_object.maximum_abundance, digits = 1), 
-                      MeanAbundance = round.(syntopic_table_object.mean_abundance, digits = 1),
-                      MedianAbundance = round.(syntopic_table_object.median_abundance, digits = 1)
+                      RelativeFrequency = syntopic_table_object.relative_frequency, 
+                      AbsoluteFrequency = syntopic_table_object.absolute_frequency,
+                      MinimumAbundance = syntopic_table_object.minimum_abundance, 
+                      MaximumAbundance = syntopic_table_object.maximum_abundance, 
+                      MeanAbundance = syntopic_table_object.mean_abundance,
+                      MedianAbundance = syntopic_table_object.median_abundance
                       )
 
     table[!, :Abundance] = string.(table.MedianAbundance, " (", table.MinimumAbundance, " - ", table.MaximumAbundance, ")")
@@ -151,6 +165,8 @@ function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, freq
     table = VegSci.extract_syntopic_table(syntopic_table_object, frequency_scale, cover_abundance_scale)
 
     summary_syntopic_table = table[:, [:Species, :RelativeFrequency, :Abundance]]
+
+    # Round values
 
     name = syntopic_table_object.name
     releve_n = syntopic_table_object.releve_n

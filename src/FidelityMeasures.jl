@@ -208,7 +208,7 @@ function G_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}}, meth
         Np = length(getindex(clusters, i))
         np = sum(x[getindex(clusters, i),:], dims = 1)
         fo_1 = np
-        fo_2 = n - np
+        fo_2 = n .- np
         fo_3 = Np .- np
         fo_4 = N - Np .- n .+ np
         fe_1 = n .* (Np / N)
@@ -237,6 +237,12 @@ function G_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}}, meth
 
 end
 
+# x = VegSci.generate_test_array(rown = 30, coln = 10, meancoloccs = 7, rowprefix = "", colprefix = "Species")
+# # Set clusters manually for now as I don't yet want to commit to making clustering a dependency.
+# clusters = Dict("1" => ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+#                 "2" => ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20"],
+#                 "3" => ["21", "22", "23", "24", "25", "26", "27", "28", "29", "30"])
+# i = "1"
 # function fisher_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}})
 
 #     x = Int.(x .!= 0)
@@ -251,9 +257,7 @@ end
 #         np = sum(x[getindex(clusters, i),:], dims = 1)
 #         # fo_1 = np
 
-#         factorial(n)
-
-#         fisher = () ./ ()
+#         fisher = (factorial.(big.(n)) * Np .* factorial.(big.(N .- n)) .* factorial.(big.(N .- Np))) ./ (factorial(i) * factorial(N) .* factorial.(big.(n - i)) .* factorial.(big.(Np - i)) .* factorial.(big.(N - Np - n + i)))
 
 #         fisher_all[i,:] = fisher
 #     end
@@ -307,5 +311,73 @@ function indval_fidelity(x::NamedMatrix, clusters::Dict{String, Vector{String}})
     end
 
     return indval_all
+
+end
+
+"""
+    extract_indicators(fidelity_values::NamedMatrix; p_cut::Float64, n_cut::Union{Float64, Nothing} = nothing)
+
+Extract the positive and negative indicator species from a matrix of fidelity values using a positive and optionally a negative cut value.
+Positive indicators are denoted by a value of 1.0 and negative indicators are denoted by a value of -1.0.
+
+### Input
+
+- `x` -- A releve by species matrix, of class NamedArrays::NamedMatrix
+- `p_cut` -- A postive number used to filter positive indicator species, of class Float64
+- `n_cut` -- A number used to filter negative indicator species, of class Float64
+
+### Output
+
+A cluster by species NamedMatrix containing the positive (1.0) and negative (-1.0) indicator species.
+
+### Notes
+
+
+"""
+function extract_indicators(fidelity_values::NamedMatrix; p_cut::Float64, n_cut::Union{Float64, Nothing} = nothing, tp::Bool = false)
+
+    fidelity_values = copy(fidelity_values)
+
+    replace!(x -> x.>= p_cut ? 1.0 : x, fidelity_values)
+
+    if !isnothing(n_cut)
+        replace!(x -> x.<= n_cut ? -1.0 : x, fidelity_values)
+        replace!(x -> (x.!= 1.0 && x.!= -1.0) ? 0.0 : x, fidelity_values)
+    elseif isnothing(n_cut)
+        replace!(x -> x.!= 1.0 ? 0.0 : x, fidelity_values)
+    end
+
+    # Remove all columns (species) for which there are no positive or negative indicators
+    fidelity_values = fidelity_values[:, vec(map(col -> any(col .!= 0), eachcol(fidelity_values)))]
+
+    if tp == true
+        fidelity_values = transpose(fidelity_values)
+    end
+
+    return fidelity_values
+    
+end
+
+
+function ind_mat_to_df(indicator_species::NamedMatrix)
+
+    df = DataFrames.DataFrame(indicator_species, Symbol.(names(indicator_species)[2]))
+    insertcols!(df, 1, Symbol("Species") => names(indicator_species)[1])
+    df = string.(df)
+    df .= ifelse.(df .== "1.0", "+", df)
+    df .= ifelse.(df .== "-1.0", "-", df)
+    df .= ifelse.(df .== "0.0", "", df)
+    sort!(df, [:Species])
+    return df
+
+end
+
+function assign_fidelity_synobj(sto::VegSci.SyntopicTable, fidelity_values::NamedMatrix, p_cut::Float64, n_cut::Float64)
+
+    sto.fidelity = vec(fidelity_values[:, sto.species_names])
+    sto.fidelity_p = names(fidelity_values[:, sto.species_names][:, vec(map(col -> any(col .>= p_cut), eachcol(fidelity_values[:, sto.species_names])))])[2]
+    sto.fidelity_n = names(fidelity_values[:, sto.species_names][:, vec(map(col -> any(col .<= n_cut), eachcol(fidelity_values[:, sto.species_names])))])[2]
+
+    return sto
 
 end
