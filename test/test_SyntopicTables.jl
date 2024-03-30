@@ -5,7 +5,7 @@ using NamedArrays
 using DataFrames
 
 @testset "SyntopicTables.jl" begin
-    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
+    x = VegSci.generate_test_array(rown = 15, coln = 10, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
     csto_results = VegSci.compose_syntopic_table_object("Test", x)
     @testset "compose_syntopic_table_object" begin 
         @test typeof(csto_results) <: SyntopicTable
@@ -38,7 +38,7 @@ using DataFrames
         @test all(x -> x .<= 1.0, esm_results)
     end
     @testset "extract_syntopic_table" begin
-        est_results = VegSci.extract_syntopic_table(csto_results, "normal", "proportion")
+        est_results = VegSci.extract_syntopic_table(csto_results)
         @test typeof(est_results) <: DataFrame
     end
     @testset "print_summary_syntopic_table" begin

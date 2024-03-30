@@ -131,7 +131,7 @@ function extract_syntopic_matrix(syntopic_table_object::SyntopicTable)
 
 end
 
-function extract_syntopic_table(syntopic_table_object::SyntopicTable, frequency_scale::String, cover_abundance_scale::String)
+function extract_syntopic_table(syntopic_table_object::SyntopicTable)
 
     # Create table
     table = DataFrame(Species = syntopic_table_object.species_names, 
@@ -143,10 +143,14 @@ function extract_syntopic_table(syntopic_table_object::SyntopicTable, frequency_
                       MedianAbundance = syntopic_table_object.median_abundance
                       )
 
-    table[!, :Abundance] = string.(table.MedianAbundance, " (", table.MinimumAbundance, " - ", table.MaximumAbundance, ")")
-
     # Order table by relative frequency
     sort!(table, [:RelativeFrequency,:MedianAbundance], rev = true)
+    
+    return table
+
+end
+
+function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, frequency_scale::String, cover_abundance_scale::String)
 
     # Convert frequency values to the desired format
     if frequency_scale == "normal"
@@ -155,22 +159,19 @@ function extract_syntopic_table(syntopic_table_object::SyntopicTable, frequency_
     # Convert cover-abundance values to the desired format
     if cover_abundance_scale == "proportion"
     end
-    
-    return table
 
-end
-
-function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, frequency_scale::String, cover_abundance_scale::String)
-
-    table = VegSci.extract_syntopic_table(syntopic_table_object, frequency_scale, cover_abundance_scale)
+    table = VegSci.extract_syntopic_table(syntopic_table_object)
+    table[!, [:RelativeFrequency, :MinimumAbundance, :MeanAbundance, :MaximumAbundance]] = round.(table[:, [:RelativeFrequency, :MinimumAbundance, :MeanAbundance, :MaximumAbundance]], digits = 1)
+    table[!, :Abundance] = string.(table.MeanAbundance, " (", table.MinimumAbundance, " - ", table.MaximumAbundance, ")")
 
     summary_syntopic_table = table[:, [:Species, :RelativeFrequency, :Abundance]]
-
-    # Round values
 
     name = syntopic_table_object.name
     releve_n = syntopic_table_object.releve_n
     species_n = syntopic_table_object.species_n
+    species_min = syntopic_table_object.minimum_species
+    species_mean = Int.(round(syntopic_table_object.mean_species, digits = 0))
+    species_max = syntopic_table_object.maximum_species
     fidelity_p = syntopic_table_object.fidelity_p
     fidelity_n = syntopic_table_object.fidelity_n
 
@@ -178,6 +179,7 @@ function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, freq
     println("Community Name: $name")
     println("Releves: n = $releve_n")
     println("Species: n = $species_n")
+    println("Species Richness: $species_mean ($species_min - $species_max)")
     printstyled(string("Postive Indicators: ", join(fidelity_p, " "), "\n"); color = :green)
     printstyled(string("Negative Indicators: ", join(fidelity_n, " "), "\n"); color = :red)
     pretty_table(summary_syntopic_table, show_subheader = false)
