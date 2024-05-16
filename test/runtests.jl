@@ -7,6 +7,7 @@ doctest(VegSci)
 
 # Collate all tests
 @testset "VegSci.jl" begin
+    include("test_Units.jl")
     include("test_Utilities.jl")
     include("test_Validation.jl")
     include("test_SyntopicTables.jl")
