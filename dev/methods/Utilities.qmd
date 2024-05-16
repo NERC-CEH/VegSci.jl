@@ -196,3 +196,54 @@ names(results.x)[2] == names(results.y)[2]
 ```{julia benchmark_align_array_columns}
 @benchmark align_array_columns(x, y)
 ```
+
+## Checking the formar of releve by species matrices {#sec-check_array_format}
+
+Before proceeding with an analysis we first need to check that the format of a releve by species matrix is correct.
+
+```{julia check_array_format_function}
+function check_relSpp_array_format(x::NamedArray; lower_bound::Float64 = 0.0, upper_bound::Float64 = 1.0)
+
+    # Check that column names are all of type String
+    column_names_strings = typeof(names(x, 2)) <: Vector{String}
+
+    # Check that row names are all of type String
+    row_names_strings = typeof(names(x, 1)) <: Vector{String}
+
+    # Check that cover-abundance values are between a lower and upper bounds
+    coverabundance_above_lowerbound = all(x .>= lower_bound)
+    coverabundance_below_upperbound  = all(x .<= upper_bound)
+
+    # Check that cover-abundance values do not contain NaN
+    coverabundance_no_NaN = !any(isnan, x)
+
+    # Check that cover-abundance values do not contain missing
+    coverabundance_no_missing = !any(ismissing, x)
+
+    # Check whether all conditions are true
+    correct_format = all([column_names_strings,
+                          row_names_strings,
+                          coverabundance_above_lowerbound,
+                          coverabundance_below_upperbound,
+                          coverabundance_no_NaN,
+                          coverabundance_no_missing
+                          ])
+
+    # Compile checks
+    checks = Dict("column_names_strings" => column_names_strings,
+                  "row_names_strings" => row_names_strings,
+                  "coverabundance_above_lowerbound" => coverabundance_above_lowerbound,
+                  "coverabundance_below_upperbound" => coverabundance_below_upperbound,
+                  "coverabundance_no_NaN" => coverabundance_no_NaN,
+                  "coverabundance_no_missing" => coverabundance_no_missing,
+                  "correct_format" => correct_format
+                  )
+
+    return checks
+
+end
+```
+
+```{julia check_array_format_function_test}
+check_relSpp_array_format(x)
+```
