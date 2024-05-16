@@ -3,7 +3,10 @@ using SparseArrays
 using InvertedIndices
 
 """
-    greet_your_package_name(name)
+    generate_test_array(;rown::Int64, coln::Int64,
+                        meancoloccs::Int64,
+                        rowprefix::String = "Releve", colprefix::String = "Species",
+                        rowdim::String = "Releve", coldim::String = "Species")
 
 Create a `rown` by `coln` NamedArray object containing random values.
 
@@ -44,12 +47,10 @@ function nzfunc(f::Function, x::NamedArray; dims::Int64 = 1)
 
     # _nzfunc(fn, A, ::Colon) = fn(skip(iszero, A))
     # _nzfunc(fn, A) = map(a->_nzfunc(fn,a,:), eachcol(A))
-    # y = nzfunc(f, x, dims = dims)
-    # setnames!(y, names(x)[2], 2)
 
     _nzfunc(fn, A, ::Colon) = fn(filter(!iszero, A))
-    _nzfunc(fn, A, dims) = mapslices(a->_nzfunc(fn,a,:), A, dims=dims)
-    nzfunc(fn, A; dims=:) = _nzfunc(fn, A, dims)
+    _nzfunc(fn, A, dims) = mapslices(a -> _nzfunc(fn, a , :), A, dims = dims)
+    nzfunc(fn, A; dims = :) = _nzfunc(fn, A, dims)
     y = nzfunc(f, x, dims = dims)
     setnames!(y, names(x)[2], 2)
 

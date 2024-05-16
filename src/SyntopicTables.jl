@@ -7,7 +7,8 @@ using NamedArrays
 SyntopicTable
 
 # Fields
-- name -- The names of the association, of class String
+- name -- The name of the association, of class String
+- code -- The code for the association, of class String
 - releve_n -- The number of releves used to compose the syntopic table object, of class Int64
 - releve_ids -- The ids of the releves used in the construction of the syntopic table object, usually the row names of the releve by species matrix, of class Vector{String}
 - species_n -- The number of species in the syntopic table, of class Int64
@@ -28,6 +29,7 @@ SyntopicTable
 """
 mutable struct SyntopicTable
     name::String
+    code::String
     releve_n::Int64
     releve_ids::Vector{String}
     species_n::Int64
@@ -71,8 +73,11 @@ A object of class VegSci.SyntopicTable.
 ### References
 
 """
-function compose_syntopic_table_object(name::String, x::NamedMatrix, cover_abundance_scale::String = "proportion")
-    
+function compose_syntopic_table_object(name::String, code::String, x::NamedMatrix, cover_abundance_scale::String = "proportion")
+
+    # Check the dimension names of the input matrix are vectors of strings
+    @assert typeof(names(x)) <: Vector{Vector{String}} "Both the row names and column names must only contain strings."
+
     # Remove columns containing all zeros (species which do not occur in any releves)
     x = x[:, vec(map(col -> any(col .!= 0), eachcol(x)))]
     x = x[vec(map(col -> any(col .!= 0), eachrow(x))), :]
@@ -96,7 +101,8 @@ function compose_syntopic_table_object(name::String, x::NamedMatrix, cover_abund
     fidelity_p = [""]
     fidelity_n = [""]
     
-    syntopic_table_object = VegSci.SyntopicTable(name,
+    syntopic_table_object = VegSci.SyntopicTable(code,
+                                                 name,
                                                  releve_n,
                                                  releve_ids, 
                                                  species_n, 
@@ -131,7 +137,7 @@ function extract_syntopic_matrix(syntopic_table_object::SyntopicTable)
 
 end
 
-function extract_syntopic_table(syntopic_table_object::SyntopicTable)
+function extract_syntopic_table(syntopic_table_object::SyntopicTable; include_code = false)
 
     # Create table
     table = DataFrame(Species = syntopic_table_object.species_names, 
@@ -142,6 +148,10 @@ function extract_syntopic_table(syntopic_table_object::SyntopicTable)
                       MeanAbundance = syntopic_table_object.mean_abundance,
                       MedianAbundance = syntopic_table_object.median_abundance
                       )
+
+    if include_code == true
+        insertcols!(table, 1, :CommunityCode => syntopic_table_object.code)
+    end
 
     # Order table by relative frequency
     sort!(table, [:RelativeFrequency,:MedianAbundance], rev = true)

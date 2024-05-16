@@ -251,7 +251,7 @@ begin
   species_x = ca_results.colcoord[:,"Dim1"]
   species_y = ca_results.colcoord[:,"Dim2"]
 
-  Plots.scatter(species_x, species_y, series_annotations = text.(ca_results.colnames, 8, :right, :bottom), framestyle=:origin, label = "Species")
+  Plots.scatter(species_x, species_y, series_annotations = text.(ca_results.colnames, 8, :right, :bottom), framestyle = :origin, label = "Species")
   Plots.scatter!(plots_x, plots_y, series_annotations = text.(ca_results.rownames, 8, :right, :bottom), label = "Plots")
 end
 ```

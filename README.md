@@ -8,9 +8,6 @@ QA](https://raw.githubusercontent.com/JuliaTesting/Aqua.jl/master/badge.svg)](ht
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Lifecycle:Experimental](https://img.shields.io/badge/Lifecycle-Experimental-339999.png)]()
-[![Project Status: WIP – Initial development is in progress, but there
-has not yet been a stable, usable release suitable for the
-public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 # VegSci.jl
 
@@ -36,6 +33,52 @@ Theurillat et al. (2021).
 `VegSci.jl` is structured around the Julia package `NamedArrays.jl`
 facilitating the use of named relevé by species matrices, which
 constitute the basic input for most functions.
+
+## Development Notes
+
+<details>
+<summary><b>Dependency Management</b></summary>
+
+Coming soon...
+
+</details>
+
+<details>
+<summary><b>Version Control</b></summary>
+
+Coming soon...
+
+</details>
+
+<details>
+<summary><b>Release Steps</b></summary>
+
+Coming soon...
+
+</details>
+
+<details>
+<summary><b>Testing</b></summary>
+
+To test `VegSci.jl`
+    1.  Run `] activate .` to activate the package environment.
+    2.  Run `] test`
+    2.  Run `] activate` to exit the package environment.
+
+</details>
+
+<details>
+<summary><b>Documentation</b></summary>
+
+Run `quarto check` in the terminal to check whether Quarto is ok.
+
+If Julia has been updated you will need to re-install the IJulia kernel
+by running `using IJulia` then `installkernel("Julia")` in the Julia
+terminal.
+
+To render the README run `quarto render README.qmd --to md`
+
+</details>
 
 ## References
 

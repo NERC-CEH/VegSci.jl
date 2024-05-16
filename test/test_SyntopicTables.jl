@@ -6,11 +6,12 @@ using DataFrames
 
 @testset "SyntopicTables.jl" begin
     x = VegSci.generate_test_array(rown = 15, coln = 10, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
-    csto_results = VegSci.compose_syntopic_table_object("Test", x)
+    csto_results = VegSci.compose_syntopic_table_object("Test", "T", x)
     @testset "compose_syntopic_table_object" begin 
         @test typeof(csto_results) <: SyntopicTable
         @test fieldnames(typeof(csto_results)) == fieldnames(VegSci.SyntopicTable) 
         @test typeof(csto_results.name) <: String
+        @test typeof(csto_results.code) <: String
         @test typeof(csto_results.releve_n) <: Int64
         @test typeof(csto_results.releve_ids) <: Vector{String}
         @test typeof(csto_results.species_n) <: Int64

@@ -1,5 +1,10 @@
 module VegSci
 
+export prop_to_domin
+export perc_to_domin
+export relfreq_to_constancy
+include("Units.jl")
+
 export generate_test_array
 export nzfunc
 export merge_namedarrays
@@ -7,6 +12,7 @@ export align_array_columns
 include("Utilities.jl")
 
 export check_cluster_releveID_duplicates
+export check_relSpp_array_format
 include("Validation.jl")
 
 export SyntopicTable
