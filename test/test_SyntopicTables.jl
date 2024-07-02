@@ -6,7 +6,13 @@ using DataFrames
 
 @testset "SyntopicTables.jl" begin
     x = VegSci.generate_test_array(rown = 15, coln = 10, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
-    csto_results = VegSci.compose_syntopic_table_object("Test", "T", x)
+    @testset "compose_syntopic_table_object with no cover_abundance_scale and excl_thresh arguments" begin
+        csto_results = VegSci.compose_syntopic_table_object("Test", "T", x)
+        @test typeof(csto_results) <: SyntopicTable
+        @test fieldnames(typeof(csto_results)) == fieldnames(VegSci.SyntopicTable)
+        @test csto_results.additional_species == [""]
+    end
+    csto_results = VegSci.compose_syntopic_table_object("Test", "T", x, excl_thresh = 0.7)
     @testset "compose_syntopic_table_object" begin 
         @test typeof(csto_results) <: SyntopicTable
         @test fieldnames(typeof(csto_results)) == fieldnames(VegSci.SyntopicTable) 
@@ -29,12 +35,13 @@ using DataFrames
         @test typeof(csto_results.fidelity) <: Vector{Float64}
         @test typeof(csto_results.fidelity_p) <: Vector{String}
         @test typeof(csto_results.fidelity_n) <: Vector{String}
+        @test typeof(csto_results.additional_species) <: Vector{String}
     end
     @testset "extract_syntopic_matrix" begin
         esm_results = VegSci.extract_syntopic_matrix(csto_results)
         @test typeof(esm_results) <: NamedMatrix
-        @test names(esm_results)[2] == names(x)[2]
-        @test size(esm_results) == (1, 10)
+        @test Set(names(esm_results)[2]) == Set(setdiff(names(x)[2], csto_results.additional_species))
+        @test size(esm_results) == (1, csto_results.species_n)
         @test all(x -> x .>= 0.0, esm_results)
         @test all(x -> x .<= 1.0, esm_results)
     end

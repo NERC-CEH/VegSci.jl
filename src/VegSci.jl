@@ -5,6 +5,7 @@ export perc_to_domin
 export relfreq_to_constancy
 include("Units.jl")
 
+export nm_to_df
 export generate_test_array
 export nzfunc
 export merge_namedarrays

@@ -1,6 +1,37 @@
 using NamedArrays
 using SparseArrays
 using InvertedIndices
+using DataFrames
+
+"""
+    nm_to_df(nm::NamedMatrix)
+
+Convert a named matrix of class NamedArrays.NamedMatrix to a 
+
+...
+# Arguments
+- `nm::NamedMatrix`: A named matric of class NamedArrays.NamedMatrix
+...
+
+...
+# Returns
+A data frame of class DataFrames.DataFrame with column names equal to the column names 
+of the named matrix and with the first column of the data frame equal to the rownames of the named matrix.
+...
+
+# Examples
+```julia
+julia>generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
+```
+"""
+function nm_to_df(nm::NamedMatrix)
+
+    df = DataFrame(nm, Symbol.(names(nm)[2]))
+    insertcols!(df, 1, Symbol(dimnames(nm, 1)) => names(nm)[1])
+
+  return df
+
+end
 
 """
     generate_test_array(;rown::Int64, coln::Int64,
@@ -31,11 +62,25 @@ function generate_test_array(;rown::Int64, coln::Int64,
                              rowprefix::String = "Releve", colprefix::String = "Species",
                              rowdim::String = "Releve", coldim::String = "Species")
 
+    # rown = 15
+    # coln = 10
+    # meancoloccs = 7
+    # rowprefix = "SiteA-"
+    # colprefix = "Species"
+    # rowdim = "Releve"
+    # coldim = "Species"
+
     zerop = meancoloccs / coln
     rownames = vec([string("$rowprefix")].*string.([1:1:rown;]))
     colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
     x = NamedArrays.NamedArray(Array(sprand(Float64, rown, coln, zerop)), names = (rownames, colnames), dimnames = (rowdim, coldim))
+
+    # x = NamedArrays.NamedArray(rand(2,2))
+    # # x = rand(2, 2)
+    # typeof(x)
+
     y = x ./ sum(x, dims = 2)
+
     return y
 
 end

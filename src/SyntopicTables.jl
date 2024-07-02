@@ -26,6 +26,7 @@ SyntopicTable
 - fidelity -- Vector{Float64}
 - fidelity_p -- Vector{String}
 - fidelity_n -- Vector{String}
+- additional_species -- Vector{String}
 """
 mutable struct SyntopicTable
     name::String
@@ -47,6 +48,7 @@ mutable struct SyntopicTable
     fidelity::Vector{Float64}
     fidelity_p::Vector{String}
     fidelity_n::Vector{String}
+    additional_species::Vector{String}
 end
 
 """
@@ -59,6 +61,9 @@ Compose a single syntopic table object from a releve by species matrix
 - `name` -- The name given to the association represented in the sytopic table, of class String
 - `x` -- A releve by species matrix, of class NamedArrays::NamedMatrix
 - `cover_abundance_scale` -- The units of the matrix values, of class String
+- `excl_thresh` -- An optional value representing the lower relative frequency threshold, greater than 0.0 and less than 1.0.
+                   Species occurring at a relative frequency of less than this threshold are excluded from the syntopic table and stored
+                   in the additional_species field of the VegSci.SyntopicTable object.
 
 ### Output
 
@@ -73,26 +78,67 @@ A object of class VegSci.SyntopicTable.
 ### References
 
 """
-function compose_syntopic_table_object(name::String, code::String, x::NamedMatrix, cover_abundance_scale::String = "proportion")
+function compose_syntopic_table_object(name::String, code::String, x::NamedMatrix; cover_abundance_scale::String = "proportion", excl_thresh::Union{Nothing, Float64} = nothing)
+
+    # Check that excl_thresh is nothing, or a value greater than 0.0 and less than 1.0.
+    @assert (isnothing(excl_thresh) || (excl_thresh > 0.0 && excl_thresh < 1.0)) "If supplied, excl_thresh must be greater than 0.0 and less than 1.0"
 
     # Check the dimension names of the input matrix are vectors of strings
     @assert typeof(names(x)) <: Vector{Vector{String}} "Both the row names and column names must only contain strings."
+
+    # Check that all values in x are positive
+    @assert all(>=(0), x) "All values in the supplied matrix must be greater than or equal to 0."
 
     # Remove columns containing all zeros (species which do not occur in any releves)
     x = x[:, vec(map(col -> any(col .!= 0), eachcol(x)))]
     x = x[vec(map(col -> any(col .!= 0), eachrow(x))), :]
 
-    species_count = vec(sum(x->x>0, x, dims=2))
-
+    # Calculate the number of releves
     releve_n = size(x)[1]
+
+    # Store the names of the releves
     releve_ids = names(x)[1]
+
+    # Calculate the initial absolute frequency of occurrence of each species across all releves
+    init_abs_frequency = vec(sum(x -> x > 0, x, dims = 1))
+
+    # Calculate the initial relative frequency of occurrence of each species across all releves
+    init_rel_frequency = vec(init_abs_frequency ./ releve_n)
+
+    # If excl_thresh is not nothing
+    if !isnothing(excl_thresh)
+
+        # Filter rel_frequency to retrieve the species that occur at a relative frequency over and under excl_thresh
+        spp_over_thresh = names(x, 2)[findall(init_rel_frequency .>= excl_thresh)]
+        spp_under_thresh = names(x, 2)[findall(init_rel_frequency .< excl_thresh)]
+
+        # Remove the species occuring at a relative frequency of less than excl_thresh from x
+        x = x[:, spp_over_thresh]
+
+        # Store the excluded species names
+        additional_species = spp_under_thresh
+        
+    elseif isnothing(excl_thresh)
+
+        additional_species = [""]
+
+    end
+
+    # Re-calculate the absolute frequency of occurrence of each species across all releves
+    abs_frequency = vec(sum(x -> x > 0, x, dims = 1))
+
+    # Re-calculate the relative frequency of occurrence of each species across all releves
+    rel_frequency = vec(abs_frequency ./ releve_n)
+
+    # Sum the total number of species in each releve - does this occur before or after removing rare species?
+    species_count = vec(sum(x -> x > 0, x, dims = 2))
+
+    # Calculate association metrics
     species_n = size(x)[2]
     species_names = names(x)[2]
     minimum_species = minimum(species_count)
     mean_species = mean(species_count)
     maximum_species = maximum(species_count)
-    abs_frequency = vec(sum(x->x>0, x, dims=1))
-    rel_frequency = vec(abs_frequency ./ releve_n)
     min_abundance = vec(VegSci.nzfunc(minimum, x, dims = 1))
     max_abundance = vec(maximum(x, dims = 1))
     mean_abundance = vec(mean(x, dims = 1))
@@ -100,7 +146,8 @@ function compose_syntopic_table_object(name::String, code::String, x::NamedMatri
     fidelity = [0.0]
     fidelity_p = [""]
     fidelity_n = [""]
-    
+
+    # Compose the sytnopic table object    
     syntopic_table_object = VegSci.SyntopicTable(code,
                                                  name,
                                                  releve_n,
@@ -119,7 +166,8 @@ function compose_syntopic_table_object(name::String, code::String, x::NamedMatri
                                                  max_abundance,
                                                  fidelity,
                                                  fidelity_p,
-                                                 fidelity_n
+                                                 fidelity_n,
+                                                 additional_species
                                                  )
 
     return syntopic_table_object
@@ -138,6 +186,9 @@ function extract_syntopic_matrix(syntopic_table_object::SyntopicTable)
 end
 
 function extract_syntopic_table(syntopic_table_object::SyntopicTable; include_code = false)
+
+    x = VegSci.generate_test_array(rown = 15, coln = 10, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
+    syntopic_table_object = VegSci.compose_syntopic_table_object("Test", "T", x, excl_thresh = 0.7)
 
     # Create table
     table = DataFrame(Species = syntopic_table_object.species_names, 

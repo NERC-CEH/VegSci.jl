@@ -1,10 +1,17 @@
 using VegSci
 using Test
 using NamedArrays
+using DataFrames
 
 @testset "Utilities.jl" begin
     x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
     y = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
+    @testset begin
+        nmtdf_results = VegSci.nm_to_df(x)
+        @test typeof(nmtdf_results) <: DataFrame
+        @test nmtdf_results[!, 1] == names(x, 1)
+        @test names(nmtdf_results) == [dimnames(x, 1); names(x, 2)]
+    end
     @testset "generate_test_array" begin
         gta_results = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
         @test typeof(gta_results) <: NamedMatrix
