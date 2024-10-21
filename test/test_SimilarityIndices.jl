@@ -4,11 +4,11 @@ using NamedArrays
 using SparseArrays
 
 @testset "SimilarityIndices.jl" begin
-    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 6, rowprefix = "SiteA-", colprefix = "Species", sparse = false)
-    y = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 6, rowprefix = "SiteB-", colprefix = "Species", sparse = false)
+    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 6, rowprefix = "SiteA-", colprefix = "Species", sparse_array = false)
+    y = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 6, rowprefix = "SiteB-", colprefix = "Species", sparse_array = false)
     xy = VegSci.merge_namedarrays([x, y])
-    x_sparse = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 6, rowprefix = "SiteA-", colprefix = "Species", sparse = true)
-    y_sparse = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 6, rowprefix = "SiteB-", colprefix = "Species", sparse = true)
+    x_sparse = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 6, rowprefix = "SiteA-", colprefix = "Species", sparse_array = true)
+    y_sparse = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 6, rowprefix = "SiteB-", colprefix = "Species", sparse_array = true)
     xy_sparse = VegSci.merge_namedarrays([x, y])
     @testset "steinhaus_coefficient" begin
         steinhaus_results = VegSci.steinhaus_coefficient(x, y)

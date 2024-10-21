@@ -8,7 +8,7 @@ using DataFrames
                         meancoloccs::Int64,
                         rowprefix::String = "Releve", colprefix::String = "Species",
                         rowdim::String = "Releve", coldim::String = "Species",
-                        sparse::Bool = false)
+                        sparse_array::Bool = false)
 
 Create a `rown` by `coln` NamedArray object containing random values.
 
@@ -21,7 +21,7 @@ Create a `rown` by `coln` NamedArray object containing random values.
 - `colprefix::String`: The prefix to the column number. "Species" by default.
 - `rowdim::String`: The row dimension name. "Releve" by default.
 - `coldim::String`: The column dimension name. "Species" by default.
-- `sparse::Bool`: If true a names sparse matrix is returned. If false a named dense matrix is returned. false by default.
+- `sparse_array::Bool`: If true a names sparse matrix is returned. If false a named dense matrix is returned. false by default.
 ...
 
 # Examples
