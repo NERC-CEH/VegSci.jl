@@ -191,9 +191,6 @@ end
 
 function extract_syntopic_table(syntopic_table_object::SyntopicTable; include_code = false)
 
-    x = VegSci.generate_test_array(rown = 15, coln = 10, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
-    syntopic_table_object = VegSci.compose_syntopic_table_object("Test", "T", x, excl_thresh = 0.7)
-
     # Create table
     table = DataFrame(Species = syntopic_table_object.species_names, 
                       RelativeFrequency = syntopic_table_object.relative_frequency, 
