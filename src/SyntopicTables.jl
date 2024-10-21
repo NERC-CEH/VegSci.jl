@@ -59,6 +59,7 @@ Compose a single syntopic table object from a releve by species matrix
 ### Input
 
 - `name` -- The name given to the association represented in the sytopic table, of class String
+- `code` -- The code given to the association represented in the sytopic table, of class String
 - `x` -- A releve by species matrix, of class NamedArrays::NamedMatrix
 - `cover_abundance_scale` -- The units of the matrix values, of class String
 - `excl_thresh` -- An optional value representing the lower relative frequency threshold, greater than 0.0 and less than 1.0.
@@ -88,6 +89,9 @@ function compose_syntopic_table_object(name::String, code::String, x::NamedMatri
 
     # Check that all values in x are positive
     @assert all(>=(0), x) "All values in the supplied matrix must be greater than or equal to 0."
+
+    # Check whether the matrix is a sparse or dense matri
+    # is_sparse = typeof(xs) <: NamedMatrix{Float64, SparseMatrixCSC{Float64, Int64}, Tuple{OrderedDict{String, Int64}, OrderedDict{String, Int64}}}
 
     # Remove columns containing all zeros (species which do not occur in any releves)
     x = x[:, vec(map(col -> any(col .!= 0), eachcol(x)))]
@@ -130,7 +134,7 @@ function compose_syntopic_table_object(name::String, code::String, x::NamedMatri
     # Re-calculate the relative frequency of occurrence of each species across all releves
     rel_frequency = vec(abs_frequency ./ releve_n)
 
-    # Sum the total number of species in each releve - does this occur before or after removing rare species?
+    # Sum the total number of species in each releve
     species_count = vec(sum(x -> x > 0, x, dims = 2))
 
     # Calculate association metrics
@@ -211,7 +215,7 @@ function extract_syntopic_table(syntopic_table_object::SyntopicTable; include_co
 
 end
 
-function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, frequency_scale::String, cover_abundance_scale::String)
+function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, frequency_scale::String = "normal", cover_abundance_scale::String = "percentage")
 
     # Convert frequency values to the desired format
     if frequency_scale == "normal"
@@ -228,6 +232,7 @@ function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, freq
     summary_syntopic_table = table[:, [:Species, :RelativeFrequency, :Abundance]]
 
     name = syntopic_table_object.name
+    code = syntopic_table_object.code
     releve_n = syntopic_table_object.releve_n
     species_n = syntopic_table_object.species_n
     species_min = syntopic_table_object.minimum_species
@@ -237,7 +242,8 @@ function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, freq
     fidelity_n = syntopic_table_object.fidelity_n
 
     println("\n")
-    println("Community Name: $name")
+    println("Name: $name")
+    println("Code: $code")
     println("Releves: n = $releve_n")
     println("Species: n = $species_n")
     println("Species Richness: $species_mean ($species_min - $species_max)")

@@ -1,6 +1,7 @@
 using NamedArrays
 using LinearAlgebra
-
+using SparseArrays
+using VegSci
 """
 """
 function jaccard_coefficient(x::Union{Matrix, NamedMatrix})

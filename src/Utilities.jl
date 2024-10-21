@@ -4,13 +4,62 @@ using InvertedIndices
 using DataFrames
 
 """
-    nm_to_df(nm::NamedMatrix)
+    generate_test_array(;rown::Int64, coln::Int64,
+                        meancoloccs::Int64,
+                        rowprefix::String = "Releve", colprefix::String = "Species",
+                        rowdim::String = "Releve", coldim::String = "Species",
+                        sparse::Bool = false)
 
-Convert a named matrix of class NamedArrays.NamedMatrix to a 
+Create a `rown` by `coln` NamedArray object containing random values.
 
 ...
 # Arguments
-- `nm::NamedMatrix`: A named matric of class NamedArrays.NamedMatrix
+- `rown::Int64`: The number of rows in the array.
+- `coln::Int64`: The number of columns in the array.
+- `meancoloccs::Int64`: The mean number of non-zero elements in each column, usually representing the species richness of each Releve.
+- `rowprefix::String`: The prefix to the row number. "Releve" by default.
+- `colprefix::String`: The prefix to the column number. "Species" by default.
+- `rowdim::String`: The row dimension name. "Releve" by default.
+- `coldim::String`: The column dimension name. "Species" by default.
+- `sparse::Bool`: If true a names sparse matrix is returned. If false a named dense matrix is returned. false by default.
+...
+
+# Examples
+```julia
+julia>VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
+```
+"""
+function generate_test_array(;rown::Int64, coln::Int64,
+                             meancoloccs::Int64,
+                             rowprefix::String = "Releve", colprefix::String = "Species",
+                             rowdim::String = "Releve", coldim::String = "Species",
+                             sparse_array::Bool = false)
+
+    nonzerop = meancoloccs / coln
+    rownames = vec([string("$rowprefix")].*string.([1:1:rown;]))
+    colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
+
+    if sparse_array == true
+        vals = sparse(sprand(Float64, rown, coln, nonzerop))
+    elseif sparse_array == false
+        vals = Array(sprand(Float64, rown, coln, nonzerop))
+    end
+
+    x = NamedArrays.NamedArray(vals, names = (rownames, colnames), dimnames = (rowdim, coldim))
+    y = x ./ sum(x, dims = 2)
+
+    return y
+
+end
+
+"""
+    nm_to_df(nm::NamedMatrix)
+
+Convert a named matrix of class NamedArrays.NamedMatrix to a data frame of class DataFrames.DataFrame
+
+...
+# Arguments
+- `nm::NamedMatrix`: A named matrix of class NamedArrays.NamedMatrix
 ...
 
 ...
@@ -21,7 +70,8 @@ of the named matrix and with the first column of the data frame equal to the row
 
 # Examples
 ```julia
-julia>generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
+julia>nm = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
+julia>VegSci.nm_to_df(nm)
 ```
 """
 function nm_to_df(nm::NamedMatrix)
@@ -34,71 +84,16 @@ function nm_to_df(nm::NamedMatrix)
 end
 
 """
-    generate_test_array(;rown::Int64, coln::Int64,
-                        meancoloccs::Int64,
-                        rowprefix::String = "Releve", colprefix::String = "Species",
-                        rowdim::String = "Releve", coldim::String = "Species")
-
-Create a `rown` by `coln` NamedArray object containing random values.
-
-...
-# Arguments
-- `rown::Int64`: The number of rows in the array.
-- `coln::Int64`: The number of columns in the array.
-- `meancoloccs::Int64`: The mean number of non-zero elements in the array.
-- `rowprefix::String`: The prefix to the row number. "Releve" by default.
-- `colprefix::String`: The prefix to the column number. "Species" by default.
-- `rowdim::String`: The row dimension name. "Releve" by default.
-- `coldim::String`: The column dimension name. "Species" by default.
-...
-
-# Examples
-```julia
-julia>generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
-```
-"""
-function generate_test_array(;rown::Int64, coln::Int64,
-                             meancoloccs::Int64,
-                             rowprefix::String = "Releve", colprefix::String = "Species",
-                             rowdim::String = "Releve", coldim::String = "Species")
-
-    # rown = 15
-    # coln = 10
-    # meancoloccs = 7
-    # rowprefix = "SiteA-"
-    # colprefix = "Species"
-    # rowdim = "Releve"
-    # coldim = "Species"
-
-    zerop = meancoloccs / coln
-    rownames = vec([string("$rowprefix")].*string.([1:1:rown;]))
-    colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
-    x = NamedArrays.NamedArray(Array(sprand(Float64, rown, coln, zerop)), names = (rownames, colnames), dimnames = (rowdim, coldim))
-
-    # x = NamedArrays.NamedArray(rand(2,2))
-    # # x = rand(2, 2)
-    # typeof(x)
-
-    y = x ./ sum(x, dims = 2)
-
-    return y
-
-end
-
-"""
-Draws heavily from the function outlines here: https://discourse.julialang.org/t/nanmean-options/4994/17
+Draws heavily from the function outlined here: https://discourse.julialang.org/t/nanmean-options/4994/17
 """
 function nzfunc(f::Function, x::NamedArray; dims::Int64 = 1)
-
-    # _nzfunc(fn, A, ::Colon) = fn(skip(iszero, A))
-    # _nzfunc(fn, A) = map(a->_nzfunc(fn,a,:), eachcol(A))
 
     _nzfunc(fn, A, ::Colon) = fn(filter(!iszero, A))
     _nzfunc(fn, A, dims) = mapslices(a -> _nzfunc(fn, a , :), A, dims = dims)
     nzfunc(fn, A; dims = :) = _nzfunc(fn, A, dims)
     y = nzfunc(f, x, dims = dims)
     setnames!(y, names(x)[2], 2)
-
+    
     return y
 
 end
@@ -128,6 +123,15 @@ function merge_namedarrays(mats::Vector)
 end
 
 function align_array_columns(x::NamedArray, y::NamedArray, colorder::String = "x")
+
+    # x = VegSci.generate_test_array(rown = 100, coln = 100, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species", sparse_array = true)
+    # y = VegSci.generate_test_array(rown = 50, coln = 100, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species", sparse_array = true)
+
+    # x = x[:,Not(["Species3", "Species10"])]
+    # y = y[:,Not(["Species4"])]
+
+    # typeof(x)
+    # typeof(y)
 
     # Check which columns are missing from x and y
     x_missing_cols = setdiff(Set(names(y)[2]), Set(names(x)[2]))
