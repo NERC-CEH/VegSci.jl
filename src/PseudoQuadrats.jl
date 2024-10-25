@@ -44,3 +44,19 @@ function generate_psquads_sto(sto::SyntopicTable, n::Int64)
     return psquads
 
 end
+
+function generate_psquads(species::Vector{String}, probs::Vector{Float64}, n::Int64)
+
+    # Prepare empty matrix
+    psquads = NamedArrays.NamedArray(fill(0, n, length(species)), names = (string.(1:n), species))
+
+    # Create a pseudo-quadrat n times and populate the matrix with the presences
+    for i in 1:n
+        trial = reduce(vcat, map(x -> rand(Distributions.Bernoulli(x), 1), probs))
+        selected_species = species[trial]
+        psquads[i, selected_species] .= 1
+    end
+
+    return psquads
+
+end

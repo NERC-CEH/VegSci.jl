@@ -19,7 +19,6 @@ end
 """
 binary_dissimilarity(x::Union{Matrix, NamedMatrix}, eq::AbstractString)
 
-Create a personalised greeting for VegSci using a `name`.
 
 ...
 # Arguments

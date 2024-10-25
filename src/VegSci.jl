@@ -42,6 +42,7 @@ export correspondence_analysis
 include("CorrespondenceAnalysis.jl")
 
 export generate_psquads_sto
+export generate_psquads
 include("PseudoQuadrats.jl")
 
 end
