@@ -41,4 +41,7 @@ include("SimilarityIndices.jl")
 export correspondence_analysis
 include("CorrespondenceAnalysis.jl")
 
+export generate_psquads_sto
+include("PseudoQuadrats.jl")
+
 end

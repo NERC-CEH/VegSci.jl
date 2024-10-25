@@ -152,8 +152,8 @@ function compose_syntopic_table_object(name::String, code::String, x::NamedMatri
     fidelity_n = [""]
 
     # Compose the sytnopic table object    
-    syntopic_table_object = VegSci.SyntopicTable(code,
-                                                 name,
+    syntopic_table_object = VegSci.SyntopicTable(name,
+                                                 code,
                                                  releve_n,
                                                  releve_ids, 
                                                  species_n, 
