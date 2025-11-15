@@ -1,6 +1,6 @@
 
 
-![version](https://img.shields.io/badge/version-0.1-blue)
+![version](https://img.shields.io/badge/version-0.1.0-blue)
 [![CI](https://github.com/ZekeMarshall/VegSci.jl/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ZekeMarshall/VegSci.jl/actions/workflows/ci.yml?query=branch%3Amain)
 [![Codecov](https://codecov.io/gh/ZekeMarshall/VegSci.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/ZekeMarshall/VegSci.jl)
 [![Aqua
