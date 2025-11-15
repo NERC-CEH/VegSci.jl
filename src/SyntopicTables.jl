@@ -213,6 +213,14 @@ function extract_syntopic_table(syntopic_table_object::SyntopicTable; include_co
 end
 
 function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, frequency_scale::String = "normal", cover_abundance_scale::String = "percentage")
+    st_name = "Test"
+    st_code = "T"
+    n_spp = 10
+    n_releves = 15 
+    x = VegSci.generate_test_array(rown = n_releves, coln = n_spp, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
+    syntopic_table_object = VegSci.compose_syntopic_table_object(st_name, st_code, x)
+    frequency_scale = "normal"
+    cover_abundance_scale = "proportion"
 
     # Convert frequency values to the desired format
     if frequency_scale == "normal"
@@ -246,6 +254,6 @@ function print_summary_syntopic_table(syntopic_table_object::SyntopicTable, freq
     println("Species Richness: $species_mean ($species_min - $species_max)")
     printstyled(string("Postive Indicators: ", join(fidelity_p, " "), "\n"); color = :green)
     printstyled(string("Negative Indicators: ", join(fidelity_n, " "), "\n"); color = :red)
-    pretty_table(summary_syntopic_table, show_subheader = false)
+    pretty_table(summary_syntopic_table, show_first_column_label_only = true)
 
 end

@@ -45,4 +45,7 @@ export generate_psquads_sto
 export generate_psquads
 include("PseudoQuadrats.jl")
 
+export hamming_distance
+include("Clustering.jl")
+
 end

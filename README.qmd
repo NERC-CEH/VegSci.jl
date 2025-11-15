@@ -24,10 +24,9 @@ jupyter: julia-1.10
 
 # VegSci.jl
 
-`VegSci.jl` is a package containing tools for vegetation science using Julia [@bezanson2017], a growing scientific programming language which solves the 'two language problem' [@roesch2023], offering C and FORTRAN-like performance alongside the readability and user-friendliness of higher level languages such as Python.
-`VegSci.jl` aims to collate selected functionality found in popular vegetation science software programs/packages such as JUICE [@tichy2002], vegan [@oksanen2022], ade4 [@dray2007], vegclust [@decaceres2010; @decaceres2013], and vegsoup [@kaiser2021] into a single location with a user-friendly API and transparent methodologies. 
-`VegSci.jl` is being developed with the aim of assisting in the creation of high-performance, reproducible analytical pipelines in vegetation research [@sperandii2024], developed primarily with the application to the vegetation of Great Britain in mind, but fully generalisable.
-Nomenclature follows @theurillat2021.
+`VegSci.jl` is a package containing tools for vegetation science using Julia [@bezanson2017], a growing scientific programming language which solves the 'two language problem' [@roesch2023], offering C and FORTRAN-like performance alongside the readability and user-friendliness of higher level languages such as Python and R.
+`VegSci.jl` aims to impliment selected functionality found in popular vegetation science software programs/packages such as JUICE [@tichy2002], vegan [@oksanen2022], ade4 [@dray2007], indicspecies [@decaceres2009], vegclust [@decaceres2010; @decaceres2013], and vegsoup [@kaiser2021] on an ad-hoc basis, as and when required by the package authors.
+`VegSci.jl` is being developed with the aim of assisting in the creation of high-performance, reproducible analytical pipelines in vegetation research [@sperandii2024].
 
 ## Design
 
@@ -61,9 +60,12 @@ Coming soon...
 <summary><b>Testing</b></summary>
 
 To test `VegSci.jl`
-    1.  Run `] activate .` to activate the package environment.
-    2.  Run `] test`
-    2.  Run `] activate` to exit the package environment.
+    1.  Enter the Pkg REPL with `]`. 
+    2.  Run `activate .` to activate the package environment.
+    3.  Re-build the package with `build VegSci` the shortcuts Alt + J then Alt + R
+    4.  Restart Julia with `exit()` and then `julia`.
+    5.  Run `test --coverage`.
+    6.  Run `activate` to exit the package environment.
 
 </details>
 

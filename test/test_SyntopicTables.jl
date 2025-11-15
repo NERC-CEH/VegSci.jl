@@ -5,14 +5,18 @@ using NamedArrays
 using DataFrames
 
 @testset "SyntopicTables.jl" begin
-    x = VegSci.generate_test_array(rown = 15, coln = 10, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
+    st_name = "Test"
+    st_code = "T"
+    n_spp = 10
+    n_releves = 15 
+    x = VegSci.generate_test_array(rown = n_releves, coln = n_spp, meancoloccs = 7, rowprefix = "SiteA-", colprefix = "Species")
     @testset "compose_syntopic_table_object with no cover_abundance_scale and excl_thresh arguments" begin
-        csto_results = VegSci.compose_syntopic_table_object("Test", "T", x)
+        csto_results = VegSci.compose_syntopic_table_object(st_name, st_code, x)
         @test typeof(csto_results) <: SyntopicTable
         @test fieldnames(typeof(csto_results)) == fieldnames(VegSci.SyntopicTable)
         @test csto_results.additional_species == [""]
     end
-    csto_results = VegSci.compose_syntopic_table_object("Test", "T", x, excl_thresh = 0.7)
+    csto_results = VegSci.compose_syntopic_table_object("Test", "T", x, excl_thresh = 0.1)
     @testset "compose_syntopic_table_object" begin 
         @test typeof(csto_results) <: SyntopicTable
         @test fieldnames(typeof(csto_results)) == fieldnames(VegSci.SyntopicTable) 
@@ -50,8 +54,12 @@ using DataFrames
         @test typeof(est_results) <: DataFrame
     end
     @testset "print_summary_syntopic_table" begin
-        # Need to think about how I test this given the complexity of the output.
         psst_result = @capture_out VegSci.print_summary_syntopic_table(csto_results, "normal", "proportion")
+        psst_result_list = split(psst_result, "\n")
         @test typeof(psst_result) <: String
+        @test psst_result_list[3] == "Name: $st_name"
+        @test psst_result_list[4] == "Code: $st_code"
+        @test psst_result_list[5] == "Releves: n = $n_releves"
+        @test psst_result_list[6] == "Species: n = $n_spp"
     end
 end
