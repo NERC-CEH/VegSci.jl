@@ -2,6 +2,7 @@ using NamedArrays
 using SparseArrays
 using InvertedIndices
 using DataFrames
+using Random
 
 """
     generate_test_array(;rown::Int64, coln::Int64,
@@ -17,38 +18,99 @@ Create a `rown` by `coln` NamedArray object containing random values.
 - `rown::Int64`: The number of rows in the array.
 - `coln::Int64`: The number of columns in the array.
 - `meancoloccs::Int64`: The mean number of non-zero elements in each column, usually representing the species richness of each Releve.
-- `rowprefix::String`: The prefix to the row number. "Releve" by default.
-- `colprefix::String`: The prefix to the column number. "Species" by default.
-- `rowdim::String`: The row dimension name. "Releve" by default.
-- `coldim::String`: The column dimension name. "Species" by default.
+- `rowprefix::String`: The prefix to the row number. "Species" by default.
+- `colprefix::String`: The prefix to the column number. "Releve" by default.
+- `rowdim::String`: The row dimension name. "Species" by default.
+- `coldim::String`: The column dimension name. "Releve" by default.
 - `sparse_array::Bool`: If true a names sparse matrix is returned. If false a named dense matrix is returned. false by default.
 ...
 
 # Examples
 ```julia
-julia>VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "Releve", colprefix = "Species")
+julia>VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5)
 ```
 """
-function generate_test_array(;rown::Int64, coln::Int64,
-                             meancoloccs::Int64,
-                             rowprefix::String = "Releve", colprefix::String = "Species",
-                             rowdim::String = "Releve", coldim::String = "Species",
+function generate_test_array(;rown::Int64, coln::Int64, meancoloccs::Int64, 
+                             val_type::String = "integer", scale::Union{Nothing, String} = "cols",
+                             rowprefix::String = "Species", colprefix::String = "Releve",
+                             rowdim::String = "Species", coldim::String = "Releve",
                              sparse_array::Bool = false)
 
     nonzerop = meancoloccs / coln
     rownames = vec([string("$rowprefix")].*string.([1:1:rown;]))
     colnames = vec([string("$colprefix")].*string.([1:1:coln;]))
 
-    if sparse_array == true
-        vals = sparse(sprand(Float64, rown, coln, nonzerop))
-    elseif sparse_array == false
-        vals = Array(sprand(Float64, rown, coln, nonzerop))
+    if val_type == "integer"
+        digits = 0
+        min_val = 1
+        step_val = 1
+        max_val = 100
+        val_range = min_val:step_val:max_val
+    elseif val_type == "float"
+        digits = 2
+        min_val = 0.01
+        step_val = 0.01
+        max_val = 1
+        val_range = min_val:step_val:max_val
+    elseif val_type == "bool"
+        min_val = 0
+        max_val = 1
+        val_range = [min_val, max_val]
     end
 
-    x = NamedArrays.NamedArray(vals, names = (rownames, colnames), dimnames = (rowdim, coldim))
-    y = x ./ sum(x, dims = 2)
+    vals = sprand(rown, 1, 5 / rown, n -> rand(val_range, n))
 
-    return y
+    while nnz(vals) == 0
+        vals = sprand(rown, 1, 5 / rown, n -> rand(val_range, n))
+    end 
+
+    for i in 2:coln
+
+        vals_i = sprand(rown, 1, nonzerop, n -> rand(val_range, n))
+
+        while nnz(vals_i) == 0
+            vals_i = sprand(rown, 1, nonzerop, n -> rand(val_range, n))
+        end 
+
+        vals = hcat(vals, vals_i)
+
+    end
+
+    if sparse_array == true
+        x = NamedArray(vals, names = (rownames, colnames), dimnames = (rowdim, coldim))
+    elseif sparse_array == false
+        x = NamedArray(Matrix(vals), names = (rownames, colnames), dimnames = (rowdim, coldim))
+    end
+
+    if val_type != "bool"
+
+        if scale == "cols"
+            scaling_vals = sum(x, dims = 1) * (1 / max_val)
+        elseif scale == "rows"
+            scaling_vals = sum(x, dims = 2) * (1 / max_val)
+        end
+
+        if sparse_array == true
+            scaling_vals = sparse(scaling_vals)
+        end
+
+        if scale == "cols"
+            scaling_mat = NamedArray(sparse(scaling_vals), names = (["sum"], colnames), dimnames = (["sum"], coldim))
+        elseif scale == "rows"
+            scaling_mat = NamedArray(sparse(scaling_vals), names = (rownames, ["sum"]), dimnames = (rowdim, ["sum"]))
+        end
+
+        x = x ./ scaling_mat
+
+        x = round.(x, digits = digits)
+
+        if val_type == "integer"
+            x = Int.(x)
+        end
+        
+    end
+
+    return x
 
 end
 

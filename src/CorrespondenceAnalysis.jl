@@ -1,5 +1,10 @@
 using NamedArrays
 using LinearAlgebra
+using LinearMaps
+using Arpack
+using SparseArrays
+using Statistics
+using Random
 
 """
 correspondence_analysis(N::NamedMatrix)::NamedMatrix
@@ -9,6 +14,7 @@ Perform a correspondence analysis following the computational algorithm outlined
 ### Input
 
 - `N` -- A releve by species matrix of the class NamedArrays::NamedMatrix
+- `axes_n` -- The number of axes, passed to the nsv argument (Number of singular values) of `Arpack.svds`.
 
 ### Output
 
@@ -21,76 +27,60 @@ Perform a correspondence analysis following the computational algorithm outlined
 Greenacre, M., 2017. Correspondence Analysis in Practice, Third Edition. CRC Press.
 
 """
-function correspondence_analysis(N::NamedMatrix)
+function correspondence_analysis(N::NamedMatrix; axes_n::Int64 = 3)
 
-    # Perform checks on input matrix
-    if any(x -> x .< 0.0, N) == true
-      println("Matrix cannot contain negative values.")
-      return
-    end
+  # N = VegSci.generate_test_array(rown = 1000, coln = 100000, meancoloccs = 15, sparse_array = true)
+  # N = VegSci.generate_test_array(rown = 1000, coln = 100000, meancoloccs = 15, val_type = "bool", sparse_array = true)
+  # axes_n = 3
 
-    if all(x -> x .== 0.0, N) == true
-      println("Matrix cannot contain all zero values")
-      return
-    end
-
-    # A.1 Create the correspondence matrix
-    P = N / sum(N)
-  
-    # A.2 Calculate column and row masses
-    r = vec(sum(P, dims = 2))
-    c = vec(sum(P, dims = 1))
-  
-    # A.3 Diagonal matrices of row and column masses
-    Dr = Diagonal(r)
-    Dc = Diagonal(c)
-  
-    # A.4 Calculate the matrix of standardized residuals
-    SR = Dr^(-1/2) * (P - r * transpose(c)) * Dc^(-1/2)
-  
-    # A.5 Calculate the Singular Value Decomposition (SVD) of S
-    svd = LinearAlgebra.svd(SR)
-    U = svd.U
-    V = svd.V
-    S = svd.S
-    D = Diagonal(S)
-  
-    # A.6 Standard coordinates Φ of rows
-    Φ_rownames = names(N)[1]
-    Φ_colnames = vec(["Dim"].*string.([1:1:size(D,1);]))
-    Φ = NamedArray(Dr^(-1/2) * U, names = (Φ_rownames, Φ_colnames), dimnames = ("Plot", "Dimension"))[1:end,1:end .!= end]
-    
-    # A.7 Standard coordinates Γ of columns
-    Γ_rownames = names(N)[2]
-    Γ_colnames = vec(["Dim"].*string.([1:1:size(D,1);]))
-    Γ = NamedArray(Dc^(-1/2) * V, names = (Γ_rownames, Γ_colnames), dimnames = ("Species", "Dimension"))[1:end,1:end .!= end]
-    
-    # A.8 Principal coordinates F of rows
-    # F = Φ * D
-    F = Dr^(-1/2) * U * D
-    F = F[1:end,1:end .!= end]
-    
-    # A.9 Principal coordinates G of columns
-    # G = Γ * D
-    G = Dc^(-1/2) * V * D
-    G = G[1:end,1:end .!= end]
-  
-    results = (sv = D, # Singular values
-               rownames = names(N)[1], # Row names
-               rowmass = r, # Row masses
-               #  rowdist = , # Row chi-square distances to centroid
-               #  rowinertia = , # Row inertias
-               rowcoord = Φ, # Row standard coordinates
-               #  rowsup = , # Indicies of row supplementary points
-               colnames = names(N)[2], # Column names
-               colmass = c, # Column masses
-               #  coldist = , # Column chi-square distances to centroid
-               #  colinertia = , # Column inertias
-               colcoord = Γ, # Column standard coordinates
-               #  colsup = , # Indices of column supplementary points
-               N = N # The frequency table
-              )
-  
-    return results
-  
+  # Perform checks on input matrix
+  if any(x -> x .< 0.0, N) == true
+    println("Matrix cannot contain negative values.")
+    return
   end
+
+  if all(x -> x .== 0.0, N) == true
+    println("Matrix cannot contain all zero values")
+    return
+  end
+
+  # Create axes names
+  axes_names = vec([string("CA")].*string.([1:1:axes_n;]))
+
+  # A.1 Create the correspondence matrix
+  P = N / sum(N)
+
+  # A.2 Calculate column and row masses
+  r = vec(sum(P, dims = 2))
+  c = vec(sum(P, dims = 1))
+
+  # A.3 Diagonal matrices of row and column masses
+  Dr = sparse(NamedArray(Diagonal(r), names = (names(N)[1], names(N)[1]), dimnames = ("Rows", "Rows")))
+  Dc = sparse(NamedArray(Diagonal(c), names = (names(N)[2], names(N)[2]), dimnames = ("Cols", "Cols")))
+
+  # A.4 Calculate the matrix of standardized residuals
+  SR = Dr^(-1/2) * (P - sparse(r * transpose(c))) * Dc^(-1/2)
+
+  # A.5 Calculate the Singular Value Decomposition
+  Z = Arpack.svds(LinearMap(SR), nsv = axes_n)[1]
+
+  # A.6 Standard coordinates Φ of rows
+  Φ = NamedArray(Dr^(-1/2) * Z.U, names = (names(N)[1], axes_names), dimnames = ("Rows", "Axis"))
+
+  # A.7 Standard coordinates Γ of columns
+  Γ = NamedArray(Dc^(-1/2) * Z.V, names = (names(N)[2], axes_names), dimnames = ("Cols", "Axis"))
+
+  # A.8 Principal coordinates F of rows
+  F = Φ * Diagonal(Z.S)
+
+  # A.9 Principal coordinates G of columns
+  G = Γ * Diagonal(Z.S)
+
+  results = Dict("StandardCoordsRows" => Φ,
+                 "StandardCoordsCols" => Γ,
+                 "PrincipleCoordsRows" => F,
+                 "PrincipleCoordsCols" => G)
+
+  return results
+  
+end

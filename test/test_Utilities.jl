@@ -6,14 +6,22 @@ using SparseArrays
 using DataFrames
 
 @testset "Utilities.jl" begin
+    test_rowprefix = "Species"
+    test_colprefix = "Releve"
+    test_rowdim = "Species"
+    test_coldim = "Releve"
     @testset "generate_test_array, dense" begin
         test_rown = 10
         test_coln = 10
         test_meancoloccs = 5
-        test_rowprefix = "Releve"
-        test_colprefix = "Species"
-        test_sparse = false
-        gtad_results = VegSci.generate_test_array(rown = test_rown, coln = test_coln, meancoloccs = test_meancoloccs, rowprefix = test_rowprefix, colprefix = test_colprefix, sparse_array = test_sparse)
+        test_val_type = "integer"
+        test_scale = "cols"
+        test_sparse_array = false
+        gtad_results = VegSci.generate_test_array(rown = test_rown, coln = test_coln, 
+                                                  meancoloccs = test_meancoloccs, val_type = test_val_type, scale = test_scale,
+                                                  rowprefix = test_rowprefix, colprefix = test_colprefix, 
+                                                  rowdim = test_rowdim, coldim = test_coldim,
+                                                  sparse_array = test_sparse_array)
         @test typeof(gtad_results) <: NamedMatrix{Float64, Matrix{Float64}, Tuple{OrderedDict{String, Int64}, OrderedDict{String, Int64}}}
         @test size(gtad_results) == (test_rown, test_coln)
         @test names(gtad_results)[1] == vec([string("Releve")].*string.([1:1:test_rown;]))
@@ -23,30 +31,31 @@ using DataFrames
         @test all(sum(gtad_results, dims = 2) .≈ 1.0)
     end
     @testset "generate_test_array, sparse" begin
-        # test_rown = 2000000
-        # test_coln = 20000
-        # 2809.881183 seconds (7.76 M allocations: 1.989 GiB, 0.02% gc time, 0.03% compilation time)
-        # 2000000×20000 Named sparse matrix with 30021850 Float64 nonzero entries:...
-        test_rown = 2000
-        test_coln = 2000
+        test_rown = 1000
+        test_coln = 10000
         test_meancoloccs = 15
-        test_rowprefix = "Releve"
-        test_colprefix = "Species"
-        test_sparse = true
-        gtas_results = VegSci.generate_test_array(rown = test_rown, coln = test_coln, meancoloccs = test_meancoloccs, rowprefix = test_rowprefix, colprefix = test_colprefix, sparse_array = true)
+        test_val_type = "integer"
+        test_scale = "cols"
+        test_sparse_array = true
+        gtas_results = VegSci.generate_test_array(rown = test_rown, coln = test_coln, 
+                                                  meancoloccs = test_meancoloccs, val_type = test_val_type, scale = test_scale,
+                                                  rowprefix = test_rowprefix, colprefix = test_colprefix, 
+                                                  rowdim = test_rowdim, coldim = test_coldim,
+                                                  sparse_array = test_sparse_array)
         @test typeof(gtas_results) <: NamedMatrix{Float64, SparseMatrixCSC{Float64, Int64}, Tuple{OrderedDict{String, Int64}, OrderedDict{String, Int64}}}
         @test size(gtas_results) == (test_rown, test_coln)
         @test names(gtas_results)[1] == vec([string("Releve")].*string.([1:1:test_rown;]))
         @test names(gtas_results)[2] == vec([string("Species")].*string.([1:1:test_coln;])) 
-        @test all(x-> x >= 0.0, gtas_results)
-        @test all(x-> x <= 1.0, gtas_results)
-        @test all(sum(gtas_results, dims = 2) .≈ 1.0)
+        @test all(x-> x >= 0, gtas_results)
+        @test all(x-> x <= 100, gtas_results)
+        @test all(sum(gtas_results, dims = 2) .>= 90)
+        @test all(sum(gtas_results, dims = 2) .<= 110)
     end
     # Generate some arrays to use in the tests below
-    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species")
-    y = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species")
-    xs = VegSci.generate_test_array(rown = 100, coln = 100, meancoloccs = 5, rowprefix = "SiteA-", colprefix = "Species", sparse_array = true)
-    ys = VegSci.generate_test_array(rown = 50, coln = 100, meancoloccs = 5, rowprefix = "SiteB-", colprefix = "Species", sparse_array = true)
+    x = VegSci.generate_test_array(rown = 10, coln = 10, meancoloccs = 5, rowprefix = "ReleveA-", colprefix = "Species")
+    y = VegSci.generate_test_array(rown = 5, coln = 10, meancoloccs = 5, rowprefix = "ReleveB-", colprefix = "Species")
+    xs = VegSci.generate_test_array(rown = 100, coln = 100, meancoloccs = 5, rowprefix = "ReleveA-", colprefix = "Species", sparse_array = true)
+    ys = VegSci.generate_test_array(rown = 50, coln = 100, meancoloccs = 5, rowprefix = "ReleveB-", colprefix = "Species", sparse_array = true)
     @testset "nm_to_df, dense" begin
         nmtdf_results = VegSci.nm_to_df(x)
         @test typeof(nmtdf_results) <: DataFrame
@@ -84,8 +93,8 @@ using DataFrames
         aac_results = VegSci.align_array_columns(x[:,Not(["Species3", "Species10"])], y[:,Not(["Species4"])])
         @test names(aac_results.x)[2] == names(aac_results.y)[2]
     end
-    # @testset "align_array_columns, sparse" begin
-    #     aac_results = VegSci.align_array_columns(xs[:,Not(["Species3", "Species10"])], ys[:,Not(["Species4"])])
-    #     @test names(aac_results.x)[2] == names(aac_results.y)[2]
-    # end
+    @testset "align_array_columns, sparse" begin
+        aac_results = VegSci.align_array_columns(xs[:,Not(["Species3", "Species10"])], ys[:,Not(["Species4"])])
+        @test names(aac_results.x)[2] == names(aac_results.y)[2]
+    end
 end
